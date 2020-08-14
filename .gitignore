@@ -1,0 +1,13 @@
+.vs
+*.csproj
+PongQuest.sln
+
+Library
+Temp
+Logs
+obj/Debug
+obj/Release
+Extras
+
+Assets/Oculus
+Assets/Oculus.meta
