@@ -13,6 +13,7 @@ public class PongPadBuilder : MonoBehaviour
     public GameObject levelPrefab;
 
     Cell track_cell;
+    GameObject levelInstance;
 
     private void Awake()
     {
@@ -85,7 +86,11 @@ public class PongPadBuilder : MonoBehaviour
         {
             track_cell = FindObjectOfType<Cell>();
             if (track_cell == null)
-                Instantiate(levelPrefab);
+            {
+                if (levelInstance != null)
+                    Destroy(levelInstance);
+                levelInstance = Instantiate(levelPrefab);
+            }
         }
 
         Physics.SyncTransforms();

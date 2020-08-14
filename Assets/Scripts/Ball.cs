@@ -25,7 +25,6 @@ public class Ball : MonoBehaviour, IBall
     float radius, rot_speed;
     Vector3 velocity, old_position;
     Vector3 rotation_axis;
-    bool ghost;
     float unstoppable_until;
     Material original_material_before_unstoppable;
     bool shot;
@@ -55,7 +54,6 @@ public class Ball : MonoBehaviour, IBall
     {
         EndUnstoppable();
         var clone = Instantiate(this);
-        clone.ghost = true;
         var delta = Random.onUnitSphere * SPEED_LIMIT * 0.25f;
         clone.velocity = velocity - delta;
         velocity += delta;
