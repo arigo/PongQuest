@@ -17,6 +17,7 @@ public class Ball : MonoBehaviour, IBall
 {
     internal const int LAYER_WALLS = 9;
     internal const int LAYER_CELLS = 10;
+    internal const int LAYER_HALOS = 11;
     const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
@@ -168,6 +169,15 @@ public class Ball : MonoBehaviour, IBall
 
         if (Mathf.Abs(velocity.z) < Mathf.Min(SPEED_LIMIT, velocity.magnitude) * 0.42f)
             velocity.z += dt * (velocity.z >= 0f ? 0.5f : -0.35f);
+
+        foreach (var collider in Physics.OverlapSphere(transform.position, radius,
+                                    1 << LAYER_HALOS, QueryTriggerInteraction.Collide))
+        {
+            var center = collider.transform.position;
+            float factor = IsUnstoppable ? 0.62f : 13.5f;
+            velocity += (transform.position - center).normalized * (dt * factor);
+            collider.GetComponent<Halo>().Pong();
+        }
 
         old_position = transform.position;
         float move = velocity.magnitude * dt;
