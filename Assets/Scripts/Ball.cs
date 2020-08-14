@@ -49,8 +49,6 @@ public class Ball : MonoBehaviour, IBall
         transform.rotation = Random.rotationUniform;
         rotation_axis = Random.onUnitSphere;
         rot_speed = 45f;
-        if (!shot && !ghost)
-            velocity = Vector3.zero;
     }
 
     public void Duplicate()
@@ -145,6 +143,7 @@ public class Ball : MonoBehaviour, IBall
                 Destroy(gameObject);
                 return;
             }
+            velocity = Vector3.zero;
             RestoreStartPosition(start_pos);
         }
 
