@@ -11043,6 +11043,7 @@ MonoBehaviour:
     type: 3}
   levelPrefab: {fileID: 5103191092605869026, guid: 66e89752c20cf3a4998454fe56e8d09d,
     type: 3}
+  backgroundMusic: {fileID: 8300000, guid: eeabce17eb1bc184788773cfddbf280c, type: 3}
 --- !u!4 &1683340158
 Transform:
   m_ObjectHideFlags: 0

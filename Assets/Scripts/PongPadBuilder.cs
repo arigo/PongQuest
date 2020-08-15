@@ -11,6 +11,7 @@ public class PongPadBuilder : MonoBehaviour
     public PongPad padObjectPrefab;
     public Ball shotBallPrefab;
     public GameObject levelPrefab;
+    public AudioClip backgroundMusic;
 
     Cell track_cell;
     GameObject levelInstance;
@@ -27,6 +28,19 @@ public class PongPadBuilder : MonoBehaviour
         var ht = Controller.GlobalTracker(this);
         ht.onControllersUpdate += Ht_onControllersUpdate;
         StartCoroutine(TrackPosition());
+
+        if (backgroundMusic != null)
+        {
+            var go = new GameObject("music");
+            var asrc = go.AddComponent<AudioSource>();
+            asrc.clip = backgroundMusic;
+            asrc.loop = true;
+            asrc.priority = 0;
+            asrc.volume = 0.65f;
+            //DontDestroyOnLoad(go);
+            //ChangedMusicVolume();
+            asrc.Play();
+        }
     }
 
     IEnumerator TrackPosition()
@@ -61,6 +75,8 @@ public class PongPadBuilder : MonoBehaviour
                     Vector3 p1 = GlobalVec2(geometry[1]);
                     Vector3 p2 = GlobalVec2(geometry[2]);
                     Vector3 p3 = GlobalVec2(geometry[3]);
+                    //string s(Vector3 p) => p.x + ", " + p.z + " / ";
+                    //Debug.Log("Recentered! " + s(p0) + s(p1) + s(p2) + s(p3));
 
                     float length = Mathf.Min(Vector3.Distance(p0, p1), Vector3.Distance(p2, p3));
                     float width = Mathf.Min(Vector3.Distance(p1, p2), Vector3.Distance(p3, p0));
@@ -69,9 +85,8 @@ public class PongPadBuilder : MonoBehaviour
                         Vector3 t1 = p0; p0 = p1; p1 = p2; p2 = p3; p3 = t1;
                     }
                     Vector3 center = (p0 + p1 + p2 + p3) * 0.25f;
-                    Debug.Log("Recentered! " + length + " " + width + ", center " + center);
 
-                    tracking_space.position = -center;  // XXXXXXXXXXX!
+                    tracking_space.position = center;
                     tracking_space.rotation = Quaternion.Inverse(Quaternion.LookRotation(
                         (p2 + p3) - (p1 + p0)));
                 }

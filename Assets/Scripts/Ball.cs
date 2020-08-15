@@ -28,13 +28,28 @@ public class Ball : MonoBehaviour, IBall
     float unstoppable_until;
     Material original_material_before_unstoppable;
     bool shot;
+    Ball duplicate_from;
 
     internal static List<Vector3> start_positions;
 
     void Start()
     {
         radius = transform.lossyScale.y * 0.5f;
-        RestoreStartPosition(transform.position);
+        Vector3 start_position;
+        if (duplicate_from == null)
+        {
+            start_position = transform.position;
+        }
+        else
+        {
+            /* this runs possibly one frame later than Duplicate().  Make sure the two balls are
+             * at the exact same position now, and tweak the velocities */
+            start_position = duplicate_from.transform.position;
+            var delta = Random.onUnitSphere * SPEED_LIMIT * 0.25f;
+            velocity = duplicate_from.velocity - delta;
+            duplicate_from.velocity += delta;
+        }
+        RestoreStartPosition(start_position);
         PongPad.all_balls.Add(this);
     }
 
@@ -54,9 +69,9 @@ public class Ball : MonoBehaviour, IBall
     {
         EndUnstoppable();
         var clone = Instantiate(this);
-        var delta = Random.onUnitSphere * SPEED_LIMIT * 0.25f;
-        clone.velocity = velocity - delta;
-        velocity += delta;
+        clone.transform.position = transform.position;
+        clone.velocity = velocity;
+        clone.duplicate_from = this;
     }
 
     public void Unstoppable()
