@@ -1,7 +1,7 @@
-Pong Quest
+Questanoid
 =========================================
 
-Pong Quest is a VR clone of the Pong/Arkanoid games, for the Oculus Quest.
+Questanoid is a VR clone of the Pong/Arkanoid games, for the Oculus Quest.
 
 
 INSTALLATION IN UNITY
