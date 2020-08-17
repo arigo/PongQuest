@@ -22,7 +22,7 @@ public class PongPadBuilder : MonoBehaviour
     Cell track_cell;
     float? level_end_time;
     GameObject levelInstance;
-    int current_level = 6;
+    int current_level;  // = 6;   /* set to non-zero to debug from a different level */
 
     private void Awake()
     {
