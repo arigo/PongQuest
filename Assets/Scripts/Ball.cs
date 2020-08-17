@@ -21,6 +21,7 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
+    const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;
 
     float radius, rot_speed;
     Vector3 velocity, old_position;
@@ -149,7 +150,7 @@ public class Ball : MonoBehaviour, IBall
         if (!this || !gameObject)
             return;
 
-        if (old_position.z < -2.5f || old_position.sqrMagnitude > 10f * 10f)
+        if (old_position.z < MIN_Z || old_position.sqrMagnitude > 10f * 10f)
         {
             if (!IsRegularBall || !TryRespawnPosition(out Vector3 start_pos))
             {
@@ -188,7 +189,7 @@ public class Ball : MonoBehaviour, IBall
             var center = collider.transform.position;
             float factor = IsUnstoppable ? 0.62f : 13.5f;
             velocity += (transform.position - center).normalized * (dt * factor);
-            collider.GetComponent<Halo>().Pong();
+            collider.GetComponentInParent<Halo>().Pong();
         }
 
         old_position = transform.position;

@@ -21,10 +21,11 @@ public class Halo : MonoBehaviour
             static_mesh.triangles = new int[] { 0, 1, 2, 1, 2, 3 };
         }
 
-        GetComponent<MeshFilter>().sharedMesh = static_mesh;
-        mesh_renderer = GetComponent<MeshRenderer>();
-        base_color = transform.parent.GetComponent<MeshRenderer>().material.color;
+        var b = FindObjectOfType<PongPadBuilder>();
+        mesh_renderer = Instantiate(b.haloPrefab, transform.position, transform.rotation, transform);
+        mesh_renderer.GetComponent<MeshFilter>().sharedMesh = static_mesh;
 
+        base_color = GetComponent<MeshRenderer>().material.color;
         SetHighlight(false);
     }
 

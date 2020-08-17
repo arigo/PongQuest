@@ -178,7 +178,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: _trackingOriginType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: mrcActivationMode
@@ -11041,8 +11041,19 @@ MonoBehaviour:
     type: 3}
   shotBallPrefab: {fileID: 2544735226999461841, guid: 06447ec8ffcdcbe4bad664010ad27129,
     type: 3}
-  levelPrefab: {fileID: 5103191092605869026, guid: 66e89752c20cf3a4998454fe56e8d09d,
+  haloPrefab: {fileID: 8408266423412598249, guid: d76351b6b2a250e43a8bd378a24bf8fa,
     type: 3}
+  levelPrefabs:
+  - {fileID: 2150280956505444870, guid: 4d72ca3946abc214e93faca898517bb5, type: 3}
+  - {fileID: 7517951128716499674, guid: 477b5fbe994a9814683eabbf457d0adf, type: 3}
+  - {fileID: 7733224890778878349, guid: efbdbb10c2dcc1544969fff11c2f8385, type: 3}
+  - {fileID: 2637372471053005771, guid: 34c95dfd564d1bd44892450cdb0bcf0c, type: 3}
+  - {fileID: 2637372471053005771, guid: fbb4665e2eb8902438db63a9cc079c01, type: 3}
+  - {fileID: 5103191092605869026, guid: 66e89752c20cf3a4998454fe56e8d09d, type: 3}
+  - {fileID: 6852614506351985400, guid: 145070d6af5f2894db50f5e2a3ca58f1, type: 3}
+  - {fileID: 8492818440772929480, guid: 34f275c76c492f14b945621b643f7f16, type: 3}
+  - {fileID: 5103191092605869026, guid: 3738a97ccf6a90e449edc60e2a5af08a, type: 3}
+  - {fileID: 2150280956505444870, guid: 1eeea3c2c7e8f95428d4ca606bc7910c, type: 3}
   backgroundMusic: {fileID: 8300000, guid: eeabce17eb1bc184788773cfddbf280c, type: 3}
 --- !u!4 &1683340158
 Transform:

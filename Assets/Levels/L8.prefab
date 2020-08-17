@@ -80,7 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {x: -0.45, y: 0, z: 4.16}
   rotationAxis: {x: 0, y: 1, z: 0}
-  rotationSpeed: 300
+  rotationSpeed: 383
   cells:
   - {fileID: 6621243015788830442}
   - {fileID: 6621243015660722211}
@@ -102,9 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  center: {x: -0.45, y: 0, z: 4.16}
+  center: {x: 0.45, y: 0, z: 4.16}
   rotationAxis: {x: 0, y: 1, z: 0}
-  rotationSpeed: -300
+  rotationSpeed: -383
   cells:
   - {fileID: 6621243016695371234}
   - {fileID: 6621243016124941743}
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {x: -0.95, y: 0, z: 3.22}
   rotationAxis: {x: 0, y: 1, z: 0}
-  rotationSpeed: -213
+  rotationSpeed: -300
   cells:
   - {fileID: 3005466199960735464}
   - {fileID: 8844537725388884453}
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {x: 0.95, y: 0, z: 3.22}
   rotationAxis: {x: 0, y: 1, z: 0}
-  rotationSpeed: 213
+  rotationSpeed: 300
   cells:
   - {fileID: 1816884554298852894}
   - {fileID: 4880230046741456901}

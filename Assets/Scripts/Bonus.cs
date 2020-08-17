@@ -5,6 +5,10 @@ using UnityEngine;
 
 public abstract class Bonus : MonoBehaviour, IBall
 {
+    const float X_DELTA_MAX = 0.8595f;
+    const float Y_MIN = 0.179f;
+    const float Y_MAX = 1.58f;
+
     public static void AddBonus(Vector3 position)
     {
         var bgo = new GameObject("bonus");
@@ -48,12 +52,13 @@ public abstract class Bonus : MonoBehaviour, IBall
                 yield break;
             }
             float dt = Time.deltaTime;
-            if (Physics.Raycast(new Ray(old_pos, velocity), velocity.magnitude * dt,
-                1 << Ball.LAYER_WALLS, QueryTriggerInteraction.Ignore))
-            {
-                velocity.x = 0;
-                velocity.y = 0;
-            }
+
+            if (Mathf.Abs(new_pos.x) > X_DELTA_MAX && velocity.x * new_pos.x > 0f)
+                velocity.x = -velocity.x;
+
+            if ((velocity.y < 0f && new_pos.y < Y_MIN) || (velocity.y > 0f && new_pos.y > Y_MAX))
+                velocity.y = -velocity.y;
+
             transform.position = new_pos = old_pos + velocity * dt;
 
             Vector2 v2 = (Vector2)velocity;
