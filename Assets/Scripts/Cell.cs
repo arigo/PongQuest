@@ -6,13 +6,15 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public int energy = 1;
+    public int points = 100;
+    public float pointsSize;
 
     bool bonus;
     Material my_material;
 
     public void Hit(RaycastHit hitInfo, bool unstoppable)
     {
-        var b = FindObjectOfType<PongPadBuilder>();
+        var b = PongPadBuilder.instance;
         var ps = b.hitPS;
         var rend = GetComponent<MeshRenderer>();
         if (my_material == null)
@@ -37,6 +39,7 @@ public class Cell : MonoBehaviour
             Destroy(gameObject);
             if (bonus)
                 Bonus.AddBonus(transform.position);
+            Points.AddPoints(transform.position, my_material.color, points, pointsSize);
         }
         else
             GetComponent<MeshRenderer>().sharedMaterial = my_material;

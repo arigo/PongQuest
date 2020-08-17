@@ -12,6 +12,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SolarCell Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
+        type: 3}
+      propertyPath: energy
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
+        type: 3}
+      propertyPath: points
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -66,11 +76,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
-        type: 3}
-      propertyPath: energy
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6716659608243124209, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}

@@ -7,15 +7,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
+        type: 3}
+      propertyPath: m_Name
+      value: SolarCell Red
+      objectReference: {fileID: 0}
     - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: energy
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
+    - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
-      propertyPath: m_Name
-      value: SolarCell Red
+      propertyPath: points
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}

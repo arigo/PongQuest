@@ -8,11 +8,16 @@ public class PongPadBuilder : MonoBehaviour
 {
     public Material cellHitMaterial, unstoppableBallMaterial;
     public ParticleSystem hitPS, starPS;
+    public GameObject preload;
     public PongPad padObjectPrefab;
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;
+    public Points canvasPointsPrefab;
     public GameObject[] levelPrefabs;
     public AudioClip backgroundMusic;
+
+    public static PongPadBuilder instance { get; private set; }
+    public static bool paused { get; private set; }
 
     Cell track_cell;
     float? level_end_time;
@@ -21,6 +26,7 @@ public class PongPadBuilder : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         Ball.start_positions = new List<Vector3>();
         foreach (var ball in FindObjectsOfType<Ball>())
             Ball.start_positions.Add(ball.transform.position);
@@ -28,6 +34,8 @@ public class PongPadBuilder : MonoBehaviour
 
     private void Start()
     {
+        level_end_time = Time.time;
+
         var ht = Controller.GlobalTracker(this);
         ht.onControllersUpdate += Ht_onControllersUpdate;
         StartCoroutine(TrackPosition());
@@ -46,8 +54,17 @@ public class PongPadBuilder : MonoBehaviour
         }
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        paused = !focus;
+        Time.timeScale = paused ? 0f : 1f;
+    }
+
     IEnumerator TrackPosition()
     {
+        yield return new WaitForEndOfFrame();
+        Destroy(preload);
+
         while (true)
         {
             var boundary = OVRManager.boundary;
@@ -90,19 +107,25 @@ public class PongPadBuilder : MonoBehaviour
                 tracking_space.rotation = Quaternion.Inverse(Quaternion.LookRotation(
                     (p2 + p3) - (p1 + p0)));
             }
-            yield return new WaitForSeconds(0.45f);
+            yield return new WaitForSecondsRealtime(0.45f);
         }
     }
 
     private void Ht_onControllersUpdate(Controller[] controllers)
     {
+        if (paused)
+            return;
+
         if (track_cell == null)
         {
             track_cell = FindObjectOfType<Cell>();
             if (track_cell == null)
             {
                 if (level_end_time == null)
+                {
                     level_end_time = Time.time + 1.2f;
+                    Bonus.RemoveAllBonuses();
+                }
 
                 if (Time.time >= level_end_time.Value)
                 {
@@ -113,6 +136,7 @@ public class PongPadBuilder : MonoBehaviour
                     if (current_level >= levelPrefabs.Length)
                         current_level = 0;
                     levelInstance = Instantiate(levelPrefabs[current_level++]);
+                    Bonus.RemoveAllBonuses();
                 }
             }
         }

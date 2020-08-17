@@ -80,7 +80,7 @@ public class Ball : MonoBehaviour, IBall
         unstoppable_until = Time.time + 10f;
         if (original_material_before_unstoppable == null)
             original_material_before_unstoppable = GetComponent<MeshRenderer>().sharedMaterial;
-        GetComponent<MeshRenderer>().sharedMaterial = FindObjectOfType<PongPadBuilder>().unstoppableBallMaterial;
+        GetComponent<MeshRenderer>().sharedMaterial = PongPadBuilder.instance.unstoppableBallMaterial;
     }
 
     public void ShootOutOf(PongPad pad)
@@ -147,7 +147,7 @@ public class Ball : MonoBehaviour, IBall
 
     public void UpdateBall()
     {
-        if (!this || !gameObject)
+        if (!this || !gameObject || PongPadBuilder.paused)
             return;
 
         if (old_position.z < MIN_Z || old_position.sqrMagnitude > 10f * 10f)

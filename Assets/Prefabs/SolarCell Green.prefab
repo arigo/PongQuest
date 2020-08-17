@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 1
+  points: 100
 --- !u!1001 &2645063274388579647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24,6 +25,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SolarCell Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362334430515126661, guid: f2f9386cd92c8524e83851cd94c12c2c,
+        type: 3}
+      propertyPath: points
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}

@@ -21,12 +21,16 @@ public class Halo : MonoBehaviour
             static_mesh.triangles = new int[] { 0, 1, 2, 1, 2, 3 };
         }
 
-        var b = FindObjectOfType<PongPadBuilder>();
+        var b = PongPadBuilder.instance;
         mesh_renderer = Instantiate(b.haloPrefab, transform.position, transform.rotation, transform);
         mesh_renderer.GetComponent<MeshFilter>().sharedMesh = static_mesh;
 
         base_color = GetComponent<MeshRenderer>().material.color;
         SetHighlight(false);
+
+        var cell = GetComponent<Cell>();
+        cell.points *= 5;
+        cell.pointsSize = 1.35f;
     }
 
     void SetHighlight(bool highlight)
@@ -47,6 +51,8 @@ public class Halo : MonoBehaviour
     IEnumerator _PongDone()
     {
         yield return new WaitForEndOfFrame();
+        while (PongPadBuilder.paused)
+            yield return new WaitForEndOfFrame();
         SetHighlight(false);
     }
 }

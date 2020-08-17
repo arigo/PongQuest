@@ -23,6 +23,7 @@ public abstract class Bonus : MonoBehaviour, IBall
     }
 
     protected abstract Color GetColor();
+    protected abstract int GetPoints();
 
     Vector3 velocity, old_pos, new_pos;
     ParticleSystem starPS;
@@ -30,7 +31,7 @@ public abstract class Bonus : MonoBehaviour, IBall
 
     private void Start()
     {
-        starPS = FindObjectOfType<PongPadBuilder>().starPS;
+        starPS = PongPadBuilder.instance.starPS;
         velocity = new Vector3(0, 0, -1);
         old_pos = transform.position;
         new_pos = transform.position;
@@ -104,6 +105,7 @@ public abstract class Bonus : MonoBehaviour, IBall
         StopAllCoroutines();
         free_falling = false;
         Hit(pad);
+        Points.AddPoints(transform.position, GetColor(), GetPoints());
     }
 
     bool IBall.IsAlive { get => this && free_falling; }
@@ -141,6 +143,9 @@ public abstract class Bonus : MonoBehaviour, IBall
 
         while (true)
         {
+            while (PongPadBuilder.paused)
+                yield return null;
+
             if (pad.most_recent_iball_hit is Ball most_recent_ball && most_recent_ball)
             {
                 hit_ball(most_recent_ball);
@@ -167,11 +172,18 @@ public abstract class Bonus : MonoBehaviour, IBall
     void IBall.UpdateBall()
     {
     }
+
+    public static void RemoveAllBonuses()
+    {
+        foreach (var bonus in FindObjectsOfType<Bonus>())
+            Destroy(bonus.gameObject);
+    }
 }
 
 public class DoubleBallBonus : Bonus
 {
     protected override Color GetColor() => new Color(0f, 1f, 0f);
+    protected override int GetPoints() => 300;
 
     protected override void Hit(PongPad pad)
     {
@@ -186,6 +198,7 @@ public class DoubleBallBonus : Bonus
 public class UnstoppableBallBonus : Bonus
 {
     protected override Color GetColor() => new Color(0f, 1f, 1f);
+    protected override int GetPoints() => 350;
 
     protected override void Hit(PongPad pad)
     {
@@ -200,6 +213,7 @@ public class UnstoppableBallBonus : Bonus
 public class LaserBonus : Bonus
 {
     protected override Color GetColor() => new Color(1f, 0f, 0f);
+    protected override int GetPoints() => 200;
 
     protected override void Hit(PongPad pad)
     {
@@ -211,7 +225,7 @@ public class LaserBonus : Bonus
     {
         float next_shot = 0;
         int remaining_shots = 20;
-        var prefab = FindObjectOfType<PongPadBuilder>().shotBallPrefab;
+        var prefab = PongPadBuilder.instance.shotBallPrefab;
 
         while (IsAttachedToPad(pad) && remaining_shots > 0)
         {
@@ -224,6 +238,8 @@ public class LaserBonus : Bonus
                 Instantiate(prefab).ShootOutOf(pad);
             }
             yield return null;
+            while (PongPadBuilder.paused)
+                yield return null;
         }
         Destroy(gameObject);
     }
