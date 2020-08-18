@@ -58,18 +58,22 @@ public class PongPadBuilder : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
+#if !UNITY_EDITOR
         paused_no_focus = !focus;
         Time.timeScale = paused ? 0f : 1f;
+#endif
     }
 
     private void Update()
     {
+#if !UNITY_EDITOR
         bool any_ctrl = Baroque.GetControllers().Where(ctrl => ctrl.isReady).Any();
         if (any_ctrl == paused_no_ctrl)
         {
             paused_no_ctrl = !any_ctrl;
             Time.timeScale = paused ? 0f : 1f;
         }
+#endif
         if (paused)
         {
             foreach (var ctrl in Baroque.GetControllers())
@@ -91,7 +95,7 @@ public class PongPadBuilder : MonoBehaviour
         {
             var boundary = OVRManager.boundary;
             Vector3[] geometry = boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
-            if (geometry.Length == 4 && OVRManager.instance != null)
+            if (geometry != null && geometry.Length == 4 && OVRManager.instance != null)
             {
                 Transform tracking_space = OVRManager.instance.transform;
 
