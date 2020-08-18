@@ -8,23 +8,32 @@ public class Cell : MonoBehaviour
     public int energy = 1;
     public int points = 100;
     public float pointsSize;
+    public bool velocityBoost;
 
     bool bonus;
-    Material my_material;
+    Material _my_material;
+
+    Material MyMaterial
+    {
+        get
+        {
+            if (_my_material == null)
+                _my_material = GetComponent<MeshRenderer>().sharedMaterial;
+            return _my_material;
+        }
+    }
 
     public void Hit(RaycastHit hitInfo, bool unstoppable)
     {
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
-        var rend = GetComponent<MeshRenderer>();
-        if (my_material == null)
-            my_material = rend.sharedMaterial;
-        var color = my_material.color;
+        var color = MyMaterial.color;
 
         for (int i = 0; i < 20; i++)
             ps.Emit(hitInfo.point, hitInfo.normal + (Random.onUnitSphere * 0.5f),
                 0.1f, Random.Range(0.2f, 0.5f), color);
 
+        var rend = GetComponent<MeshRenderer>();
         rend.sharedMaterial = b.cellHitMaterial;
         StartCoroutine(_Hit(unstoppable));
     }
@@ -39,10 +48,10 @@ public class Cell : MonoBehaviour
             Destroy((GameObject)gameObject);
             if (bonus)
                 Bonus.AddBonus(transform.position);
-            Points.AddPoints(transform.position, my_material.color, points, pointsSize);
+            Points.AddPoints(transform.position, MyMaterial.color, points, pointsSize);
         }
         else
-            GetComponent<MeshRenderer>().sharedMaterial = my_material;
+            GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
     }
 
     Vector3 last_pos;
@@ -68,5 +77,66 @@ public class Cell : MonoBehaviour
         Vector3 v = point - transform.position;
         Vector3 v2 = transform.rotation * Quaternion.Inverse(last_rot) * v;
         return (v2 - v + transform.position - last_pos) / Time.deltaTime;
+    }
+
+    public void HitVelocityBoost()
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Destroy(go.GetComponent<Collider>());
+        go.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        go.transform.localScale = transform.lossyScale;
+        go.GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
+        go.AddComponent<VelocityBooster>();
+    }
+
+    class VelocityBooster : MonoBehaviour
+    {
+        static Mesh static_mesh;
+
+        IEnumerator Start()
+        {
+            if (static_mesh == null)
+            {
+                var vecs = new Vector3[8];
+                var norms = new Vector3[8];
+                int i = 0;
+                for (int dz = -1; dz <= 1; dz += 2)
+                    for (int dy = -1; dy <= 1; dy += 2)
+                        for (int dx = -1; dx <= 1; dx += 2)
+                        {
+                            vecs[i] = new Vector3(dx * 0.5f, dy * 0.5f, dz * 0.5f);
+                            norms[i] = vecs[i].normalized;
+                            i++;
+                        }
+
+                var indices = new int[] {
+                    0, 1, 2, 3, 4, 5, 6, 7,
+                    0, 2, 1, 3, 4, 6, 5, 7,
+                    0, 4, 1, 5, 2, 6, 3, 7,
+                };
+
+                static_mesh = new Mesh();
+                static_mesh.vertices = vecs;
+                static_mesh.normals = norms;
+                static_mesh.SetUVs(0, new List<Vector3>(vecs));
+                static_mesh.SetIndices(indices, MeshTopology.Lines, 0);
+                static_mesh.UploadMeshData(true);
+            }
+            GetComponent<MeshFilter>().sharedMesh = static_mesh;
+
+            Vector3 base_scale = transform.localScale;
+            float delta_y = 1f;
+            float vy = 0.5f;
+            while (vy > 0f)
+            {
+                yield return null;
+
+                float delta = Time.deltaTime * vy * 2.2f;
+                delta_y += delta;
+                transform.localScale = base_scale * delta_y;
+                vy -= Time.deltaTime;
+            }
+            Destroy((GameObject)gameObject);
+        }
     }
 }

@@ -14,8 +14,8 @@ public class PongPadBuilder : MonoBehaviour
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;
     public Points canvasPointsPrefab;
-    public GameObject[] levelPrefabs;
     public AudioClip backgroundMusic;
+    public GameObject[] levelPrefabs;
 
     public static PongPadBuilder instance { get; private set; }
     public static bool paused { get => paused_no_focus || paused_no_ctrl; }
@@ -60,7 +60,6 @@ public class PongPadBuilder : MonoBehaviour
     {
         paused_no_focus = !focus;
         Time.timeScale = paused ? 0f : 1f;
-        Debug.LogError("OnApplicationFocus(" + focus + "): timeScale = " + Time.timeScale);
     }
 
     private void Update()
@@ -70,7 +69,6 @@ public class PongPadBuilder : MonoBehaviour
         {
             paused_no_ctrl = !any_ctrl;
             Time.timeScale = paused ? 0f : 1f;
-            Debug.LogError("Update(any_ctrl=" + any_ctrl + "): timeScale = " + Time.timeScale);
         }
         if (paused)
         {

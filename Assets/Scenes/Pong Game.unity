@@ -11179,6 +11179,7 @@ MonoBehaviour:
     type: 3}
   canvasPointsPrefab: {fileID: 1491243787789807247, guid: 3a1c2d984bb58404fab56f0f6a327649,
     type: 3}
+  backgroundMusic: {fileID: 8300000, guid: eeabce17eb1bc184788773cfddbf280c, type: 3}
   levelPrefabs:
   - {fileID: 2150280956505444870, guid: 4d72ca3946abc214e93faca898517bb5, type: 3}
   - {fileID: 7517951128716499674, guid: 477b5fbe994a9814683eabbf457d0adf, type: 3}
@@ -11190,7 +11191,9 @@ MonoBehaviour:
   - {fileID: 8492818440772929480, guid: 34f275c76c492f14b945621b643f7f16, type: 3}
   - {fileID: 5103191092605869026, guid: 3738a97ccf6a90e449edc60e2a5af08a, type: 3}
   - {fileID: 2150280956505444870, guid: 1eeea3c2c7e8f95428d4ca606bc7910c, type: 3}
-  backgroundMusic: {fileID: 8300000, guid: eeabce17eb1bc184788773cfddbf280c, type: 3}
+  - {fileID: 6444202312872065104, guid: e14da9254a80e474394ece2a1d53cb70, type: 3}
+  - {fileID: 6444202312872065104, guid: 385e8655c89890a48a0805522745a4ea, type: 3}
+  - {fileID: 2150280956505444870, guid: 3a3e5987cd9168c4abeb40bc68f3325b, type: 3}
 --- !u!4 &1683340158
 Transform:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
+    const float SPEED_BOOST_TO = SPEED_LIMIT * 5f;
     const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;
 
     float radius, rot_speed;
@@ -239,6 +240,16 @@ public class Ball : MonoBehaviour, IBall
 
                         rotation_axis = Random.onUnitSphere;
                         rot_speed = Random.Range(15f, 270f);
+
+                        if (cell != null && cell.velocityBoost)
+                        {
+                            float extra = SPEED_BOOST_TO - velocity.magnitude;
+                            if (extra > 0f)
+                                velocity += hitInfo.normal * extra;
+                            rot_speed *= 2.5f;
+                            cell.HitVelocityBoost();
+                        }
+
                         done = true;
                     }
                     else

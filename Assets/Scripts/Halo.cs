@@ -19,6 +19,7 @@ public class Halo : MonoBehaviour
             static_mesh.vertices = new Vector3[] { new Vector2(-E, -E), new Vector2(E, -E), new Vector2(-E, E), new Vector2(E, E) };
             static_mesh.uv = new Vector2[] { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(-1, 1), new Vector2(1, 1) };
             static_mesh.triangles = new int[] { 0, 1, 2, 1, 2, 3 };
+            static_mesh.UploadMeshData(true);
         }
 
         var b = PongPadBuilder.instance;
