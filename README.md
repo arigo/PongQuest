@@ -4,6 +4,12 @@ Questanoid
 Questanoid is a VR clone of the Pong/Arkanoid games, for the Oculus Quest.
 
 
+GETTING STARTED
+---------------
+
+See https://github.com/arigo/Questanoid/releases.  Drop the downloaded .apk file on the SideQuest window to install (https://sidequestvr.com/).
+
+
 INSTALLATION IN UNITY
 ---------------------
 
