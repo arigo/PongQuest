@@ -9,11 +9,12 @@ public class PongPadBuilder : MonoBehaviour
 {
     public Material cellHitMaterial, unstoppableBallMaterial;
     public ParticleSystem hitPS, starPS;
-    public GameObject preloadGameObject, pauseGameObject;
+    public GameObject preloadGameObject;
     public PongPad padObjectPrefab;
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;
     public Points canvasPointsPrefab;
+    public UnityEngine.UI.Text totalPointsText;
     public AudioClip backgroundMusic;
     public GameObject[] levelPrefabs;
 
@@ -25,6 +26,7 @@ public class PongPadBuilder : MonoBehaviour
     float? level_end_time;
     GameObject levelInstance;
     int current_level;  // = 6;   /* set to non-zero to debug from a different level */
+    public int _total_points { get; set; }
 
     private void Awake()
     {
@@ -64,6 +66,8 @@ public class PongPadBuilder : MonoBehaviour
 #endif
     }
 
+    static bool _was_paused;
+
     private void Update()
     {
 #if !UNITY_EDITOR
@@ -82,8 +86,12 @@ public class PongPadBuilder : MonoBehaviour
                 if (pad != null)
                     Destroy((GameObject)pad.gameObject);
             }
+            totalPointsText.text = "PAUSE";
         }
-        pauseGameObject.SetActive(paused);
+        else if (_was_paused)
+            Points.UpdateTotalPoints(0);
+
+        _was_paused = paused;
     }
 
     IEnumerator TrackPosition()

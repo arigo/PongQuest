@@ -160,6 +160,10 @@ public class Ball : MonoBehaviour, IBall
             }
             velocity = Vector3.zero;
             RestoreStartPosition(start_pos);
+
+            var color = GetComponent<MeshRenderer>().sharedMaterial.color;
+            Cell.EmitHitPS(start_pos, Vector3.zero, color);
+            Points.AddPoints(start_pos, color, -2000, 1.5f);
         }
 
         if (IsUnstoppable && Time.time >= unstoppable_until)

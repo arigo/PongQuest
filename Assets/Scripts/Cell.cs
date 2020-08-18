@@ -23,15 +23,22 @@ public class Cell : MonoBehaviour
         }
     }
 
+    public static void EmitHitPS(Vector3 pos, Vector3 normal, Color color)
+    {
+        var b = PongPadBuilder.instance;
+        var ps = b.hitPS;
+
+        for (int i = 0; i < 20; i++)
+            ps.Emit(pos, normal + (Random.onUnitSphere * 0.5f),
+                0.1f, Random.Range(0.2f, 0.5f), color);
+    }
+
     public void Hit(RaycastHit hitInfo, bool unstoppable)
     {
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
         var color = MyMaterial.color;
-
-        for (int i = 0; i < 20; i++)
-            ps.Emit(hitInfo.point, hitInfo.normal + (Random.onUnitSphere * 0.5f),
-                0.1f, Random.Range(0.2f, 0.5f), color);
+        EmitHitPS(hitInfo.point, hitInfo.normal, color);
 
         var rend = GetComponent<MeshRenderer>();
         rend.sharedMaterial = b.cellHitMaterial;

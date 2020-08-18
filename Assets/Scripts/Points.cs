@@ -7,18 +7,49 @@ using BaroqueUI;
 
 public class Points : MonoBehaviour
 {
+    static Color total_points_color;
+
     public Text text;
+
+    public static void UpdateTotalPoints(int count)
+    {
+        var b = PongPadBuilder.instance;
+        b._total_points += count;
+        if (b._total_points < 0)
+            b._total_points = 0;
+        b.totalPointsText.text = b._total_points.ToString("###\\'###\\'##0").TrimStart('\'');
+    }
 
     public static void AddPoints(Vector3 position, Color color, int count, float points_size = 0f)
     {
         Quaternion rot = Quaternion.LookRotation(position - Baroque.GetHeadTransform().position);
         rot.eulerAngles += Random.insideUnitSphere * 10f;
 
-        var p = Instantiate(PongPadBuilder.instance.canvasPointsPrefab, position, rot);
+        var b = PongPadBuilder.instance;
+        var p = Instantiate(b.canvasPointsPrefab, position, rot);
         p.text.text = count.ToString();
         p.text.color = color;
         if (points_size > 1f)
             p.transform.localScale *= points_size;
+
+        if (total_points_color == new Color())
+            total_points_color = b.totalPointsText.color;
+
+        UpdateTotalPoints(count);
+        b.StartCoroutine(_Blink());
+
+        IEnumerator _Blink()
+        {
+            float fraction = 0.75f;
+            while (true)
+            {
+                b.totalPointsText.color = Color.Lerp(total_points_color, color, fraction);
+                if (fraction <= 0f)
+                    break;
+                yield return null;
+                fraction -= Time.deltaTime;
+            }
+        }
     }
 
     IEnumerator Start()
