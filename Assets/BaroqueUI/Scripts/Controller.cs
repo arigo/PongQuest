@@ -34,6 +34,7 @@ namespace BaroqueUI
         }
 
         public Model controllerModel { get { return controller_model; } }
+        public bool isReady { get => isActiveAndEnabled && is_tracking_active; }
         public bool haveRealTouchpad { get {
                 return controllerModel == Model.HTCVive || controllerModel == Model.Other;  // maybe?
             } }
@@ -120,7 +121,7 @@ namespace BaroqueUI
             UpdateScrollWheel();
         }
 
-        public void SetControllerHints(string trigger = null, string grip = null, 
+        public void SetControllerHints(string trigger = null, string grip = null,
             string touchpadTouched = null, string touchpadPressed = null, string menu = null)
         {
             SetControllerHint(ref triggerHint, trigger);
@@ -710,7 +711,7 @@ namespace BaroqueUI
 
                 /* Force one of the controllers "out" of the zone, and force a button deactivation if needed.
                  * In principle, afterwards, it is not possible that the tracker remains locked for both
-                 * controllers, because tracker_hover_lock == MANUAL_LOCK can only be set if the tracker is 
+                 * controllers, because tracker_hover_lock == MANUAL_LOCK can only be set if the tracker is
                  * the current hover in the first place and this tracker cannot be current for both. */
                 if (forced_out.active_trigger == tracker)
                     forced_out.DeactivateTrigger();
@@ -1179,7 +1180,7 @@ namespace BaroqueUI
 
         void LateUpdate()
         {
-            /* haaaack: we need to constantly re-enable the scroll wheel gameobjects in 
+            /* haaaack: we need to constantly re-enable the scroll wheel gameobjects in
              * the Model.  Officially there must be a way to enable the scroll wheel,
              * but I can't find it for now... */
             if (scrollWheelVisible != 0)

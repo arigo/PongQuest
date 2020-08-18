@@ -9,7 +9,7 @@ public class PongPadBuilder : MonoBehaviour
 {
     public Material cellHitMaterial, unstoppableBallMaterial;
     public ParticleSystem hitPS, starPS;
-    public GameObject preload;
+    public GameObject preloadGameObject, pauseGameObject;
     public PongPad padObjectPrefab;
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;
@@ -60,15 +60,17 @@ public class PongPadBuilder : MonoBehaviour
     {
         paused_no_focus = !focus;
         Time.timeScale = paused ? 0f : 1f;
+        Debug.LogError("OnApplicationFocus(" + focus + "): timeScale = " + Time.timeScale);
     }
 
     private void Update()
     {
-        bool any_ctrl = Baroque.GetControllers().Where(ctrl => ctrl.isActiveAndEnabled).Any();
+        bool any_ctrl = Baroque.GetControllers().Where(ctrl => ctrl.isReady).Any();
         if (any_ctrl == paused_no_ctrl)
         {
             paused_no_ctrl = !any_ctrl;
             Time.timeScale = paused ? 0f : 1f;
+            Debug.LogError("Update(any_ctrl=" + any_ctrl + "): timeScale = " + Time.timeScale);
         }
         if (paused)
         {
@@ -79,12 +81,13 @@ public class PongPadBuilder : MonoBehaviour
                     Destroy((GameObject)pad.gameObject);
             }
         }
+        pauseGameObject.SetActive(paused);
     }
 
     IEnumerator TrackPosition()
     {
         yield return new WaitForEndOfFrame();
-        Destroy((GameObject)preload);
+        Destroy((GameObject)preloadGameObject);
 
         while (true)
         {
@@ -172,7 +175,7 @@ public class PongPadBuilder : MonoBehaviour
         UpdateAllBalls();
 
         foreach (var ctrl in controllers)
-            if (ctrl.isActiveAndEnabled && !paused)
+            if (ctrl.isReady)
             {
                 var pad = ctrl.GetComponentInChildren<PongPad>();
                 if (pad == null)
