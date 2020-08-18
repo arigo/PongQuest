@@ -14,7 +14,15 @@ Clone this repo, and go to that directory and open it with Unity (launch Unity, 
 You need to install the asset "Oculus integration", which is not included in this repo.
 
 
-IRC
----
+CONTRIBUTIONS
+-------------
+
+Original music by Greg_Bedford
+
+Skybox from the Cope! pack: https://assetstore.unity.com/packages/2d/textures-materials/sky/cope-free-skybox-pack-22252
+
+
+CONTACT
+-------
 
 For now, the public IRC channel is #pypy-vr at irc.freenode.net.  You can also leave comments and issues by clicking "Issues" on github.
