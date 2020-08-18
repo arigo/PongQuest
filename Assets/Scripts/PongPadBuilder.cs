@@ -4,6 +4,7 @@ using UnityEngine;
 using BaroqueUI;
 using System.Linq;
 
+
 public class PongPadBuilder : MonoBehaviour
 {
     public Material cellHitMaterial, unstoppableBallMaterial;
@@ -74,7 +75,7 @@ public class PongPadBuilder : MonoBehaviour
     IEnumerator TrackPosition()
     {
         yield return new WaitForEndOfFrame();
-        Destroy(preload);
+        Destroy((GameObject)preload);
 
         while (true)
         {
@@ -139,7 +140,7 @@ public class PongPadBuilder : MonoBehaviour
                 {
                     level_end_time = null;
                     if (levelInstance != null)
-                        Destroy(levelInstance);
+                        Destroy((GameObject)levelInstance);
 
                     if (current_level >= levelPrefabs.Length)
                         current_level = 0;
@@ -172,7 +173,7 @@ public class PongPadBuilder : MonoBehaviour
                 pad.FollowController();
             }
             else if (pad != null)
-                Destroy(pad);
+                Destroy((GameObject)pad.gameObject);
         }
     }
 }

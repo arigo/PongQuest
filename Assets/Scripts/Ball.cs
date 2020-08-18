@@ -154,7 +154,7 @@ public class Ball : MonoBehaviour, IBall
         {
             if (!IsRegularBall || !TryRespawnPosition(out Vector3 start_pos))
             {
-                Destroy(gameObject);
+                Destroy((GameObject)gameObject);
                 return;
             }
             velocity = Vector3.zero;
@@ -248,7 +248,7 @@ public class Ball : MonoBehaviour, IBall
                 }
                 else
                 {
-                    Destroy(gameObject);
+                    Destroy((GameObject)gameObject);
                     done = true;
                 }
 

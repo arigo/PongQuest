@@ -36,7 +36,7 @@ public class Cell : MonoBehaviour
         energy -= 1;
         if (energy <= 0 || unstoppable)
         {
-            Destroy(gameObject);
+            Destroy((GameObject)gameObject);
             if (bonus)
                 Bonus.AddBonus(transform.position);
             Points.AddPoints(transform.position, my_material.color, points, pointsSize);

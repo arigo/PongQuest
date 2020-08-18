@@ -34,6 +34,6 @@ public class Points : MonoBehaviour
             transform.position += transform.TransformVector(new Vector3(0, delta, 0));
             vy -= Time.deltaTime;
         }
-        Destroy(gameObject, 0.1f);
+        Destroy((GameObject)gameObject, 0.1f);
     }
 }

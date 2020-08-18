@@ -49,7 +49,7 @@ public abstract class Bonus : MonoBehaviour, IBall
             old_pos = new_pos;
             if (old_pos.z < -2.5f)
             {
-                Destroy(gameObject);
+                Destroy((GameObject)gameObject);
                 yield break;
             }
             float dt = Time.deltaTime;
@@ -122,7 +122,7 @@ public abstract class Bonus : MonoBehaviour, IBall
     {
         var ba2p = pad.controller.GetAdditionalData(ref bonus_attached_to_pad);
         if (ba2p.bonus)
-            Destroy(ba2p.bonus.gameObject);
+            Destroy((GameObject)ba2p.bonus.gameObject);
         ba2p.bonus = this;
         pad.controller.HapticPulse(400);
         if (hit_ball != null)
@@ -149,7 +149,7 @@ public abstract class Bonus : MonoBehaviour, IBall
             if (pad.most_recent_iball_hit is Ball most_recent_ball && most_recent_ball)
             {
                 hit_ball(most_recent_ball);
-                Destroy(gameObject);
+                Destroy((GameObject)gameObject);
                 yield break;
             }
 
@@ -176,7 +176,7 @@ public abstract class Bonus : MonoBehaviour, IBall
     public static void RemoveAllBonuses()
     {
         foreach (var bonus in FindObjectsOfType<Bonus>())
-            Destroy(bonus.gameObject);
+            Destroy((GameObject)bonus.gameObject);
     }
 }
 
@@ -241,6 +241,6 @@ public class LaserBonus : Bonus
             while (PongPadBuilder.paused)
                 yield return null;
         }
-        Destroy(gameObject);
+        Destroy((GameObject)gameObject);
     }
 }
