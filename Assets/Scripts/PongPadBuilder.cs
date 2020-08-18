@@ -17,7 +17,8 @@ public class PongPadBuilder : MonoBehaviour
     public AudioClip backgroundMusic;
 
     public static PongPadBuilder instance { get; private set; }
-    public static bool paused { get; private set; }
+    public static bool paused { get => paused_no_focus || paused_no_ctrl; }
+    static bool paused_no_focus, paused_no_ctrl;
 
     Cell track_cell;
     float? level_end_time;
@@ -56,8 +57,18 @@ public class PongPadBuilder : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
-        paused = !focus;
+        paused_no_focus = !focus;
         Time.timeScale = paused ? 0f : 1f;
+    }
+
+    private void Update()
+    {
+        bool any_ctrl = Baroque.GetControllers().Where(ctrl => ctrl.isActiveAndEnabled).Any();
+        if (any_ctrl == paused_no_ctrl)
+        {
+            paused_no_ctrl = !any_ctrl;
+            Time.timeScale = paused ? 0f : 1f;
+        }
     }
 
     IEnumerator TrackPosition()
@@ -111,11 +122,8 @@ public class PongPadBuilder : MonoBehaviour
         }
     }
 
-    private void Ht_onControllersUpdate(Controller[] controllers)
+    void UpdateAllBalls()
     {
-        if (paused)
-            return;
-
         if (track_cell == null)
         {
             track_cell = FindObjectOfType<Cell>();
@@ -144,11 +152,18 @@ public class PongPadBuilder : MonoBehaviour
         Physics.SyncTransforms();
 
         PongPad.UpdateAllBalls();
+    }
+
+    private void Ht_onControllersUpdate(Controller[] controllers)
+    {
+        if (!paused)
+            UpdateAllBalls();
 
         foreach (var ctrl in controllers)
-            if (ctrl.isActiveAndEnabled)
+        {
+            var pad = ctrl.GetComponentInChildren<PongPad>();
+            if (ctrl.isActiveAndEnabled && !paused)
             {
-                var pad = ctrl.GetComponentInChildren<PongPad>();
                 if (pad == null)
                 {
                     pad = Instantiate(padObjectPrefab, ctrl.transform);
@@ -156,5 +171,8 @@ public class PongPadBuilder : MonoBehaviour
                 }
                 pad.FollowController();
             }
+            else if (pad != null)
+                Destroy(pad);
+        }
     }
 }
