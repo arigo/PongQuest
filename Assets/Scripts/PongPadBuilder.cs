@@ -70,6 +70,15 @@ public class PongPadBuilder : MonoBehaviour
             paused_no_ctrl = !any_ctrl;
             Time.timeScale = paused ? 0f : 1f;
         }
+        if (paused)
+        {
+            foreach (var ctrl in Baroque.GetControllers())
+            {
+                var pad = ctrl.GetComponentInChildren<PongPad>();
+                if (pad != null)
+                    Destroy((GameObject)pad.gameObject);
+            }
+        }
     }
 
     IEnumerator TrackPosition()
@@ -157,14 +166,15 @@ public class PongPadBuilder : MonoBehaviour
 
     private void Ht_onControllersUpdate(Controller[] controllers)
     {
-        if (!paused)
-            UpdateAllBalls();
+        if (paused)
+            return;
+
+        UpdateAllBalls();
 
         foreach (var ctrl in controllers)
-        {
-            var pad = ctrl.GetComponentInChildren<PongPad>();
             if (ctrl.isActiveAndEnabled && !paused)
             {
+                var pad = ctrl.GetComponentInChildren<PongPad>();
                 if (pad == null)
                 {
                     pad = Instantiate(padObjectPrefab, ctrl.transform);
@@ -172,8 +182,5 @@ public class PongPadBuilder : MonoBehaviour
                 }
                 pad.FollowController();
             }
-            else if (pad != null)
-                Destroy((GameObject)pad.gameObject);
-        }
     }
 }
