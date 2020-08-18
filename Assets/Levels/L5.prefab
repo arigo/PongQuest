@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d465426ffa0204b9f4b5debfda5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6149152865212642454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227298140942381867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  center: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 1, y: 1, z: 0}
+  rotationSpeed: 30
+  cells: []
 --- !u!1 &2637372471053005771
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,6 +85,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d465426ffa0204b9f4b5debfda5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9133077745059113924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093625608799231649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  center: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 1, y: 1, z: 0}
+  rotationSpeed: 30
+  cells: []
 --- !u!114 &1854126460158542718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +113,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d465426ffa0204b9f4b5debfda5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &264620098405540610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4180280471468999803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  center: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 1, y: 1, z: 0}
+  rotationSpeed: 30
+  cells: []
 --- !u!114 &2669294859481154288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +141,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d465426ffa0204b9f4b5debfda5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6024200183139768860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5689515351521922444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  center: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 1, y: 1, z: 0}
+  rotationSpeed: 30
+  cells: []
 --- !u!114 &4744395876991914273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,6 +169,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d465426ffa0204b9f4b5debfda5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7875897551730281431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403488957443137353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b30cefed29703e45b93882ced32c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  center: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 1, y: 1, z: 0}
+  rotationSpeed: 30
+  cells: []
 --- !u!1001 &37300951909993614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -340,7 +420,7 @@ PrefabInstance:
     - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_Name
-      value: SolarCell
+      value: SolarCell H
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
@@ -399,15 +479,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2f9386cd92c8524e83851cd94c12c2c, type: 3}
---- !u!1 &5689515351521922444 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
-    type: 3}
-  m_PrefabInstance: {fileID: 864603503077691041}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8695995449369067423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 864603503077691041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5689515351521922444 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
     type: 3}
   m_PrefabInstance: {fileID: 864603503077691041}
   m_PrefabAsset: {fileID: 0}
@@ -571,7 +651,7 @@ PrefabInstance:
     - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_Name
-      value: SolarCell
+      value: SolarCell H
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
@@ -630,15 +710,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2f9386cd92c8524e83851cd94c12c2c, type: 3}
---- !u!1 &8403488957443137353 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
-    type: 3}
-  m_PrefabInstance: {fileID: 3572965227186707556}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4811086257629572442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3572965227186707556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8403488957443137353 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
     type: 3}
   m_PrefabInstance: {fileID: 3572965227186707556}
   m_PrefabAsset: {fileID: 0}
@@ -727,7 +807,7 @@ PrefabInstance:
     - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_Name
-      value: SolarCell
+      value: SolarCell H
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
@@ -786,15 +866,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2f9386cd92c8524e83851cd94c12c2c, type: 3}
---- !u!4 &2833719576591122744 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
-    type: 3}
-  m_PrefabInstance: {fileID: 6053600373510746118}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1227298140942381867 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6053600373510746118}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2833719576591122744 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
     type: 3}
   m_PrefabInstance: {fileID: 6053600373510746118}
   m_PrefabAsset: {fileID: 0}
@@ -1108,7 +1188,7 @@ PrefabInstance:
     - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_Name
-      value: SolarCell
+      value: SolarCell H
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
@@ -1167,15 +1247,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2f9386cd92c8524e83851cd94c12c2c, type: 3}
---- !u!1 &3093625608799231649 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
-    type: 3}
-  m_PrefabInstance: {fileID: 8062653099780480396}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2068733057561619634 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8062653099780480396}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3093625608799231649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
     type: 3}
   m_PrefabInstance: {fileID: 8062653099780480396}
   m_PrefabAsset: {fileID: 0}
@@ -1189,7 +1269,7 @@ PrefabInstance:
     - target: {fileID: 4974938682119783213, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
       propertyPath: m_Name
-      value: SolarCell
+      value: SolarCell H
       objectReference: {fileID: 0}
     - target: {fileID: 8309653167651385662, guid: f2f9386cd92c8524e83851cd94c12c2c,
         type: 3}
