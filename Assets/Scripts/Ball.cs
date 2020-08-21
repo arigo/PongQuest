@@ -29,7 +29,7 @@ public class Ball : MonoBehaviour, IBall
     Vector3 rotation_axis;
     float unstoppable_until;
     Material original_material_before_unstoppable;
-    bool shot;
+    bool shot, respawning;
     Ball duplicate_from;
 
     internal static List<Vector3> start_positions;
@@ -146,24 +146,44 @@ public class Ball : MonoBehaviour, IBall
         return true;
     }
 
+    IEnumerator RespawnAfterDelay()
+    {
+        respawning = true;
+        EndUnstoppable();
+        var color = GetComponent<MeshRenderer>().sharedMaterial.color;
+        color = Color.Lerp(color, Color.white, 0.7f);
+        Cell.EmitHitPS(transform.position, velocity, color);
+
+        transform.position = 1024 * Vector3.down;
+        velocity = Vector3.zero;
+
+        yield return new WaitForSeconds(2.0f);
+        respawning = false;
+
+        /* this return false if there are more than two regular balls alive */
+        if (TryRespawnPosition(out Vector3 start_pos))
+        {
+            velocity = Vector3.zero;
+            RestoreStartPosition(start_pos);
+            Cell.EmitHitPS(start_pos, Vector3.zero, color);
+            Points.AddPoints(start_pos, color, -5000, 1.5f);
+        }
+        else
+            Destroy((GameObject)gameObject);
+    }
+
     public void UpdateBall()
     {
-        if (!this || !gameObject || PongPadBuilder.paused)
+        if (!this || !gameObject || PongPadBuilder.paused || respawning)
             return;
 
         if (old_position.z < MIN_Z || old_position.sqrMagnitude > 10f * 10f)
         {
-            if (!IsRegularBall || !TryRespawnPosition(out Vector3 start_pos))
-            {
+            if (!IsRegularBall)
                 Destroy((GameObject)gameObject);
-                return;
-            }
-            velocity = Vector3.zero;
-            RestoreStartPosition(start_pos);
-
-            var color = GetComponent<MeshRenderer>().sharedMaterial.color;
-            Cell.EmitHitPS(start_pos, Vector3.zero, color);
-            Points.AddPoints(start_pos, color, -2000, 1.5f);
+            else
+                StartCoroutine(RespawnAfterDelay());
+            return;
         }
 
         if (IsUnstoppable && Time.time >= unstoppable_until)
