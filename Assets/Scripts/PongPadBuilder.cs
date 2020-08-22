@@ -86,7 +86,7 @@ public class PongPadBuilder : MonoBehaviour
                 if (pad != null)
                     Destroy((GameObject)pad.gameObject);
             }
-            totalPointsText.text = "PAUSE";
+            totalPointsText.text = "READY";
         }
         else if (_was_paused)
             Points.UpdateTotalPoints(0);
