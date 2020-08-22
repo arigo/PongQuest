@@ -4,7 +4,7 @@ using UnityEngine;
 using BaroqueUI;
 
 
-public class PongPad : MonoBehaviour
+public class PongPad : MonoBehaviour, IPongPad
 {
     const int PAD_LAYER = 8;
 
@@ -122,4 +122,9 @@ public class PongPad : MonoBehaviour
                 return true;
         return false;
     }*/
+
+    void IPongPad.DestroyPad()
+    {
+        DestroyImmediate((GameObject)gameObject);
+    }
 }

@@ -57,9 +57,13 @@ namespace BaroqueUI
             return rig;
 #else
             var rig = UnityEngine.Object.FindObjectOfType<OVRCameraRig>();
-            Debug.Assert(rig != null);
-            UnityEngine.Object.DontDestroyOnLoad(rig.gameObject);
-            return rig.gameObject;
+            if (rig != null)
+                return rig.gameObject;
+
+            var prefab = Resources.Load<GameObject>("OVRCameraRig1");
+            var rig_go = UnityEngine.Object.Instantiate(prefab);
+            UnityEngine.Object.DontDestroyOnLoad(rig_go);
+            return rig_go;
 #endif
         }
 

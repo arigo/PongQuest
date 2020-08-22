@@ -8,7 +8,7 @@ public class Cell : MonoBehaviour
     public int energy = 1;
     public int points = 100;
     public float pointsSize;
-    public bool velocityBoost;
+    public bool velocityBoost, finalBigCell;
 
     bool bonus;
     Material _my_material;
@@ -38,11 +38,15 @@ public class Cell : MonoBehaviour
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
         var color = MyMaterial.color;
-        EmitHitPS(hitInfo.point, hitInfo.normal, color);
+        var ignore = finalBigCell && OtherCellsStillAround();
+        EmitHitPS(hitInfo.point, hitInfo.normal, ignore ? Color.black : color);
 
-        var rend = GetComponent<MeshRenderer>();
-        rend.sharedMaterial = b.cellHitMaterial;
-        StartCoroutine(_Hit(unstoppable));
+        if (!ignore)
+        {
+            var rend = GetComponent<MeshRenderer>();
+            rend.sharedMaterial = b.cellHitMaterial;
+            StartCoroutine(_Hit(unstoppable));
+        }
     }
 
     IEnumerator _Hit(bool unstoppable)
@@ -59,6 +63,14 @@ public class Cell : MonoBehaviour
         }
         else
             GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
+    }
+
+    bool OtherCellsStillAround()
+    {
+        foreach (var cells in FindObjectsOfType<Cell>())
+            if (cells != this)
+                return true;
+        return false;
     }
 
     Vector3 last_pos;

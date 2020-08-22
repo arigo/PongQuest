@@ -31,7 +31,9 @@ public class Halo : MonoBehaviour
 
         var cell = GetComponent<Cell>();
         cell.points *= 5;
-        cell.pointsSize = 1.35f;
+        if (cell.pointsSize == 0)
+            cell.pointsSize = 1;
+        cell.pointsSize *= 1.35f;
     }
 
     void SetHighlight(bool highlight)

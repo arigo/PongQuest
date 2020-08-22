@@ -154,7 +154,7 @@ public class Ball : MonoBehaviour, IBall
         color = Color.Lerp(color, Color.white, 0.7f);
         Cell.EmitHitPS(transform.position, velocity, color);
 
-        transform.position = 1024 * Vector3.down;
+        transform.position = old_position = 1024 * Vector3.down;
         velocity = Vector3.zero;
 
         yield return new WaitForSeconds(2.0f);
@@ -254,9 +254,10 @@ public class Ball : MonoBehaviour, IBall
                     continue;
 
                 bool done;
+                bool unstoppable = cell != null && IsUnstoppable && !cell.finalBigCell;
                 if (!shot)
                 {
-                    if (cell == null || !IsUnstoppable)
+                    if (cell == null || !unstoppable)
                     {
                         transform.position += dir * hitInfo.distance;
 
@@ -288,7 +289,7 @@ public class Ball : MonoBehaviour, IBall
                 }
 
                 if (cell != null)
-                    cell.Hit(hitInfo, IsUnstoppable);
+                    cell.Hit(hitInfo, unstoppable);
 
                 if (done)
                     return;
@@ -322,4 +323,10 @@ public class Ball : MonoBehaviour, IBall
     }
 
     bool IBall.IsAlive { get => this && !shot; }
+
+    public static void RemoveAllBalls()
+    {
+        foreach (var ball in FindObjectsOfType<Ball>())
+            Destroy((GameObject)ball.gameObject);
+    }
 }
