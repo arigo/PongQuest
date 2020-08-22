@@ -24,6 +24,8 @@ public abstract class PongBaseBuilder : MonoBehaviour
     protected virtual void Start()
     {
         Baroque.FadeToColor(Color.clear, 0.2f);
+        SilenceNow();
+        FadeInSounds(0.5f);
 
         var ht = Controller.GlobalTracker(this);
         ht.onControllersUpdate += Ht_onControllersUpdate;
@@ -40,7 +42,7 @@ public abstract class PongBaseBuilder : MonoBehaviour
 
     bool _was_paused;
 
-    private void Update()
+    protected virtual void Update()
     {
 #if !UNITY_EDITOR
         bool any_ctrl = Baroque.GetControllers().Where(ctrl => ctrl.isReady).Any();
@@ -149,11 +151,71 @@ public abstract class PongBaseBuilder : MonoBehaviour
     private void OnDestroy()
     {
         /* scene change */
+        AudioListener.volume = 1;
         foreach (var ctrl in Baroque.GetControllers())
         {
             var pad = ctrl.GetComponentInChildren<IPongPad>();
             if (pad != null)
                 pad.DestroyPad();
+        }
+    }
+
+    float _volume = 1;
+    Coroutine _volume_changer;
+
+    void _StopVolumeChanger()
+    {
+        if (_volume_changer != null)
+        {
+            StopCoroutine(_volume_changer);
+            _volume_changer = null;
+        }
+    }
+
+    public void FadeOutSounds(float delay)
+    {
+        _StopVolumeChanger();
+        StartCoroutine(_FadeOutSounds(delay));
+    }
+
+    public void FadeInSounds(float delay)
+    {
+        _StopVolumeChanger();
+        StartCoroutine(_FadeInSounds(delay));
+    }
+
+    public void SilenceNow()
+    {
+        _StopVolumeChanger();
+        _volume = 0;
+        AudioListener.volume = 0;
+    }
+
+    IEnumerator _FadeOutSounds(float delay)
+    {
+        while (true)
+        {
+            _volume -= Time.unscaledDeltaTime / delay;
+            if (_volume < 0f)
+                _volume = 0f;
+            AudioListener.volume = _volume;
+            if (_volume == 0f)
+                break;
+            yield return null;
+        }
+    }
+
+    IEnumerator _FadeInSounds(float delay)
+    {
+        while (true)
+        {
+            _volume += Time.unscaledDeltaTime / delay;
+            if (_volume > 1f)
+                _volume = 1f;
+            AudioListener.volume = _volume;
+            if (_volume == 1f)
+                break;
+            yield return null;
         }
     }
 }

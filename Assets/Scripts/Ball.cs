@@ -253,6 +253,7 @@ public class Ball : MonoBehaviour, IBall
                 if (Vector3.Dot(velocity - cell_speed, hitInfo.normal) >= 0f)
                     continue;
 
+                AudioClip clip = PongPadBuilder.instance.ballBounceSound;
                 bool done;
                 bool unstoppable = cell != null && IsUnstoppable && !cell.finalBigCell;
                 if (!shot)
@@ -289,7 +290,9 @@ public class Ball : MonoBehaviour, IBall
                 }
 
                 if (cell != null)
-                    cell.Hit(hitInfo, unstoppable);
+                    cell.Hit(hitInfo, unstoppable, ref clip);
+
+                AudioSource.PlayClipAtPoint(clip, hitInfo.point);
 
                 if (done)
                     return;

@@ -13,7 +13,8 @@ public class PongPadBuilder : PongBaseBuilder
     public MeshRenderer haloPrefab;
     public Points canvasPointsPrefab;
     public UnityEngine.UI.Text totalPointsText;
-    public AudioClip backgroundMusic;
+    public AudioClip ballBounceSound, tileBreakSound;
+    public AudioClip[] backgroundMusicParts;
     public GameObject[] levelPrefabs;
 
     public static PongPadBuilder instance { get; private set; }
@@ -21,9 +22,10 @@ public class PongPadBuilder : PongBaseBuilder
     GameObject track_cell;
     float? level_end_time;
     GameObject levelInstance;
-    int current_level = 16;  // = 6;   /* set to non-zero to debug from a different level */
+    int current_level;  // = 6;   /* set to non-zero to debug from a different level */
     public int _total_points { get; set; }
-    AudioSource music_source;
+    AudioSource[] audio_sources;
+    int number_of_cells_in_this_level, number_of_cells_killed;
 
     private void Awake()
     {
@@ -39,18 +41,86 @@ public class PongPadBuilder : PongBaseBuilder
 
         base.Start();
 
-        if (backgroundMusic != null)
+        audio_sources = new AudioSource[backgroundMusicParts.Length];
+        var music_go = new GameObject("music");
+        for (int i = 0; i < backgroundMusicParts.Length; i++)
         {
-            var go = new GameObject("music");
-            music_source = go.AddComponent<AudioSource>();
-            music_source.clip = backgroundMusic;
-            music_source.loop = true;
+            var music_source = music_go.AddComponent<AudioSource>();
+            music_source.clip = backgroundMusicParts[i];
             music_source.priority = 0;
-            music_source.volume = 0.65f;
-            //DontDestroyOnLoad(go);
-            //ChangedMusicVolume();
-            music_source.Play();
+            music_source.volume = i == 0 ? MUSIC_VOLUME_MAX : 0f;
+            audio_sources[i] = music_source;
         }
+        StartCoroutine(_RestartMusic());
+    }
+
+    IEnumerator _RestartMusic()
+    {
+        while (true)
+        {
+            for (int i = 0; i < audio_sources.Length; i++)
+                audio_sources[i].Play();
+
+            while (true)
+            {
+                yield return null;
+
+                bool any = false;
+                for (int i = 0; i < audio_sources.Length; i++)
+                    if (audio_sources[i].isPlaying)
+                    {
+                        any = true;
+                        break;
+                    }
+                if (!any)
+                    break;
+            }
+
+            yield return new WaitForSecondsRealtime(0.75f);
+        }
+    }
+
+    public void KilledOneCell()
+    {
+        number_of_cells_killed++;
+        UpdateMusicVolumes();
+    }
+
+    float music_volumes_fraction = 0f, target_volumes_fraction = 0f;
+    const float MUSIC_VOLUME_MAX = 0.65f;
+    Coroutine coro_music_volumes;
+
+    void UpdateMusicVolumes()
+    {
+        target_volumes_fraction = number_of_cells_killed;
+        if (target_volumes_fraction > 0f && number_of_cells_in_this_level > 1)
+            target_volumes_fraction /= number_of_cells_in_this_level - 1;
+
+        if (coro_music_volumes == null)
+            coro_music_volumes = StartCoroutine(_UpdateMusicVolumes());
+    }
+
+    IEnumerator _UpdateMusicVolumes()
+    {
+        while (music_volumes_fraction != target_volumes_fraction)
+        {
+            yield return null;
+
+            float dt = Time.deltaTime;
+            if (music_volumes_fraction < target_volumes_fraction)
+                music_volumes_fraction = Mathf.Min(target_volumes_fraction, music_volumes_fraction + dt);
+            else
+                music_volumes_fraction = Mathf.Max(target_volumes_fraction, music_volumes_fraction - dt);
+
+            float m = music_volumes_fraction * (audio_sources.Length - 1) + 1;
+            for (int i = 0; i < audio_sources.Length; i++)
+            {
+                float vol1 = Mathf.Clamp01(m) * MUSIC_VOLUME_MAX;
+                audio_sources[i].volume = vol1;
+                m -= 1f;
+            }
+        }
+        coro_music_volumes = null;
     }
 
     protected override void SetPaused(bool paused)
@@ -84,7 +154,23 @@ public class PongPadBuilder : PongBaseBuilder
                         return;
                     }
                     else
+                    {
+                        if (number_of_cells_in_this_level > 0)
+                        {
+                            music_volumes_fraction = 1f;
+                            for (int i = 0; i < audio_sources.Length; i++)
+                            {
+                                int j = Random.Range(0, audio_sources.Length);
+                                var tmp = audio_sources[i];
+                                audio_sources[i] = audio_sources[j];
+                                audio_sources[j] = tmp;
+                            }
+                        }
+                        number_of_cells_in_this_level = 0;
+                        number_of_cells_killed = 0;
+                        UpdateMusicVolumes();
                         level_end_time = Time.time + 1.2f;
+                    }
                 }
 
                 if (Time.time >= level_end_time.Value)
@@ -93,8 +179,10 @@ public class PongPadBuilder : PongBaseBuilder
                     if (levelInstance != null)
                         Destroy((GameObject)levelInstance);
 
-                    levelInstance = Instantiate(levelPrefabs[current_level++]);
                     Bonus.RemoveAllBonuses();
+                    levelInstance = Instantiate(levelPrefabs[current_level++]);
+                    number_of_cells_in_this_level = levelInstance.GetComponentsInChildren<Cell>().Length;
+                    number_of_cells_killed = 0;
                 }
             }
         }
@@ -106,8 +194,9 @@ public class PongPadBuilder : PongBaseBuilder
 
     IEnumerator EndGame()
     {
+        FadeOutSounds(0.8f);
+
         float f = 0f;
-        float music_initial_volume = music_source.volume;
         float t0 = Time.time;
         int total_emit = 250;
         while (total_emit > 0)
@@ -123,8 +212,6 @@ public class PongPadBuilder : PongBaseBuilder
                 total_emit--;
                 f -= 1f;
             }
-
-            music_source.volume = Mathf.Lerp(music_initial_volume, 0, Time.time - t0);
         }
         Baroque.FadeToColor(Color.black, 2f);
         yield return new WaitForSeconds(2f);

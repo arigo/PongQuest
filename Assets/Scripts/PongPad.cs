@@ -101,6 +101,10 @@ public class PongPad : MonoBehaviour, IPongPad
 
         controller.HapticPulse(1000);
 
+        var asrc = GetComponent<AudioSource>();
+        asrc.Stop();
+        asrc.Play();
+
         /*ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         //emitParams.applyShapeToPosition = true;
         ParticleSystem ps = ballScene.particleSystem;

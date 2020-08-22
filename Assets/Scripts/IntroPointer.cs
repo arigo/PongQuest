@@ -54,6 +54,7 @@ public class IntroPointer : MonoBehaviour, IPongPad
 
     IEnumerator SceneChange()
     {
+        FindObjectOfType<PongBaseBuilder>().FadeOutSounds(0.2f);
         Baroque.FadeToColor(Color.black, 0.2f);
         yield return new WaitForSeconds(0.2f);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Pong Game");

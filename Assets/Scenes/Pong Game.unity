@@ -11067,7 +11067,14 @@ MonoBehaviour:
   canvasPointsPrefab: {fileID: 1491243787789807247, guid: 3a1c2d984bb58404fab56f0f6a327649,
     type: 3}
   totalPointsText: {fileID: 7629483463844406002}
-  backgroundMusic: {fileID: 8300000, guid: eeabce17eb1bc184788773cfddbf280c, type: 3}
+  ballBounceSound: {fileID: 8300000, guid: c63f835dd60b7e94987bfb402c330f95, type: 3}
+  tileBreakSound: {fileID: 8300000, guid: fe464236c2172144a9d198c607e841ef, type: 3}
+  backgroundMusicParts:
+  - {fileID: 8300000, guid: f5398e27a766b4d439735d2cbc422ffd, type: 3}
+  - {fileID: 8300000, guid: e425be718fcde1c4a869b77e169755b4, type: 3}
+  - {fileID: 8300000, guid: 05ec9e4a2c48c1140ada846ce5a39e8a, type: 3}
+  - {fileID: 8300000, guid: eb3ff378e261cae4cb9399922fc7d8a1, type: 3}
+  - {fileID: 8300000, guid: e7e1c8ca5e7042b4abd9d157de0881e7, type: 3}
   levelPrefabs:
   - {fileID: 2150280956505444870, guid: 4d72ca3946abc214e93faca898517bb5, type: 3}
   - {fileID: 7517951128716499674, guid: 477b5fbe994a9814683eabbf457d0adf, type: 3}
