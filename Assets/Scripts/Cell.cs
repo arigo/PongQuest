@@ -86,19 +86,21 @@ public class Cell : MonoBehaviour
         return (v2 - v + transform.position - last_pos) / Time.deltaTime;
     }
 
-    public void HitVelocityBoost()
+    public void HitVelocityBoost(Vector3 cell_speed)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         Destroy(go.GetComponent<Collider>());
         go.transform.SetPositionAndRotation(transform.position, transform.rotation);
         go.transform.localScale = transform.lossyScale;
         go.GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
-        go.AddComponent<VelocityBooster>();
+        go.AddComponent<VelocityBooster>().base_speed = cell_speed * 0.5f;
     }
 
     class VelocityBooster : MonoBehaviour
     {
         static Mesh static_mesh;
+
+        internal Vector3 base_speed;
 
         IEnumerator Start()
         {
@@ -141,6 +143,7 @@ public class Cell : MonoBehaviour
                 float delta = Time.deltaTime * vy * 2.2f;
                 delta_y += delta;
                 transform.localScale = base_scale * delta_y;
+                transform.position += Time.deltaTime * base_speed;
                 vy -= Time.deltaTime;
             }
             Destroy((GameObject)gameObject);

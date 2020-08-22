@@ -271,7 +271,7 @@ public class Ball : MonoBehaviour, IBall
                             if (extra > 0f)
                                 velocity += hitInfo.normal * extra;
                             rot_speed *= 2.5f;
-                            cell.HitVelocityBoost();
+                            cell.HitVelocityBoost(cell_speed);
                         }
 
                         done = true;
