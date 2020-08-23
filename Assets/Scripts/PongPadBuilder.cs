@@ -24,7 +24,7 @@ public class PongPadBuilder : PongBaseBuilder
     GameObject levelInstance;
     int current_level;  // = 6;   /* set to non-zero to debug from a different level */
     public int _total_points { get; set; }
-    AudioSource[] audio_sources;
+    AudioSource[] music_sources;
     int number_of_cells_in_this_level, number_of_cells_killed;
 
     private void Awake()
@@ -41,43 +41,19 @@ public class PongPadBuilder : PongBaseBuilder
 
         base.Start();
 
-        audio_sources = new AudioSource[backgroundMusicParts.Length];
+        music_sources = new AudioSource[backgroundMusicParts.Length];
         var music_go = new GameObject("music");
         for (int i = 0; i < backgroundMusicParts.Length; i++)
         {
             var music_source = music_go.AddComponent<AudioSource>();
             music_source.clip = backgroundMusicParts[i];
+            music_source.loop = true;
             music_source.priority = 0;
             music_source.volume = i == 0 ? MUSIC_VOLUME_MAX : 0f;
-            audio_sources[i] = music_source;
+            music_sources[i] = music_source;
         }
-        StartCoroutine(_RestartMusic());
-    }
-
-    IEnumerator _RestartMusic()
-    {
-        while (true)
-        {
-            for (int i = 0; i < audio_sources.Length; i++)
-                audio_sources[i].Play();
-
-            while (true)
-            {
-                yield return null;
-
-                bool any = false;
-                for (int i = 0; i < audio_sources.Length; i++)
-                    if (audio_sources[i].isPlaying)
-                    {
-                        any = true;
-                        break;
-                    }
-                if (!any)
-                    break;
-            }
-
-            yield return new WaitForSecondsRealtime(0.75f);
-        }
+        foreach (var asrc in music_sources)
+            asrc.Play();
     }
 
     public void KilledOneCell()
@@ -112,11 +88,11 @@ public class PongPadBuilder : PongBaseBuilder
             else
                 music_volumes_fraction = Mathf.Max(target_volumes_fraction, music_volumes_fraction - dt);
 
-            float m = music_volumes_fraction * (audio_sources.Length - 1) + 1;
-            for (int i = 0; i < audio_sources.Length; i++)
+            float m = music_volumes_fraction * (music_sources.Length - 1) + 1;
+            for (int i = 0; i < music_sources.Length; i++)
             {
                 float vol1 = Mathf.Clamp01(m) * MUSIC_VOLUME_MAX;
-                audio_sources[i].volume = vol1;
+                music_sources[i].volume = vol1;
                 m -= 1f;
             }
         }
@@ -158,12 +134,12 @@ public class PongPadBuilder : PongBaseBuilder
                         if (number_of_cells_in_this_level > 0)
                         {
                             music_volumes_fraction = 1f;
-                            for (int i = 0; i < audio_sources.Length; i++)
+                            for (int i = 0; i < music_sources.Length; i++)
                             {
-                                int j = Random.Range(0, audio_sources.Length);
-                                var tmp = audio_sources[i];
-                                audio_sources[i] = audio_sources[j];
-                                audio_sources[j] = tmp;
+                                int j = Random.Range(0, music_sources.Length);
+                                var tmp = music_sources[i];
+                                music_sources[i] = music_sources[j];
+                                music_sources[j] = tmp;
                             }
                         }
                         number_of_cells_in_this_level = 0;
