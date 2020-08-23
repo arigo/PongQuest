@@ -40,7 +40,11 @@ public class IntroPointer : MonoBehaviour, IPongPad
             z = hitInfo.distance * 0.5f;
 
             if (controller.triggerPressed && !triggered)
-                StartCoroutine(SceneChange());
+            {
+                var menu_item = hitInfo.collider.GetComponent<IntroMenuItem>();
+                if (menu_item != null)
+                    StartCoroutine(menu_item.SceneChange());
+            }
         }
         var v = cylinder_tr.localScale; v.y = z; cylinder_tr.localScale = v;
         v = cylinder_tr.localPosition; v.z = z; cylinder_tr.localPosition = v;
@@ -50,14 +54,6 @@ public class IntroPointer : MonoBehaviour, IPongPad
     void IPongPad.DestroyPad()
     {
         DestroyImmediate((GameObject)gameObject);
-    }
-
-    IEnumerator SceneChange()
-    {
-        FindObjectOfType<PongBaseBuilder>().FadeOutSounds(0.2f);
-        Baroque.FadeToColor(Color.black, 0.2f);
-        yield return new WaitForSeconds(0.2f);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Pong Game");
     }
 
 

@@ -230,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &425053082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -382,7 +382,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Level 2
+  m_Text: 'Episode 2
 
     CELL'
 --- !u!222 &562574008
@@ -402,6 +402,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592487434}
+  - component: {fileID: 592487438}
   - component: {fileID: 592487437}
   - component: {fileID: 592487436}
   - component: {fileID: 592487435}
@@ -485,6 +486,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592487433}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &592487438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592487433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94ea94dec5419e4fa56589fece6f0c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Pong Game 2
 --- !u!1 &595380738
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,7 +699,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Level 1
+  m_Text: 'Episode 1
 
     SNOW'
 --- !u!222 &968211235
@@ -1022,6 +1036,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1255048880}
+  - component: {fileID: 1255048884}
   - component: {fileID: 1255048883}
   - component: {fileID: 1255048882}
   - component: {fileID: 1255048881}
@@ -1105,6 +1120,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255048879}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1255048884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255048879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94ea94dec5419e4fa56589fece6f0c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Pong Game
 --- !u!1 &1303519937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,7 +1460,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Level 3
+  m_Text: 'Episode 3
 
     STAR'
 --- !u!222 &1908704903
