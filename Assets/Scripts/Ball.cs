@@ -22,7 +22,7 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
     const float SPEED_BOOST_TO = SPEED_LIMIT * 5f;
-    const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;
+    const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;   // -0.722
 
     float radius, initial_radius, rot_speed;
     Vector3 velocity, old_position;

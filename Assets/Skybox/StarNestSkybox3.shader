@@ -13,7 +13,7 @@
 // **Further simplified for Quest by Armin Rigo**
 
 
-Shader "Skybox/StarNest2" {
+Shader "Skybox/StarNest3" {
 	Properties {
 		//Scrolls in this direction over time.
 		_Scroll ("Scrolling direction (x,y,z) * time", Vector) = (0, 0, 0)
@@ -26,7 +26,7 @@ Shader "Skybox/StarNest2" {
 		
 		//Iterations of inner loop. 
 		//The higher this is, the more distant objects get rendered.
-		_Iterations ("Iterations", Range(1, 30)) = 15
+		//_Iterations ("Iterations", Range(1, 30)) = 15
 		
 		//Volumetric rendering steps. Each 'step' renders more objects at all distances.
 		//This has a higher performance hit than iterations.
@@ -59,7 +59,7 @@ Shader "Skybox/StarNest2" {
 			#include "UnityCG.cginc"
 			
 			//int _Volsteps;
-			int _Iterations;
+			//int _Iterations;
 			
 			float4 _Scroll;
 			float4 _Center;
@@ -93,47 +93,56 @@ Shader "Skybox/StarNest2" {
 				return OUT;
 			}
 			
-			half4 frag (v2f IN) : SV_Target {
-				half3 col = half3(0, 0, 0);
-				half3 dir = IN.rayDir;
-				
-				float time = _Time.x;
-				
-				float3 from = _Center.xyz;
-				
-				//scroll over time
-				from += _Scroll.xyz * time;
-				//scroll from camera position
-				//from += _WorldSpaceCameraPos * _CamScroll;
-				
-				
-				//volumetric rendering
-				float s = 0.2, fade = 0.01;
-				float3 v = float3(0, 0, 0);
+            half4 frag(v2f IN) : SV_Target{
+                half3 col = half3(0, 0, 0);
+                half3 dir = IN.rayDir;
 
-				float3 p = from + s * dir * .5;
+                float time = _Time.x;
 
-				p = _Tile - fmod(abs(p), _Tile*2);
+                float3 from = _Center.xyz;
+
+                //scroll over time
+                from += _Scroll.xyz * time;
+                //scroll from camera position
+                //from += _WorldSpaceCameraPos * _CamScroll;
+
+
+                //volumetric rendering
+                float s = 0.2, fade = 0.01;
+                float3 v = float3(0, 0, 0);
+
+                float3 p = from + s * dir * .5;
+
+                p = _Tile - fmod(abs(p), _Tile * 2);
                 float pa = 0;
                 float a = 0;
-				for (int i = 0; i < _Iterations; i++) {
-					p = abs(p) / dot(p, p) - _Formuparam;
-					a += abs(length(p) - pa);
-					pa = length(p);
-				}
-					
-				//v += fade;
-					
-				// coloring based on distance
-                if (a < 64)
-                    v += float3(s, s*s, 0) * a*a * _Brightness * fade;
-					
-				float len = length(v);
-				//Quick saturate
-				v = lerp(float3(len, len, len), v, _Saturation);
-				
-				return float4(v, 1.0);
-			}
+                int iterations = dir.y >= 0 ? 11 : 6;
+                for (int i = 0; i < iterations; i++) {
+                    // unroll one
+                    p = abs(p) / dot(p, p) - _Formuparam;
+                    a += abs(length(p) - pa);
+                    pa = length(p);
+                    // unroll two
+                    p = abs(p) / dot(p, p) - _Formuparam;
+                    a += abs(length(p) - pa);
+                    pa = length(p);
+                    // unroll three
+                    p = abs(p) / dot(p, p) - _Formuparam;
+                    a += abs(length(p) - pa);
+                    pa = length(p);
+                }
+
+                a = max(a, 42);
+
+                // coloring based on distance
+                v += float3(0, s*s, s) * a*a * _Brightness * fade;
+
+                float len = length(v);
+                //Quick saturate
+                v = lerp(float3(len, len, len), v, _Saturation);
+
+                return float4(v, 1.0);
+            }
 			
 			
 			
