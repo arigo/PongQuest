@@ -33,7 +33,7 @@ public class Cell : MonoBehaviour
                 0.1f, Random.Range(0.2f, 0.5f), color);
     }
 
-    public void Hit(RaycastHit hitInfo, bool unstoppable, ref AudioClip clip)
+    public void Hit(RaycastHit hitInfo, int subtract_energy, ref AudioClip clip)
     {
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
@@ -45,12 +45,14 @@ public class Cell : MonoBehaviour
         {
             var rend = GetComponent<MeshRenderer>();
             rend.sharedMaterial = b.cellHitMaterial;
-            bonus |= Random.Range(0, 4) == 3;
-            energy -= 1;
-            StartCoroutine(_Hit(energy <= 0 || unstoppable));
-
-            if (energy == 0 || unstoppable)
-                clip = PongPadBuilder.instance.tileBreakSound;
+            if (energy > 0)
+            {
+                bonus |= Random.Range(0, 4) == 3;
+                energy -= subtract_energy;
+                if (energy <= 0)
+                    clip = PongPadBuilder.instance.tileBreakSound;
+            }
+            StartCoroutine(_Hit(energy <= 0));
         }
     }
 

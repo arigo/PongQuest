@@ -7,7 +7,7 @@ using System.Linq;
 
 public class PongPadBuilder : PongBaseBuilder
 {
-    public Material cellHitMaterial, unstoppableBallMaterial;
+    public Material cellHitMaterial, unstoppableBallMaterial, growingBallMaterial;
     public ParticleSystem hitPS, starPS;
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;
@@ -15,6 +15,7 @@ public class PongPadBuilder : PongBaseBuilder
     public UnityEngine.UI.Text totalPointsText;
     public AudioClip ballBounceSound, tileBreakSound;
     public AudioClip[] backgroundMusicParts;
+    public int episodeNumber = 1;
     public GameObject[] levelPrefabs;
 
     public static PongPadBuilder instance { get; private set; }

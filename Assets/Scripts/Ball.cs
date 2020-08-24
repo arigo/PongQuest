@@ -24,19 +24,20 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_BOOST_TO = SPEED_LIMIT * 5f;
     const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;
 
-    float radius, rot_speed;
+    float radius, initial_radius, rot_speed;
     Vector3 velocity, old_position;
     Vector3 rotation_axis;
     float unstoppable_until;
-    Material original_material_before_unstoppable;
-    bool shot, respawning;
+    Material original_material;
+    bool shot, respawning, growing;
+    int inflation_bonuses;
     Ball duplicate_from;
 
     internal static List<Vector3> start_positions;
 
     void Start()
     {
-        radius = transform.lossyScale.y * 0.5f;
+        initial_radius = transform.localScale.y * 0.5f;
         Vector3 start_position;
         if (duplicate_from == null)
         {
@@ -61,10 +62,13 @@ public class Ball : MonoBehaviour, IBall
     {
         EndUnstoppable();
         old_position = start_position;
+        radius = initial_radius;
         transform.position = start_position;
         transform.rotation = Random.rotationUniform;
+        transform.localScale = new Vector3(2f, 2f, 2f) * initial_radius;
         rotation_axis = Random.onUnitSphere;
         rot_speed = 45f;
+        inflation_bonuses = 0;
     }
 
     public void Duplicate()
@@ -79,9 +83,34 @@ public class Ball : MonoBehaviour, IBall
     public void Unstoppable()
     {
         unstoppable_until = Time.time + 10f;
-        if (original_material_before_unstoppable == null)
-            original_material_before_unstoppable = GetComponent<MeshRenderer>().sharedMaterial;
-        GetComponent<MeshRenderer>().sharedMaterial = PongPadBuilder.instance.unstoppableBallMaterial;
+        AdjustMaterial();
+    }
+
+    public void BiggerBall()
+    {
+        inflation_bonuses += 1;
+        float target_radius = initial_radius * (1f + 0.5f * Mathf.Log(inflation_bonuses + 1));
+        StartCoroutine(_InflateBall(target_radius));
+    }
+
+    IEnumerator _InflateBall(float target_radius)
+    {
+        while (true)
+        {
+            if (!growing)
+            {
+                growing = true;
+                AdjustMaterial();
+            }
+            yield return null;
+
+            if (radius >= target_radius)
+                break;
+            radius = Mathf.MoveTowards(radius, target_radius, Time.deltaTime * 0.1f);
+            transform.localScale = new Vector3(2f, 2f, 2f) * radius;
+        }
+        growing = false;
+        AdjustMaterial();
     }
 
     public void ShootOutOf(PongPad pad)
@@ -102,16 +131,31 @@ public class Ball : MonoBehaviour, IBall
         }
     }
 
-    void EndUnstoppable()
+    bool IsUnstoppable => unstoppable_until != 0f;
+
+    void AdjustMaterial()
     {
-        if (original_material_before_unstoppable != null)
-        {
-            GetComponent<MeshRenderer>().sharedMaterial = original_material_before_unstoppable;
-            original_material_before_unstoppable = null;
-        }
+        if (original_material == null)
+            original_material = GetComponent<MeshRenderer>().sharedMaterial;
+
+        Material mat;
+        if (IsUnstoppable)
+            mat = PongPadBuilder.instance.unstoppableBallMaterial;
+        else if (growing)
+            mat = PongPadBuilder.instance.growingBallMaterial;
+        else
+            mat = original_material;
+        GetComponent<MeshRenderer>().sharedMaterial = mat;
     }
 
-    bool IsUnstoppable => original_material_before_unstoppable != null;
+    void EndUnstoppable()
+    {
+        if (unstoppable_until != 0f)
+        {
+            unstoppable_until = 0f;
+            AdjustMaterial();
+        }
+    }
 
     bool TryRespawnPosition(out Vector3 start_pos)
     {
@@ -158,6 +202,8 @@ public class Ball : MonoBehaviour, IBall
         velocity = Vector3.zero;
 
         yield return new WaitForSeconds(2.0f);
+        while (growing)
+            yield return null;
         respawning = false;
 
         /* this return false if there are more than two regular balls alive */
@@ -177,6 +223,9 @@ public class Ball : MonoBehaviour, IBall
         if (!this || !gameObject || PongPadBuilder.paused || respawning)
             return;
 
+        if (unstoppable_until != 0f && Time.time >= unstoppable_until)
+            EndUnstoppable();
+
         if (old_position.z < MIN_Z || old_position.sqrMagnitude > 10f * 10f)
         {
             if (!IsRegularBall)
@@ -185,9 +234,6 @@ public class Ball : MonoBehaviour, IBall
                 StartCoroutine(RespawnAfterDelay());
             return;
         }
-
-        if (IsUnstoppable && Time.time >= unstoppable_until)
-            EndUnstoppable();
 
         float dt = Time.deltaTime;
         float speed_reduction = Mathf.Exp(dt * SPEED_EXPONENT);
@@ -212,7 +258,7 @@ public class Ball : MonoBehaviour, IBall
                                     1 << LAYER_HALOS, QueryTriggerInteraction.Collide))
         {
             var center = collider.transform.position;
-            float factor = IsUnstoppable ? 0.62f : 13.5f;
+            float factor = IsUnstoppable ? 2.54f : 13.5f;
             velocity += (transform.position - center).normalized * (dt * factor);
             collider.GetComponentInParent<Halo>().Pong();
         }
@@ -290,7 +336,7 @@ public class Ball : MonoBehaviour, IBall
                 }
 
                 if (cell != null)
-                    cell.Hit(hitInfo, unstoppable, ref clip);
+                    cell.Hit(hitInfo, unstoppable ? 9999 : inflation_bonuses + 1, ref clip);
 
                 AudioSource.PlayClipAtPoint(clip, hitInfo.point);
 

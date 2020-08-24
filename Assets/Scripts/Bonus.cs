@@ -16,9 +16,20 @@ public abstract class Bonus : MonoBehaviour, IBall
 
         switch (Random.Range(0, 3))
         {
-            case 0: bgo.AddComponent<DoubleBallBonus>(); break;
-            case 1: bgo.AddComponent<UnstoppableBallBonus>(); break;
-            default: bgo.AddComponent<LaserBonus>(); break;
+            case 0:
+                bgo.AddComponent<DoubleBallBonus>();
+                break;
+
+            case 1:
+                if (PongPadBuilder.instance.episodeNumber == 2)
+                    bgo.AddComponent<BigBallBonus>();
+                else
+                    bgo.AddComponent<UnstoppableBallBonus>();
+                break;
+
+            case 2:
+                bgo.AddComponent<LaserBonus>();
+                break;
         }
     }
 
@@ -205,6 +216,21 @@ public class UnstoppableBallBonus : Bonus
         void HitBall(Ball ball)
         {
             ball.Unstoppable();
+        }
+        AttachToPad(pad, HitBall);
+    }
+}
+
+public class BigBallBonus : Bonus
+{
+    protected override Color GetColor() => new Color(1f, 0.85f, 0f);
+    protected override int GetPoints() => 350;
+
+    protected override void Hit(PongPad pad)
+    {
+        void HitBall(Ball ball)
+        {
+            ball.BiggerBall();
         }
         AttachToPad(pad, HitBall);
     }

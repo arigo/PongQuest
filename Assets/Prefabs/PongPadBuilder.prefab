@@ -9662,6 +9662,7 @@ MonoBehaviour:
   cellHitMaterial: {fileID: 2100000, guid: cd2048e9a8966354fa6b913474e92795, type: 2}
   unstoppableBallMaterial: {fileID: 2100000, guid: ebd8f452bd168484baccee91ca21f2fa,
     type: 2}
+  growingBallMaterial: {fileID: 2100000, guid: 0e93f5bc458737549aa27cf072c1a262, type: 2}
   hitPS: {fileID: 2480069470577818196}
   starPS: {fileID: 2480069470004511318}
   shotBallPrefab: {fileID: 2544735226999461841, guid: 06447ec8ffcdcbe4bad664010ad27129,
@@ -9679,6 +9680,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 05ec9e4a2c48c1140ada846ce5a39e8a, type: 3}
   - {fileID: 8300000, guid: eb3ff378e261cae4cb9399922fc7d8a1, type: 3}
   - {fileID: 8300000, guid: e7e1c8ca5e7042b4abd9d157de0881e7, type: 3}
+  episodeNumber: 1
   levelPrefabs:
   - {fileID: 2150280956505444870, guid: 4d72ca3946abc214e93faca898517bb5, type: 3}
   - {fileID: 7517951128716499674, guid: 477b5fbe994a9814683eabbf457d0adf, type: 3}
@@ -9904,6 +9906,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas Points
       objectReference: {fileID: 0}
+    - target: {fileID: 7629483463915314728, guid: 3a1c2d984bb58404fab56f0f6a327649,
+        type: 3}
+      propertyPath: m_Text
+      value: -0123456789
+      objectReference: {fileID: 0}
     - target: {fileID: 7629483465087588720, guid: 3a1c2d984bb58404fab56f0f6a327649,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10023,11 +10030,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629483463915314728, guid: 3a1c2d984bb58404fab56f0f6a327649,
-        type: 3}
-      propertyPath: m_Text
-      value: -0123456789
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1491243787789807247, guid: 3a1c2d984bb58404fab56f0f6a327649, type: 3}

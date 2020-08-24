@@ -6,7 +6,7 @@ SketchUpImporter:
   selectedNodes: 0000000001000000
   assetHash:
     serializedVersion: 2
-    Hash: 112abdadfc8e82dd71ae08dedefacae2
+    Hash: 14d79eb8a3b6aabd0809095864c68b71
   longitude: 2.333
   latitude: 48.867
   northCorrection: -0
@@ -75,7 +75,7 @@ SketchUpImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
