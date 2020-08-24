@@ -337,6 +337,22 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0.5529412
       objectReference: {fileID: 0}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: levelPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: levelPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 2532397204951736877, guid: 32c6346dc0398444bb12771c6a04e2f9,
+        type: 3}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: cellHitMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 7438f785525f2344d8a2138885b9144b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd909f05ccf630a4fb7c74b74c6ffcb7, type: 3}
 --- !u!1001 &1699113575
@@ -561,7 +577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3552168563502265045}
   m_LocalRotation: {x: 0.37113017, y: 0.40190098, z: 0.093649544, w: 0.831846}
-  m_LocalPosition: {x: 0, y: 1.96, z: 0}
+  m_LocalPosition: {x: 0, y: 3.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1103371605}

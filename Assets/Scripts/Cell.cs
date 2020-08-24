@@ -47,17 +47,17 @@ public class Cell : MonoBehaviour
             rend.sharedMaterial = b.cellHitMaterial;
             bonus |= Random.Range(0, 4) == 3;
             energy -= 1;
-            StartCoroutine(_Hit(unstoppable));
+            StartCoroutine(_Hit(energy <= 0 || unstoppable));
 
             if (energy == 0 || unstoppable)
                 clip = PongPadBuilder.instance.tileBreakSound;
         }
     }
 
-    IEnumerator _Hit(bool unstoppable)
+    IEnumerator _Hit(bool fatal)
     {
         yield return new WaitForSeconds(0.05f);
-        if (energy <= 0 || unstoppable)
+        if (fatal)
         {
             Destroy((GameObject)gameObject);
             if (bonus)
