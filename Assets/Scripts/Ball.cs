@@ -251,8 +251,25 @@ public class Ball : MonoBehaviour, IBall
         speed = (speed - SPEED_LIMIT) * speed_reduction + SPEED_LIMIT;
         velocity *= speed / vmag;
 
-        if (Mathf.Abs(velocity.z) < Mathf.Min(SPEED_LIMIT, velocity.magnitude) * 0.42f)
-            velocity.z += dt * (velocity.z >= 0f ? 0.5f : -0.35f);
+        if (PongPadBuilder.instance.episodeNumber != 3)
+        {
+            if (Mathf.Abs(velocity.z) < Mathf.Min(SPEED_LIMIT, velocity.magnitude) * 0.42f)
+                velocity.z += dt * (velocity.z >= 0f ? 0.5f : -0.35f);
+        }
+        else
+        {
+            Vector2 h_velocity = new Vector2(velocity.x, velocity.z);
+            float h_mag = h_velocity.magnitude;
+            if (h_mag < Mathf.Min(SPEED_LIMIT, velocity.magnitude) * 0.42f)
+            {
+                if (h_mag < 1e-8)
+                    h_velocity = Vector2.up;
+                else
+                    h_velocity /= h_mag;
+                h_velocity *= dt * 0.35f;
+                velocity += new Vector3(h_velocity.x, 0, h_velocity.y);
+            }
+        }
 
         foreach (var collider in Physics.OverlapSphere(transform.position, radius,
                                     1 << LAYER_HALOS, QueryTriggerInteraction.Collide))

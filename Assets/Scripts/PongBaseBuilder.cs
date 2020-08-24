@@ -16,7 +16,7 @@ public interface IPongPad
 public abstract class PongBaseBuilder : MonoBehaviour
 {
     public GameObject padObjectPrefab;
-    public GameObject preloadGameObject;
+    /*public GameObject preloadGameObject;*/
 
     public static bool paused { get => paused_no_focus || paused_no_ctrl; }
     static bool paused_no_focus, paused_no_ctrl;
@@ -29,6 +29,8 @@ public abstract class PongBaseBuilder : MonoBehaviour
 
         var ht = Controller.GlobalTracker(this);
         ht.onControllersUpdate += Ht_onControllersUpdate;
+
+        UpdateTrackingSpacePosition();
         StartCoroutine(TrackPosition());
     }
 
@@ -70,58 +72,79 @@ public abstract class PongBaseBuilder : MonoBehaviour
 
     protected abstract void SetPaused(bool paused);
 
-    IEnumerator TrackPosition()
+    Transform transform_origin;
+
+    public void ChangeTrackingSpacePosition(Transform new_transform_origin)
     {
-        while (true)
+        transform_origin = new_transform_origin;
+        UpdateTrackingSpacePosition();
+    }
+
+    void UpdateTrackingSpacePosition()
+    {
+        var boundary = OVRManager.boundary;
+        Vector3[] geometry = boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
+        if (geometry != null && geometry.Length == 4 && OVRManager.instance != null)
         {
-            var boundary = OVRManager.boundary;
-            Vector3[] geometry = boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
-            if (geometry != null && geometry.Length == 4 && OVRManager.instance != null)
+            Transform tracking_space = OVRManager.instance.transform;
+
+            /*string x(Vector3 v)
             {
-                Transform tracking_space = OVRManager.instance.transform;
+                return v.x + "," + v.z;
+            }
+            Debug.LogError("size: " + x(size) + "   geometry: " + string.Join(" ", geometry.Select(x)));*/
 
-                /*string x(Vector3 v)
-                {
-                    return v.x + "," + v.z;
-                }
-                Debug.LogError("size: " + x(size) + "   geometry: " + string.Join(" ", geometry.Select(x)));*/
+            /* assume that geometry returned a perfect rectangle, but with a random center and orientation. */
+            Vector3 GlobalVec2(Vector3 local_v)
+            {
+                /* the documentation for GetGeometry() implies we need a
+                 * TransformPoint() to get global coordinates, but it seems we don't
+                 */
+                Vector3 glob = local_v;
+                return new Vector3(glob.x, 0, glob.z);
+            }
+            Vector3 p0 = GlobalVec2(geometry[0]);
+            Vector3 p1 = GlobalVec2(geometry[1]);
+            Vector3 p2 = GlobalVec2(geometry[2]);
+            Vector3 p3 = GlobalVec2(geometry[3]);
+            //string s(Vector3 p) => p.x + ", " + p.z + " / ";
+            //Debug.Log("Recentered! " + s(p0) + s(p1) + s(p2) + s(p3));
 
-                /* assume that geometry returned a perfect rectangle, but with a random center and orientation. */
-                Vector3 GlobalVec2(Vector3 local_v)
-                {
-                    /* the documentation for GetGeometry() implies we need a
-                        * TransformPoint() to get global coordinates, but it seems we don't
-                        */
-                    Vector3 glob = local_v;
-                    return new Vector3(glob.x, 0, glob.z);
-                }
-                Vector3 p0 = GlobalVec2(geometry[0]);
-                Vector3 p1 = GlobalVec2(geometry[1]);
-                Vector3 p2 = GlobalVec2(geometry[2]);
-                Vector3 p3 = GlobalVec2(geometry[3]);
-                //string s(Vector3 p) => p.x + ", " + p.z + " / ";
-                //Debug.Log("Recentered! " + s(p0) + s(p1) + s(p2) + s(p3));
+            float length = Mathf.Min(Vector3.Distance(p0, p1), Vector3.Distance(p2, p3));
+            float width = Mathf.Min(Vector3.Distance(p1, p2), Vector3.Distance(p3, p0));
+            if (width > length)
+            {
+                Vector3 t1 = p0; p0 = p1; p1 = p2; p2 = p3; p3 = t1;
+            }
+            Vector3 center = (p0 + p1 + p2 + p3) * 0.25f;
+            Vector3 bar = (p2 + p3) - (p1 + p0);
 
-                float length = Mathf.Min(Vector3.Distance(p0, p1), Vector3.Distance(p2, p3));
-                float width = Mathf.Min(Vector3.Distance(p1, p2), Vector3.Distance(p3, p0));
-                if (width > length)
-                {
-                    Vector3 t1 = p0; p0 = p1; p1 = p2; p2 = p3; p3 = t1;
-                }
-                Vector3 center = (p0 + p1 + p2 + p3) * 0.25f;
-
-                tracking_space.position = center;
-                tracking_space.rotation = Quaternion.Inverse(Quaternion.LookRotation(
-                    (p2 + p3) - (p1 + p0)));
+            if (transform_origin != null)
+            {
+                /* not completely right... works in our limited use cases */
+                center = transform_origin.TransformPoint(center);
+                bar = transform_origin.InverseTransformVector(bar);
             }
 
-            if (preloadGameObject != null)
+            tracking_space.position = center;
+            tracking_space.rotation = Quaternion.Inverse(Quaternion.LookRotation(bar));
+        }
+    }
+
+    IEnumerator TrackPosition()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        while (true)
+        {
+            UpdateTrackingSpacePosition();
+
+            /*if (preloadGameObject != null)
             {
                 yield return new WaitForEndOfFrame();
                 Destroy((GameObject)preloadGameObject);
                 preloadGameObject = null;
-            }
-
+            }*/
             yield return new WaitForSecondsRealtime(0.45f);
         }
     }
