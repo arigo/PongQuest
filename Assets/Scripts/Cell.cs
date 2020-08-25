@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public int energy = 1;
+    public float energy = 1;
     public int points = 100;
     public float pointsSize;
     public bool velocityBoost, finalBigCell;
@@ -33,7 +33,7 @@ public class Cell : MonoBehaviour
                 0.1f, Random.Range(0.2f, 0.5f), color);
     }
 
-    public void Hit(RaycastHit hitInfo, int subtract_energy, ref AudioClip clip)
+    public void Hit(RaycastHit hitInfo, float subtract_energy, ref AudioClip clip)
     {
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
@@ -49,6 +49,8 @@ public class Cell : MonoBehaviour
             {
                 bonus |= Random.Range(0, 4) == 3;
                 energy -= subtract_energy;
+                if (energy > 0 && energy < 1e-3)
+                    energy = 0;
                 if (energy <= 0)
                     clip = PongPadBuilder.instance.tileBreakSound;
             }
@@ -64,12 +66,21 @@ public class Cell : MonoBehaviour
             Destroy((GameObject)gameObject);
             if (bonus)
                 Bonus.AddBonus(transform.position);
-            Points.AddPoints(transform.position, MyMaterial.color, points, pointsSize);
-            PongPadBuilder.instance.KilledOneCell();
+
+            float cell_fraction = GetCellFraction();
+            int points1 = Mathf.RoundToInt(points * cell_fraction);
+            Points.AddPoints(transform.position, MyMaterial.color, points1, pointsSize);
+            PongPadBuilder.instance.KilledOneCell(cell_fraction);
         }
         else
+        {
             GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
+            NonFatalHit();
+        }
     }
+
+    protected virtual float GetCellFraction() => 1f;
+    protected virtual void NonFatalHit() { }
 
     bool OtherCellsStillAround()
     {

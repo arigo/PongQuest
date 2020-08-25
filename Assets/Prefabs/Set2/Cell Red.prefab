@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 4987327876559511466, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
       propertyPath: m_Name
-      value: Cell Green
+      value: Cell Red
       objectReference: {fileID: 0}
     - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
@@ -70,17 +70,22 @@ PrefabInstance:
     - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
       propertyPath: points
-      value: 150
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: energy
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
       propertyPath: movingVelocity
-      value: 0.08
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 4987327876559511464, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 73763f9544f875f4398d087b119af67c, type: 2}
+      objectReference: {fileID: 2100000, guid: d43a6d9e884921d478541c6b2b68e09d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 624b002ef7befe4449e4673985314173, type: 3}

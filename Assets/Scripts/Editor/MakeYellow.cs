@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class MakeYellow
 {
-    static void MakeCmd(MenuCommand command, string path1, string path2)
+    static void MakeCmd(MenuCommand command, string path1, string path2, string path3)
     {
         Cell cell = (Cell)command.context;
-        string path = cell is LivingCell ? path2 : path1;
+        string path = cell is LivingCell ? path2 : cell is HexCell ? path3 : path1;
 
         Transform parent = cell.transform.parent;
 
@@ -30,32 +30,40 @@ public static class MakeYellow
     static void MakeYellowCmd(MenuCommand command)
     {
         MakeCmd(command, "Assets/Prefabs/Set1/SolarCell.prefab",
-            "Assets/Prefabs/Set2/Cell Yellow.prefab");
+            "Assets/Prefabs/Set2/Cell Yellow.prefab",
+            "Assets/Prefabs/Set3/HexCell Yellow.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Green")]
     static void MakeGreenCmd(MenuCommand command)
     {
         MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Green.prefab",
-            "Assets/Prefabs/Set2/Cell Green.prefab");
+            "Assets/Prefabs/Set2/Cell Green.prefab",
+            "Assets/Prefabs/Set3/HexCell Green.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Blue")]
     static void MakeBlueCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Blue.prefab", "?");
+        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Blue.prefab",
+            "Assets/Prefabs/Set2/Cell Blue.prefab",
+            "?");
     }
 
     [MenuItem("CONTEXT/Cell/Make Red")]
     static void MakeRedCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Red.prefab", "?");
+        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Red.prefab",
+            "Assets/Prefabs/Set2/Cell Red.prefab",
+            "?");
     }
 
     [MenuItem("CONTEXT/Cell/Make Purple")]
     static void MakePurpleCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Purple.prefab", "?");
+        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Purple.prefab",
+            "?",
+            "?");
     }
 
     [MenuItem("CONTEXT/Cell/Shuffle Rotation")]

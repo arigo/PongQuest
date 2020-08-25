@@ -28,7 +28,8 @@ public class PongPadBuilder : PongBaseBuilder
     int current_level;  // = 6;   /* set to non-zero to debug from a different level */
     public int _total_points { get; set; }
     AudioSource[] music_sources;
-    int number_of_cells_in_this_level, number_of_cells_killed;
+    int number_of_cells_in_this_level;
+    float number_of_cells_killed;
 
     private void Awake()
     {
@@ -59,9 +60,9 @@ public class PongPadBuilder : PongBaseBuilder
             asrc.Play();
     }
 
-    public void KilledOneCell()
+    public void KilledOneCell(float cell_fraction)
     {
-        number_of_cells_killed++;
+        number_of_cells_killed += cell_fraction;
         UpdateMusicVolumes();
     }
 
@@ -160,6 +161,7 @@ public class PongPadBuilder : PongBaseBuilder
 
                     Bonus.RemoveAllBonuses();
                     levelInstance = Instantiate(levelPrefabs[current_level++]);
+
                     number_of_cells_in_this_level = levelInstance.GetComponentsInChildren<Cell>().Length;
                     number_of_cells_killed = 0;
                 }

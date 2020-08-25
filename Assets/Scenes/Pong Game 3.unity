@@ -951,15 +951,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
-      propertyPath: levelPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 2532397204951736877, guid: 32c6346dc0398444bb12771c6a04e2f9,
-        type: 3}
-    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
-        type: 3}
       propertyPath: cellHitMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: 7438f785525f2344d8a2138885b9144b, type: 2}
+      objectReference: {fileID: 2100000, guid: 151f9c92887b31143a9438ab1d922eb6, type: 2}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
       propertyPath: episodeNumber
@@ -970,6 +964,12 @@ PrefabInstance:
       propertyPath: transformSpaceBase
       value: 
       objectReference: {fileID: 1321588596}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: levelPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 2428711591003737684, guid: 7ff4f5f136edceb4980b15f1194f423d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd909f05ccf630a4fb7c74b74c6ffcb7, type: 3}
 --- !u!1 &1719532112

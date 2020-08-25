@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: a8e1a2e036c36cf40905cd01c14726c0
+guid: 4d24cc75cbf2c034d94b9e8a781bd459
 SketchUpImporter:
   generateBackFace: 0
   mergeCoplanarFaces: 0
   selectedNodes: 0000000001000000
   assetHash:
     serializedVersion: 2
-    Hash: 15cc2facdd21bdbe60edbf32dd0ce219
+    Hash: bf37b9a4d700526d644f1dda42a84212
   longitude: -105.242139
   latitude: 40.018309
   northCorrection: -0
@@ -27,7 +27,7 @@ SketchUpImporter:
   internalIDToNameTable: []
   externalObjects: {}
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 2
     materialSearch: 0
     materialLocation: 1

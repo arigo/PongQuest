@@ -31,23 +31,24 @@ public class Ball : MonoBehaviour, IBall
     float unstoppable_until;
     Material original_material;
     bool shot, respawning, growing;
-    int inflation_bonuses;
+    float inflation_bonuses;
     Ball duplicate_from;
 
     internal static List<Vector3> start_positions;
 
     void Start()
     {
-        initial_radius = transform.localScale.y * 0.5f;
         Vector3 start_position;
         if (duplicate_from == null)
         {
+            initial_radius = transform.localScale.y * 0.5f;
             start_position = transform.position;
         }
         else
         {
             /* this runs possibly one frame later than Duplicate().  Make sure the two balls are
              * at the exact same position now, and tweak the velocities */
+            Debug.Assert(initial_radius != 0);
             start_position = duplicate_from.transform.position;
             var delta = Random.onUnitSphere * SPEED_LIMIT * 0.25f;
             velocity = duplicate_from.velocity - delta;
@@ -81,10 +82,19 @@ public class Ball : MonoBehaviour, IBall
     public void Duplicate()
     {
         EndUnstoppable();
+
         var clone = Instantiate(this);
         clone.transform.position = transform.position;
+        clone.initial_radius = initial_radius;
         clone.velocity = velocity;
         clone.duplicate_from = this;
+
+        if (inflation_bonuses > 0f)
+        {
+            float add = inflation_bonuses * -0.5f;
+            BiggerBall(add);   /* reduce by half each ball's inflation bonus */
+            clone.BiggerBall(add);
+        }
     }
 
     public void Unstoppable()
@@ -93,15 +103,17 @@ public class Ball : MonoBehaviour, IBall
         AdjustMaterial();
     }
 
-    public void BiggerBall()
+    public void BiggerBall(float add = 1f)
     {
-        inflation_bonuses += 1;
-        float target_radius = initial_radius * (1f + 0.5f * Mathf.Log(inflation_bonuses + 1));
-        StartCoroutine(_InflateBall(target_radius));
+        inflation_bonuses += add;
+        StartCoroutine(_InflateBall(inflation_bonuses));
     }
 
-    IEnumerator _InflateBall(float target_radius)
+    IEnumerator _InflateBall(float inflation_bonuses)
     {
+        /* the ball's volume should be 'inflation_bonuses + 1' times the initial volume */
+        float target_radius = initial_radius * Mathf.Pow(inflation_bonuses + 1, 1f/3f);
+
         while (true)
         {
             if (!growing)
@@ -109,10 +121,11 @@ public class Ball : MonoBehaviour, IBall
                 growing = true;
                 AdjustMaterial();
             }
-            yield return null;
 
-            if (radius >= target_radius)
+            yield return null;
+            if (radius == target_radius || inflation_bonuses != this.inflation_bonuses)
                 break;
+
             radius = Mathf.MoveTowards(radius, target_radius, Time.deltaTime * 0.1f);
             transform.localScale = new Vector3(2f, 2f, 2f) * radius;
         }
