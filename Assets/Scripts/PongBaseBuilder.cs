@@ -16,6 +16,7 @@ public interface IPongPad
 public abstract class PongBaseBuilder : MonoBehaviour
 {
     public GameObject padObjectPrefab;
+    public Transform transformSpaceBase;
     /*public GameObject preloadGameObject;*/
 
     public static bool paused { get => paused_no_focus || paused_no_ctrl; }
@@ -72,15 +73,7 @@ public abstract class PongBaseBuilder : MonoBehaviour
 
     protected abstract void SetPaused(bool paused);
 
-    Transform transform_origin;
-
-    public void ChangeTrackingSpacePosition(Transform new_transform_origin)
-    {
-        transform_origin = new_transform_origin;
-        UpdateTrackingSpacePosition();
-    }
-
-    void UpdateTrackingSpacePosition()
+    public void UpdateTrackingSpacePosition()
     {
         var boundary = OVRManager.boundary;
         Vector3[] geometry = boundary.GetGeometry(OVRBoundary.BoundaryType.PlayArea);
@@ -119,11 +112,11 @@ public abstract class PongBaseBuilder : MonoBehaviour
             Vector3 center = (p0 + p1 + p2 + p3) * 0.25f;
             Vector3 bar = (p2 + p3) - (p1 + p0);
 
-            if (transform_origin != null)
+            if (transformSpaceBase != null)
             {
                 /* not completely right... works in our limited use cases */
-                center = transform_origin.TransformPoint(center);
-                bar = transform_origin.InverseTransformVector(bar);
+                center = transformSpaceBase.TransformPoint(center);
+                bar = transformSpaceBase.InverseTransformVector(bar);
             }
 
             tracking_space.position = center;

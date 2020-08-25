@@ -13,6 +13,8 @@ public class PongPadBuilder : PongBaseBuilder
     public MeshRenderer haloPrefab;
     public Points canvasPointsPrefab;
     public UnityEngine.UI.Text totalPointsText;
+    public Transform headsetPrefab;
+    public Material padsAndHeadsetTransparencyMaterial;
     public AudioClip ballBounceSound, tileBreakSound;
     public AudioClip[] backgroundMusicParts;
     public int episodeNumber = 1;

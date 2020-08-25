@@ -22,9 +22,23 @@ public class PongPad : MonoBehaviour, IPongPad
         controller = ctrl;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        RestartFollowing();
+    }
 
+    void RestartFollowing()
+    {
         previous_position = myCollider.transform.position;
         previous_time = Time.time;
+    }
+
+    public static void RestartFollowingAll()
+    {
+        foreach (var ctrl in Baroque.GetControllers())
+        {
+            var pad = ctrl.GetComponentInChildren<PongPad>();
+            if (pad != null)
+                pad.RestartFollowing();
+        }
     }
 
     public static void UpdateAllBalls()

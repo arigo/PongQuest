@@ -9626,7 +9626,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   padObjectPrefab: {fileID: 1465324865632614, guid: 0891e980c1555e648ab148aa6b9098a0,
     type: 3}
-  preloadGameObject: {fileID: 0}
   cellHitMaterial: {fileID: 2100000, guid: cd2048e9a8966354fa6b913474e92795, type: 2}
   unstoppableBallMaterial: {fileID: 2100000, guid: ebd8f452bd168484baccee91ca21f2fa,
     type: 2}
@@ -9640,6 +9639,10 @@ MonoBehaviour:
   canvasPointsPrefab: {fileID: 1491243787789807247, guid: 3a1c2d984bb58404fab56f0f6a327649,
     type: 3}
   totalPointsText: {fileID: 5443625730710804855}
+  headsetPrefab: {fileID: 6634675445557735363, guid: 5941a5f73255e60449f41d8cee857c0e,
+    type: 3}
+  padsAndHeadsetTransparencyMaterial: {fileID: 2100000, guid: 6ea35161003ecbf4d842dc29ff47ed92,
+    type: 2}
   ballBounceSound: {fileID: 8300000, guid: c63f835dd60b7e94987bfb402c330f95, type: 3}
   tileBreakSound: {fileID: 8300000, guid: fe464236c2172144a9d198c607e841ef, type: 3}
   backgroundMusicParts:

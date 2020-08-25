@@ -23,6 +23,7 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_UPPER_LIMIT = 23f;
     const float SPEED_BOOST_TO = SPEED_LIMIT * 5f;
     const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;   // -0.722
+    const float EPISODE3_CENTER = 2.401781f;
 
     float radius, initial_radius, rot_speed;
     Vector3 velocity, old_position;
@@ -69,6 +70,12 @@ public class Ball : MonoBehaviour, IBall
         rotation_axis = Random.onUnitSphere;
         rot_speed = 45f;
         inflation_bonuses = 0;
+
+        if (velocity == Vector3.zero && PongPadBuilder.instance.transformSpaceBase != null)
+        {
+            var tr = PongPadBuilder.instance.transformSpaceBase;
+            velocity = tr.forward * -0.2f;
+        }
     }
 
     public void Duplicate()
@@ -226,7 +233,16 @@ public class Ball : MonoBehaviour, IBall
         if (unstoppable_until != 0f && Time.time >= unstoppable_until)
             EndUnstoppable();
 
-        if (old_position.z < MIN_Z || old_position.sqrMagnitude > 10f * 10f)
+        var out_of_bounds = old_position.z < MIN_Z || old_position.sqrMagnitude > 9f * 9f;
+        if (PongPadBuilder.instance.episodeNumber == 3)
+        {
+            float SQRT305 = Mathf.Sqrt(3) * 0.5f;
+            float x = old_position.x;
+            float z = old_position.z - EPISODE3_CENTER;
+            out_of_bounds |= (x * SQRT305 - z * 0.5f) < MIN_Z - EPISODE3_CENTER;
+            out_of_bounds |= (x * -SQRT305 - z * 0.5f) < MIN_Z - EPISODE3_CENTER;
+        }
+        if (out_of_bounds)
         {
             if (!IsRegularBall)
                 Destroy((GameObject)gameObject);

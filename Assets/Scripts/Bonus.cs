@@ -12,6 +12,13 @@ public abstract class Bonus : MonoBehaviour, IBall
     public static void AddBonus(Vector3 position)
     {
         var bgo = new GameObject("bonus");
+        var btr = PongPadBuilder.instance.transformSpaceBase;
+        if (btr != null)
+        {
+            var bonus_tr = new GameObject("bonus_tr").transform;
+            bonus_tr.SetPositionAndRotation(btr.position, btr.rotation);
+            bgo.transform.parent = bonus_tr;
+        }
         bgo.transform.position = position;
 
         switch (Random.Range(0, 3))
@@ -44,8 +51,8 @@ public abstract class Bonus : MonoBehaviour, IBall
     {
         starPS = PongPadBuilder.instance.starPS;
         velocity = new Vector3(0, 0, -1);
-        old_pos = transform.position;
-        new_pos = transform.position;
+        old_pos = transform.localPosition;
+        new_pos = transform.localPosition;
         free_falling = true;
         StartCoroutine(FreeFalling());
         PongPad.all_balls.Add(this);
@@ -71,7 +78,7 @@ public abstract class Bonus : MonoBehaviour, IBall
             if ((velocity.y < 0f && new_pos.y < Y_MIN) || (velocity.y > 0f && new_pos.y > Y_MAX))
                 velocity.y = -velocity.y;
 
-            transform.position = new_pos = old_pos + velocity * dt;
+            transform.localPosition = new_pos = old_pos + velocity * dt;
 
             Vector2 v2 = (Vector2)velocity;
             v2 += dt * (Vector2)Random.onUnitSphere * 3f;
@@ -97,13 +104,24 @@ public abstract class Bonus : MonoBehaviour, IBall
 
     Vector3 IBall.GetVelocity()
     {
-        return velocity;
+        if (transform.parent != null)
+            return transform.parent.TransformVector(velocity);
+        else
+            return velocity;
     }
 
     void IBall.GetPositions(out Vector3 old_pos, out Vector3 new_pos)
     {
-        old_pos = this.old_pos;
-        new_pos = this.new_pos;
+        if (transform.parent != null)
+        {
+            old_pos = transform.parent.TransformPoint(this.old_pos);
+            new_pos = transform.parent.TransformPoint(this.new_pos);
+        }
+        else
+        {
+            old_pos = this.old_pos;
+            new_pos = this.new_pos;
+        }
     }
 
     float IBall.GetRadius()
