@@ -405,7 +405,8 @@ PrefabInstance:
         type: 3}
       propertyPath: levelPrefabs.Array.data[8]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2532397204951736877, guid: 356e3f643c01e7b4591ec07833b90318,
+        type: 3}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
       propertyPath: cocoonMaterial

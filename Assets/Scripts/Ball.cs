@@ -43,6 +43,7 @@ public class Ball : MonoBehaviour, IBall
         {
             initial_radius = transform.localScale.y * 0.5f;
             start_position = transform.position;
+            inflation_bonuses = 0;
         }
         else
         {
@@ -54,29 +55,51 @@ public class Ball : MonoBehaviour, IBall
             velocity = duplicate_from.velocity - delta;
             duplicate_from.velocity += delta;
         }
-        RestoreStartPosition(start_position);
+        RestoreStartPosition(start_position, inflation_bonuses);
         PongPad.all_balls.Add(this);
     }
 
     bool IsRegularBall { get => !shot; }
 
-    void RestoreStartPosition(Vector3 start_position)
+    static readonly Vector3 TWO = new Vector3(2, 2, 2);
+
+    float GetRadiusForInflationBonuses(float inflation_bonuses)
+    {
+        /* the ball's apparent surface is increased by a factor 'inflation_bonuses + 1' */
+        return initial_radius * Mathf.Sqrt(inflation_bonuses + 1);
+    }
+
+    void RestoreStartPosition(Vector3 start_position, float inflation_bonuses = 0f)
     {
         EndUnstoppable();
         old_position = start_position;
         radius = initial_radius;
+        this.inflation_bonuses = inflation_bonuses;
         transform.position = start_position;
         transform.rotation = Random.rotationUniform;
-        transform.localScale = new Vector3(2f, 2f, 2f) * initial_radius;
+        transform.localScale = TWO * GetRadiusForInflationBonuses(inflation_bonuses);
         rotation_axis = Random.onUnitSphere;
         rot_speed = 45f;
-        inflation_bonuses = 0;
 
-        if (velocity == Vector3.zero && PongPadBuilder.instance.transformSpaceBase != null)
+        if (velocity == Vector3.zero)
         {
-            var tr = PongPadBuilder.instance.transformSpaceBase;
-            velocity = tr.forward * -0.2f;
+            if (PongPadBuilder.instance.transformSpaceBase != null)
+            {
+                var tr = PongPadBuilder.instance.transformSpaceBase;
+                velocity = tr.forward * -0.2f;
+            }
+            else if (start_position.x < 0f)
+            {
+                respawning = true;
+                StartCoroutine(_DoneWaitingForABit());
+            }
         }
+    }
+
+    IEnumerator _DoneWaitingForABit()
+    {
+        yield return new WaitForSeconds(1f);
+        respawning = false;
     }
 
     public void Duplicate()
@@ -91,9 +114,11 @@ public class Ball : MonoBehaviour, IBall
 
         if (inflation_bonuses > 0f)
         {
-            float add = inflation_bonuses * -0.5f;
-            BiggerBall(add);   /* reduce by half each ball's inflation bonus */
-            clone.BiggerBall(add);
+            /* reduce by half each ball's inflation bonus */
+            inflation_bonuses *= 0.5f;
+            transform.localScale = TWO * GetRadiusForInflationBonuses(inflation_bonuses);
+            clone.inflation_bonuses = inflation_bonuses;
+            clone.transform.localScale = TWO * GetRadiusForInflationBonuses(inflation_bonuses);
         }
     }
 
@@ -103,16 +128,15 @@ public class Ball : MonoBehaviour, IBall
         AdjustMaterial();
     }
 
-    public void BiggerBall(float add = 1f)
+    public void BiggerBall()
     {
-        inflation_bonuses += add;
+        inflation_bonuses += 1f;
         StartCoroutine(_InflateBall(inflation_bonuses));
     }
 
     IEnumerator _InflateBall(float inflation_bonuses)
     {
-        /* the ball's volume should be 'inflation_bonuses + 1' times the initial volume */
-        float target_radius = initial_radius * Mathf.Pow(inflation_bonuses + 1, 1f/3f);
+        float target_radius = GetRadiusForInflationBonuses(inflation_bonuses);
 
         while (true)
         {
@@ -127,7 +151,7 @@ public class Ball : MonoBehaviour, IBall
                 break;
 
             radius = Mathf.MoveTowards(radius, target_radius, Time.deltaTime * 0.1f);
-            transform.localScale = new Vector3(2f, 2f, 2f) * radius;
+            transform.localScale = TWO * radius;
         }
         growing = false;
         AdjustMaterial();

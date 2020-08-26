@@ -135,16 +135,16 @@ public class LivingCell : Cell
                     var flee_direction = transform.position - dying_cell_location;
                     flee_direction.Normalize();   /* may be zero */
 
-                    for (int i = 0; i < 30; i++)
+                    for (int i = 0; i < 60; i++)
                     {
-                        Vector3 direction = flee_direction + 1.9f * Random.insideUnitSphere;
+                        Vector3 direction = flee_direction + 1.6f * Random.insideUnitSphere;
                         if (Physics.Raycast(transform.position, direction,
                             out var hitInfo, 2.5f,
                             1 << GUIDE_LAYER, QueryTriggerInteraction.Collide))
                         {
                             target_rotation = Quaternion.LookRotation(direction);
                             transform.rotation = target_rotation;
-                            float source_moving_velocity = movingVelocity * 3f;
+                            float source_moving_velocity = movingVelocity * 4f;
                             float target_moving_velocity = InitialMovingVelocity();
                             float fast_distance = hitInfo.distance;
                             while (fast_distance > 0f)
@@ -168,7 +168,7 @@ public class LivingCell : Cell
                     cocoon_mode = true;
                     ChangeMaterial(PongPadBuilder.instance.cocoonMaterial);
                     transform.localScale = Vector3.one * (base_scale * 0.9f);
-                    yield return new WaitForSeconds(Random.Range(2f, 5f));
+                    yield return new WaitForSeconds(Random.Range(4f, 9f));
                     cocoon_mode = false;
                     ChangeMaterial(MyMaterial);
                     transform.localScale = Vector3.one * base_scale;
