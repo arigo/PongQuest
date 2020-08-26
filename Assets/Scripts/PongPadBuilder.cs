@@ -7,7 +7,7 @@ using System.Linq;
 
 public class PongPadBuilder : PongBaseBuilder
 {
-    public Material cellHitMaterial, unstoppableBallMaterial, growingBallMaterial;
+    public Material cellHitMaterial, unstoppableBallMaterial, growingBallMaterial, cocoonMaterial;
     public ParticleSystem hitPS, starPS;
     public Ball shotBallPrefab;
     public MeshRenderer haloPrefab;

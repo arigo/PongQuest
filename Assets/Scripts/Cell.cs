@@ -13,14 +13,25 @@ public class Cell : MonoBehaviour
     bool bonus;
     Material _my_material;
 
-    Material MyMaterial
+    void FetchMyMaterial()
+    {
+        if (_my_material == null)
+            _my_material = GetComponent<MeshRenderer>().sharedMaterial;
+    }
+
+    protected Material MyMaterial
     {
         get
         {
-            if (_my_material == null)
-                _my_material = GetComponent<MeshRenderer>().sharedMaterial;
+            FetchMyMaterial();
             return _my_material;
         }
+    }
+
+    protected void ChangeMaterial(Material mat)
+    {
+        FetchMyMaterial();
+        GetComponent<MeshRenderer>().sharedMaterial = mat;
     }
 
     public static void EmitHitPS(Vector3 pos, Vector3 normal, Color color)
@@ -38,13 +49,12 @@ public class Cell : MonoBehaviour
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
         var color = MyMaterial.color;
-        var ignore = finalBigCell && OtherCellsStillAround();
+        var ignore = IgnoreHit();
         EmitHitPS(hitInfo.point, hitInfo.normal, ignore ? Color.black : color);
 
         if (!ignore)
         {
-            var rend = GetComponent<MeshRenderer>();
-            rend.sharedMaterial = b.cellHitMaterial;
+            ChangeMaterial(b.cellHitMaterial);
             if (energy > 0)
             {
                 bonus |= Random.Range(0, 4) == 3;
@@ -61,6 +71,9 @@ public class Cell : MonoBehaviour
     IEnumerator _Hit(bool fatal)
     {
         yield return new WaitForSeconds(0.05f);
+        ChangeMaterial(MyMaterial);
+        GotHit(fatal);
+
         if (fatal)
         {
             Destroy((GameObject)gameObject);
@@ -72,15 +85,11 @@ public class Cell : MonoBehaviour
             Points.AddPoints(transform.position, MyMaterial.color, points1, pointsSize);
             PongPadBuilder.instance.KilledOneCell(cell_fraction);
         }
-        else
-        {
-            GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
-            NonFatalHit();
-        }
     }
 
+    protected virtual bool IgnoreHit() => finalBigCell && OtherCellsStillAround();
     protected virtual float GetCellFraction() => 1f;
-    protected virtual void NonFatalHit() { }
+    protected virtual void GotHit(bool fatal) { }
 
     bool OtherCellsStillAround()
     {

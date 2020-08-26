@@ -46,6 +46,8 @@ Shader "Skybox/StarNest3" {
 		//How much color is present?
 		_Saturation ("Saturation", Float) = 0.77
 		
+        _ColorGround ("Color Ground", Color) = (0, 0, 0, 0)
+        _ColorSky ("Color Sky", Color) = (0, 0, 0, 0)
 	}
 
 	SubShader {
@@ -71,7 +73,10 @@ Shader "Skybox/StarNest3" {
 
 			float _Brightness;
 			float _Saturation;
-			
+
+            float4 _ColorGround;
+            float4 _ColorSky;
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 			};
@@ -135,7 +140,8 @@ Shader "Skybox/StarNest3" {
                 a = max(a, 42);
 
                 // coloring based on distance
-                v += float3(0, s*s, s) * a*a * _Brightness * fade;
+                float3 v1 = dir.y >= 0 ? _ColorSky : _ColorGround;
+                v += v1 * a*a * _Brightness * fade;
 
                 float len = length(v);
                 //Quick saturate

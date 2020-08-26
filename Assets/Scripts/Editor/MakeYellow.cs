@@ -74,4 +74,13 @@ public static class MakeYellow
         EditorUtility.SetDirty(cell.transform);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("CONTEXT/Cell/Move Forward By Diameter")]
+    static void MoveForwardByDiameterCmd(MenuCommand command)
+    {
+        Cell cell = (Cell)command.context;
+        cell.transform.position += cell.transform.forward * cell.transform.lossyScale.y;
+        EditorUtility.SetDirty(cell.transform);
+        AssetDatabase.SaveAssets();
+    }
 }

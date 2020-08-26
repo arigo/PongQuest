@@ -82,6 +82,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.21
       objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511464, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e8afbaa9811dbd64aa2b43313726e2ee, type: 2}
     - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
       propertyPath: points
@@ -97,10 +102,10 @@ PrefabInstance:
       propertyPath: movingVelocity
       value: 0.07
       objectReference: {fileID: 0}
-    - target: {fileID: 4987327876559511464, guid: 624b002ef7befe4449e4673985314173,
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: e8afbaa9811dbd64aa2b43313726e2ee, type: 2}
+      propertyPath: allowCocoon
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 624b002ef7befe4449e4673985314173, type: 3}
