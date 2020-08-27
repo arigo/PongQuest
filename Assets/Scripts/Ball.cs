@@ -69,6 +69,8 @@ public class Ball : MonoBehaviour, IBall
         return initial_radius * Mathf.Sqrt(inflation_bonuses + 1);
     }
 
+    static float wait_for_next_respawn;
+
     void RestoreStartPosition(Vector3 start_position, float inflation_bonuses = 0f)
     {
         EndUnstoppable();
@@ -88,17 +90,18 @@ public class Ball : MonoBehaviour, IBall
                 var tr = PongPadBuilder.instance.transformSpaceBase;
                 velocity = tr.forward * -0.2f;
             }
-            else if (start_position.x < 0f)
+            else if (Time.time < wait_for_next_respawn)
             {
                 respawning = true;
-                StartCoroutine(_DoneWaitingForABit());
+                StartCoroutine(_DoneWaitingForABit(wait_for_next_respawn - Time.time));
             }
+            wait_for_next_respawn = Mathf.Max(wait_for_next_respawn, Time.time) + 1f;
         }
     }
 
-    IEnumerator _DoneWaitingForABit()
+    IEnumerator _DoneWaitingForABit(float delay)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(delay);
         respawning = false;
     }
 

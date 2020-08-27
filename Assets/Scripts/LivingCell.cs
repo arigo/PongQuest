@@ -9,7 +9,8 @@ public class LivingCell : Cell
 
     public float movingVelocity = 0.07f;
     public bool allowFlee, allowCocoon;
-    public LivingCell spawnCellPrefab;
+    public LivingCell[] spawnCellPrefabs;
+    public Vector3[] spawnCellOrientation;
 
     float wobble, wobble_speed, base_scale;
     Quaternion target_rotation;
@@ -105,18 +106,33 @@ public class LivingCell : Cell
             dying_cell_time = Time.time;
             dying_cell_location = transform.position;
         }
-        else if (finalBigCell)
+        else if (spawnCellPrefabs.Length > 0)
         {
-            StartCoroutine(PassThroughCocoonMode(2.2f));
+            int spawn_count = spawnCellOrientation.Length;
+            Debug.Assert(spawn_count > 0);
+            Debug.Assert(finalBigCell);
+
+            StartCoroutine(PassThroughCocoonMode(spawnCellPrefabs.Length == 1 ? 2.2f : 11f));
+
+            void SpawnNewCell(LivingCell prefab, Quaternion orientation)
+            {
+                var spawn = Instantiate(prefab, transform.parent);
+                var q = Quaternion.LookRotation(info.hit_point - transform.position);
+                q = q * orientation;
+                float dist = 0.055f + 0.21f - spawn.transform.localScale.y;
+                var p = transform.position + dist * (q * Vector3.forward);
+                spawn.transform.SetPositionAndRotation(p, q);
+                spawn.fraction_of_original = 1f / (full_energy * spawn_count + 1);
+                spawn.points = Mathf.RoundToInt(spawn.points / spawn.fraction_of_original);
+            }
 
             for (int i = Mathf.RoundToInt(energy); i < Mathf.RoundToInt(info.prev_energy); i++)
             {
-                var spawn = Instantiate(spawnCellPrefab, transform.parent);
-                var q = Quaternion.LookRotation(info.hit_point - transform.position);
-                var p = transform.position + 0.055f * (q * Vector3.forward);
-                spawn.transform.SetPositionAndRotation(p, q);
-                spawn.fraction_of_original = 1f / (full_energy + 1);
-                spawn.points = Mathf.RoundToInt(spawn.points / spawn.fraction_of_original);
+                int j = i % spawnCellPrefabs.Length;
+                j = spawnCellPrefabs.Length - 1 - j;
+                var prefab = spawnCellPrefabs[j];
+                foreach (var orientation in spawnCellOrientation)
+                    SpawnNewCell(prefab, Quaternion.LookRotation(orientation));
             }
         }
         else if (last_moving_target != null)
