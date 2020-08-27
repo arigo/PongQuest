@@ -8,12 +8,14 @@ public class PongPad : MonoBehaviour, IPongPad
 {
     const int PAD_LAYER = 8;
 
+    public AudioSource pongSound, whooshSound;
+
     public Collider myCollider;
 
     internal Controller controller;
     internal IBall most_recent_iball_hit;
     Vector3 previous_position;
-    float previous_time;
+    float previous_time, prev_air_volume;
 
     internal static List<IBall> all_balls = new List<IBall>();
 
@@ -23,12 +25,16 @@ public class PongPad : MonoBehaviour, IPongPad
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         RestartFollowing();
+
+        whooshSound.volume = 0;
+        whooshSound.pitch = 0;
+        whooshSound.Play();
     }
 
     void RestartFollowing()
     {
         previous_position = myCollider.transform.position;
-        previous_time = Time.time;
+        previous_time = Time.time + 0.25f;
     }
 
     public static void RestartFollowingAll()
@@ -50,9 +56,27 @@ public class PongPad : MonoBehaviour, IPongPad
     public void FollowController()
     {
         Vector3 old_position = previous_position;
-        Vector3 current_velocity = (myCollider.transform.position - previous_position) / (Time.time - previous_time);
+        Vector3 current_velocity;
+        if (Time.time > previous_time)
+        {
+            current_velocity = (myCollider.transform.position - previous_position) / (Time.time - previous_time);
+            previous_time = Time.time;
+        }
+        else
+        {
+            old_position = myCollider.transform.position;
+            current_velocity = Vector3.zero;
+        }
         previous_position = myCollider.transform.position;
-        previous_time = Time.time;
+
+        float air_volume = Mathf.Clamp01(current_velocity.magnitude * 0.1f - 0.3f);
+        air_volume = Mathf.Pow(air_volume, 0.4f);
+        if (air_volume < prev_air_volume)
+            air_volume = Mathf.Lerp(air_volume, prev_air_volume, Mathf.Exp(Time.unscaledDeltaTime * -5f));
+        prev_air_volume = air_volume;
+
+        whooshSound.volume = air_volume * 0.5f;
+        whooshSound.pitch = air_volume;
 
         int i = 0;
         while (i < all_balls.Count)
@@ -115,9 +139,8 @@ public class PongPad : MonoBehaviour, IPongPad
 
         controller.HapticPulse(1000);
 
-        var asrc = GetComponent<AudioSource>();
-        asrc.Stop();
-        asrc.Play();
+        pongSound.Stop();
+        pongSound.Play();
 
         /*ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         //emitParams.applyShapeToPosition = true;

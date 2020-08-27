@@ -16,6 +16,7 @@ public class PongPadBuilder : PongBaseBuilder
     public Transform headsetPrefab;
     public Material padsAndHeadsetTransparencyMaterial;
     public AudioClip ballBounceSound, tileBreakSound;
+    public AudioSource levelEndSound;
     public AudioClip[] backgroundMusicParts;
     public int episodeNumber = 1;
     public GameObject[] levelPrefabs;
@@ -125,6 +126,8 @@ public class PongPadBuilder : PongBaseBuilder
                 if (level_end_time == null)
                 {
                     Bonus.RemoveAllBonuses();
+                    if (levelEndSound != null)    /* no nice sound found so far */
+                        levelEndSound.Play();
 
                     if (current_level >= levelPrefabs.Length)
                     {

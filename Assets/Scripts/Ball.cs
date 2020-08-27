@@ -372,7 +372,6 @@ public class Ball : MonoBehaviour, IBall
                 if (Vector3.Dot(velocity - cell_speed, hitInfo.normal) >= 0f)
                     continue;
 
-                AudioClip clip = PongPadBuilder.instance.ballBounceSound;
                 bool done;
                 bool unstoppable = cell != null && IsUnstoppable && !cell.finalBigCell;
                 if (!shot)
@@ -408,10 +407,15 @@ public class Ball : MonoBehaviour, IBall
                     done = true;
                 }
 
+                AudioClip clip = null;
                 if (cell != null)
                     cell.Hit(hitInfo, unstoppable ? 9999 : inflation_bonuses + 1, ref clip);
 
-                AudioSource.PlayClipAtPoint(clip, hitInfo.point);
+                if (clip == null)
+                    PlayClip(PongPadBuilder.instance.ballBounceSound,
+                             Mathf.Sqrt(IsUnstoppable ? 0.5f : (1f / (inflation_bonuses + 1))));
+                else
+                    PlayClip(clip);
 
                 if (done)
                     return;
@@ -419,6 +423,15 @@ public class Ball : MonoBehaviour, IBall
         }
         transform.position += dir * move;
         transform.rotation = Quaternion.AngleAxis(rot_speed * dt, rotation_axis) * transform.rotation;
+    }
+
+    void PlayClip(AudioClip clip, float pitch = 1f)
+    {
+        var asrc = GetComponent<AudioSource>();
+        asrc.Stop();
+        asrc.clip = clip;
+        asrc.pitch = pitch;
+        asrc.Play();
     }
 
     public Vector3 GetVelocity()
