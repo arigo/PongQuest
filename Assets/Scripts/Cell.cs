@@ -55,6 +55,7 @@ public class Cell : MonoBehaviour
         if (!ignore)
         {
             ChangeMaterial(b.cellHitMaterial);
+            float prev_energy = energy;
             if (energy > 0)
             {
                 bonus |= Random.Range(0, 4) == 3;
@@ -64,17 +65,22 @@ public class Cell : MonoBehaviour
                 if (energy <= 0)
                     clip = PongPadBuilder.instance.tileBreakSound;
             }
-            StartCoroutine(_Hit(energy <= 0));
+            StartCoroutine(_Hit(new CellHitInfo
+            {
+                fatal = energy <= 0,
+                prev_energy = prev_energy,
+                hit_point = hitInfo.point,
+            }));
         }
     }
 
-    IEnumerator _Hit(bool fatal)
+    IEnumerator _Hit(CellHitInfo info)
     {
         yield return new WaitForSeconds(0.05f);
         ChangeMaterial();
-        GotHit(fatal);
+        GotHit(info);
 
-        if (fatal)
+        if (info.fatal)
         {
             Destroy((GameObject)gameObject);
             if (bonus)
@@ -87,9 +93,16 @@ public class Cell : MonoBehaviour
         }
     }
 
+    protected struct CellHitInfo
+    {
+        public float prev_energy;
+        public bool fatal;
+        public Vector3 hit_point;
+    }
+
     protected virtual bool IgnoreHit() => finalBigCell && OtherCellsStillAround();
     protected virtual float GetCellFraction() => 1f;
-    protected virtual void GotHit(bool fatal) { }
+    protected virtual void GotHit(CellHitInfo info) { }
 
     bool OtherCellsStillAround()
     {

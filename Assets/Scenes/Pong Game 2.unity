@@ -341,7 +341,7 @@ PrefabInstance:
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
       propertyPath: levelPrefabs.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
@@ -412,6 +412,12 @@ PrefabInstance:
       propertyPath: cocoonMaterial
       value: 
       objectReference: {fileID: 2100000, guid: eb5b2516a5b677d48a60049b6f1e109d, type: 2}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: levelPrefabs.Array.data[9]
+      value: 
+      objectReference: {fileID: 2532397204951736877, guid: 17a67bb0b4dce8f419ff86c8a9a89edd,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd909f05ccf630a4fb7c74b74c6ffcb7, type: 3}
 --- !u!1001 &1699113575

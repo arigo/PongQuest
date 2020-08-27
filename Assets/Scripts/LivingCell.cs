@@ -9,6 +9,7 @@ public class LivingCell : Cell
 
     public float movingVelocity = 0.07f;
     public bool allowFlee, allowCocoon;
+    public LivingCell spawnCellPrefab;
 
     float wobble, wobble_speed, base_scale;
     Quaternion target_rotation;
@@ -28,12 +29,18 @@ public class LivingCell : Cell
 
         wobble = Random.Range(0, 2 * Mathf.PI);
         wobble_speed = Random.Range(2.7f, 3.0f);
+
         base_scale = transform.localScale.y;
         moving_velocity = InitialMovingVelocity();
         target_rotation = transform.rotation;
         full_energy = energy;
 
-        if (FindTrackCollider(out Collider track) || copied_from_cell != null)
+        if (finalBigCell)
+        {
+            Debug.Assert(copied_from_cell == null);
+            wobble_speed *= 0.5f;
+        }
+        else if (FindTrackCollider(out Collider track) || copied_from_cell != null)
         {
             if (copied_from_cell != null)
             {
@@ -76,7 +83,7 @@ public class LivingCell : Cell
             {
                 mat = new Material(MyMaterial)
                 {
-                    color = MyMaterial.color * Mathf.Sqrt(fraction / 16f),
+                    color = MyMaterial.color * Mathf.Pow(fraction / 16f, 0.75f),
                 };
                 _lower_energy_mats[key] = mat;
             }
@@ -84,12 +91,26 @@ public class LivingCell : Cell
         base.ChangeMaterial(mat);
     }
 
-    protected override void GotHit(bool fatal)
+    protected override void GotHit(CellHitInfo info)
     {
-        if (fatal)
+        if (info.fatal)
         {
             dying_cell_time = Time.time;
             dying_cell_location = transform.position;
+        }
+        else if (finalBigCell)
+        {
+            StartCoroutine(PassThroughCocoonMode(2.2f));
+
+            for (int i = Mathf.RoundToInt(energy); i < Mathf.RoundToInt(info.prev_energy); i++)
+            {
+                var spawn = Instantiate(spawnCellPrefab, transform.parent);
+                var q = Quaternion.LookRotation(info.hit_point - transform.position);
+                var p = transform.position + 0.055f * (q * Vector3.forward);
+                spawn.transform.SetPositionAndRotation(p, q);
+                spawn.fraction_of_original = 1f / (full_energy + 1);
+                spawn.points = Mathf.RoundToInt(spawn.points / spawn.fraction_of_original);
+            }
         }
         else if (last_moving_target != null)
         {
@@ -129,7 +150,11 @@ public class LivingCell : Cell
             transform.localScale = new Vector3(base_scale, base_scale, base_scale * factor);
         }
 
-        if (last_moving_target != null)
+        if (finalBigCell)
+        {
+            transform.rotation = Quaternion.Euler(0f, Time.time * 30f, 0f);
+        }
+        else if (last_moving_target != null)
         {
             if (!cocoon_mode)
             {
@@ -187,15 +212,7 @@ public class LivingCell : Cell
                     }
                 }
                 if (allowCocoon)
-                {
-                    cocoon_mode = true;
-                    ChangeMaterial(PongPadBuilder.instance.cocoonMaterial);
-                    transform.localScale = Vector3.one * (base_scale * 0.9f);
-                    yield return new WaitForSeconds(Random.Range(4f, 9f));
-                    cocoon_mode = false;
-                    ChangeMaterial();
-                    transform.localScale = Vector3.one * base_scale;
-                }
+                    yield return PassThroughCocoonMode(Random.Range(4f, 9f));
             }
 
           normal_behavior:
@@ -232,5 +249,16 @@ public class LivingCell : Cell
             /* Steer back to the last moving target */
             target_rotation = Quaternion.LookRotation(last_moving_target.Value - position, transform.up);
         }
+    }
+
+    IEnumerator PassThroughCocoonMode(float time)
+    {
+        cocoon_mode = true;
+        ChangeMaterial(PongPadBuilder.instance.cocoonMaterial);
+        transform.localScale = Vector3.one * (base_scale * 0.9f);
+        yield return new WaitForSeconds(time);
+        cocoon_mode = false;
+        ChangeMaterial();
+        transform.localScale = Vector3.one * base_scale;
     }
 }
