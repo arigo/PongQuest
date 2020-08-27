@@ -28,10 +28,10 @@ public class Cell : MonoBehaviour
         }
     }
 
-    protected void ChangeMaterial(Material mat)
+    protected virtual void ChangeMaterial(Material mat = null)
     {
         FetchMyMaterial();
-        GetComponent<MeshRenderer>().sharedMaterial = mat;
+        GetComponent<MeshRenderer>().sharedMaterial = mat ?? _my_material;
     }
 
     public static void EmitHitPS(Vector3 pos, Vector3 normal, Color color)
@@ -71,7 +71,7 @@ public class Cell : MonoBehaviour
     IEnumerator _Hit(bool fatal)
     {
         yield return new WaitForSeconds(0.05f);
-        ChangeMaterial(MyMaterial);
+        ChangeMaterial();
         GotHit(fatal);
 
         if (fatal)

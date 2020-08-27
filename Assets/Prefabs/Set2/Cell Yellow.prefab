@@ -47,11 +47,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 1
-  points: 100
+  points: 200
   pointsSize: 0
   velocityBoost: 0
   finalBigCell: 0
   movingVelocity: 0.05
+  allowFlee: 0
+  allowCocoon: 0
 --- !u!33 &4987327876559511465
 MeshFilter:
   m_ObjectHideFlags: 0

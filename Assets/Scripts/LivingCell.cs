@@ -17,6 +17,7 @@ public class LivingCell : Cell
     float moving_velocity;
     LivingCell copied_from_cell;
     bool cocoon_mode;
+    float full_energy;
 
     static float dying_cell_time;
     static Vector3 dying_cell_location;
@@ -30,6 +31,7 @@ public class LivingCell : Cell
         base_scale = transform.localScale.y;
         moving_velocity = InitialMovingVelocity();
         target_rotation = transform.rotation;
+        full_energy = energy;
 
         if (FindTrackCollider(out Collider track) || copied_from_cell != null)
         {
@@ -37,6 +39,7 @@ public class LivingCell : Cell
             {
                 wobble = copied_from_cell.wobble;
                 base_scale = copied_from_cell.base_scale;
+                full_energy = copied_from_cell.full_energy;
 
                 copied_from_cell.fraction_of_original *= 0.5f;
                 fraction_of_original = copied_from_cell.fraction_of_original;
@@ -60,6 +63,26 @@ public class LivingCell : Cell
 
     protected override bool IgnoreHit() => cocoon_mode;
     protected override float GetCellFraction() => fraction_of_original;
+
+    static Dictionary<System.Tuple<Material, int>, Material> _lower_energy_mats = new Dictionary<System.Tuple<Material, int>, Material>();
+
+    protected override void ChangeMaterial(Material mat = null)
+    {
+        if (mat == null && energy > 0 && energy < full_energy)
+        {
+            int fraction = Mathf.RoundToInt(Mathf.Clamp((energy / full_energy) * 16f, 1, 15));
+            var key = System.Tuple.Create(MyMaterial, fraction);
+            if (!_lower_energy_mats.TryGetValue(key, out mat))
+            {
+                mat = new Material(MyMaterial)
+                {
+                    color = MyMaterial.color * Mathf.Sqrt(fraction / 16f),
+                };
+                _lower_energy_mats[key] = mat;
+            }
+        }
+        base.ChangeMaterial(mat);
+    }
 
     protected override void GotHit(bool fatal)
     {
@@ -170,7 +193,7 @@ public class LivingCell : Cell
                     transform.localScale = Vector3.one * (base_scale * 0.9f);
                     yield return new WaitForSeconds(Random.Range(4f, 9f));
                     cocoon_mode = false;
-                    ChangeMaterial(MyMaterial);
+                    ChangeMaterial();
                     transform.localScale = Vector3.one * base_scale;
                 }
             }
