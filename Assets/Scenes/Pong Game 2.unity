@@ -341,7 +341,7 @@ PrefabInstance:
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
       propertyPath: levelPrefabs.Array.size
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
@@ -399,13 +399,13 @@ PrefabInstance:
         type: 3}
       propertyPath: levelPrefabs.Array.data[7]
       value: 
-      objectReference: {fileID: 2532397204951736877, guid: 8450b657ea512574d91a5ed8fa91e6d1,
+      objectReference: {fileID: 2532397204951736877, guid: 17a67bb0b4dce8f419ff86c8a9a89edd,
         type: 3}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
       propertyPath: levelPrefabs.Array.data[8]
       value: 
-      objectReference: {fileID: 2532397204951736877, guid: 356e3f643c01e7b4591ec07833b90318,
+      objectReference: {fileID: 2532397204951736877, guid: 8450b657ea512574d91a5ed8fa91e6d1,
         type: 3}
     - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
         type: 3}
@@ -416,7 +416,13 @@ PrefabInstance:
         type: 3}
       propertyPath: levelPrefabs.Array.data[9]
       value: 
-      objectReference: {fileID: 2532397204951736877, guid: 17a67bb0b4dce8f419ff86c8a9a89edd,
+      objectReference: {fileID: 2532397204951736877, guid: 356e3f643c01e7b4591ec07833b90318,
+        type: 3}
+    - target: {fileID: 2480069471974031608, guid: dd909f05ccf630a4fb7c74b74c6ffcb7,
+        type: 3}
+      propertyPath: levelPrefabs.Array.data[10]
+      value: 
+      objectReference: {fileID: 4774637808712057899, guid: c4cfb997d2182ce4aa3f63b14a9cec86,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd909f05ccf630a4fb7c74b74c6ffcb7, type: 3}

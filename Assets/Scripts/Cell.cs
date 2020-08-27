@@ -137,6 +137,9 @@ public class Cell : MonoBehaviour
         return (v2 - v + transform.position - last_pos) / Time.deltaTime;
     }
 
+    public virtual float VelocityBoostSpeed() => 2.5f;
+    public virtual bool VelocityBoostCube() => true;
+
     public void HitVelocityBoost(Vector3 cell_speed)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -144,45 +147,93 @@ public class Cell : MonoBehaviour
         go.transform.SetPositionAndRotation(transform.position, transform.rotation);
         go.transform.localScale = transform.lossyScale;
         go.GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
-        go.AddComponent<VelocityBooster>().base_speed = cell_speed * 0.5f;
+        var vb = go.AddComponent<VelocityBooster>();
+        vb.base_speed = cell_speed * 0.5f;
+        if (!VelocityBoostCube())
+            vb.src_mesh = GetComponent<MeshFilter>().sharedMesh;
     }
 
     class VelocityBooster : MonoBehaviour
     {
-        static Mesh static_mesh;
+        static Dictionary<string, Mesh> static_meshes = new Dictionary<string, Mesh>();
 
+        internal Mesh src_mesh;
         internal Vector3 base_speed;
 
         IEnumerator Start()
         {
-            if (static_mesh == null)
+            string name = src_mesh ? src_mesh.name : "cube";
+            if (!static_meshes.TryGetValue(name, out Mesh mesh))
             {
-                var vecs = new Vector3[8];
-                var norms = new Vector3[8];
-                int i = 0;
-                for (int dz = -1; dz <= 1; dz += 2)
-                    for (int dy = -1; dy <= 1; dy += 2)
-                        for (int dx = -1; dx <= 1; dx += 2)
+                var vecs = new List<Vector3>();
+                var indices = new List<int>();
+
+                if (!src_mesh)
+                {
+                    /* cube */
+                    for (int dz = -1; dz <= 1; dz += 2)
+                        for (int dy = -1; dy <= 1; dy += 2)
+                            for (int dx = -1; dx <= 1; dx += 2)
+                                vecs.Add(new Vector3(dx * 0.5f, dy * 0.5f, dz * 0.5f));
+
+                    indices.AddRange(new int[] {
+                        0, 1, 2, 3, 4, 5, 6, 7,
+                        0, 2, 1, 3, 4, 6, 5, 7,
+                        0, 4, 1, 5, 2, 6, 3, 7,
+                    });
+                }
+                else
+                {
+                    /* copy the underlying mesh's edges */
+                    var vec2index = new Dictionary<Vector3Int, int>();
+                    var seen_edge = new HashSet<System.Tuple<int, int>>();
+
+                    int AddVec(Vector3 v)
+                    {
+                        Vector3Int key = Vector3Int.RoundToInt(v * 128f);
+                        if (!vec2index.TryGetValue(key, out int i))
                         {
-                            vecs[i] = new Vector3(dx * 0.5f, dy * 0.5f, dz * 0.5f);
-                            norms[i] = vecs[i].normalized;
-                            i++;
+                            i = vecs.Count;
+                            vecs.Add(v);
+                            vec2index[key] = i;
                         }
+                        return i;
+                    }
 
-                var indices = new int[] {
-                    0, 1, 2, 3, 4, 5, 6, 7,
-                    0, 2, 1, 3, 4, 6, 5, 7,
-                    0, 4, 1, 5, 2, 6, 3, 7,
-                };
+                    var src_vecs = src_mesh.vertices;
+                    var src_indices = src_mesh.GetIndices(0);
+                    for (int i = 0; i < src_indices.Length; i++)
+                    {
+                        int j = i + 1;
+                        if ((j % 3) == 0)
+                            j -= 3;
 
-                static_mesh = new Mesh();
-                static_mesh.vertices = vecs;
-                static_mesh.normals = norms;
-                static_mesh.SetUVs(0, new List<Vector3>(vecs));
-                static_mesh.SetIndices(indices, MeshTopology.Lines, 0);
-                static_mesh.UploadMeshData(true);
+                        int ii = AddVec(src_vecs[src_indices[i]]);
+                        int jj = AddVec(src_vecs[src_indices[j]]);
+
+                        if (!seen_edge.Contains(System.Tuple.Create(ii, jj)) &&
+                            !seen_edge.Contains(System.Tuple.Create(jj, ii)))
+                        {
+                            indices.Add(ii);
+                            indices.Add(jj);
+                            seen_edge.Add(System.Tuple.Create(jj, ii));
+                        }
+                    }
+                }
+
+                var norms = new Vector3[vecs.Count];
+                for (int i = 0; i < vecs.Count; i++)
+                    norms[i] = vecs[i].normalized;
+
+                mesh = new Mesh();
+                mesh.SetVertices(vecs);
+                mesh.normals = norms;
+                mesh.SetUVs(0, vecs);
+                mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+                mesh.UploadMeshData(true);
+                static_meshes[name] = mesh;
             }
-            GetComponent<MeshFilter>().sharedMesh = static_mesh;
+            GetComponent<MeshFilter>().sharedMesh = mesh;
 
             Vector3 base_scale = transform.localScale;
             float delta_y = 1f;

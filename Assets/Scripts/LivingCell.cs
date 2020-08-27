@@ -68,8 +68,15 @@ public class LivingCell : Cell
 
     float InitialMovingVelocity() => movingVelocity * Random.Range(0.9f, 1.1f);
 
-    protected override bool IgnoreHit() => cocoon_mode;
+    protected override bool IgnoreHit()
+    {
+        if (finalBigCell && transform.childCount > 0)
+            return true;
+        return cocoon_mode;
+    }
     protected override float GetCellFraction() => fraction_of_original;
+    public override float VelocityBoostSpeed() => 1.75f;
+    public override bool VelocityBoostCube() => false;
 
     static Dictionary<System.Tuple<Material, int>, Material> _lower_energy_mats = new Dictionary<System.Tuple<Material, int>, Material>();
 
