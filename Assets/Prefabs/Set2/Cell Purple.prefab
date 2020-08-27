@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5226816879980978116
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4987327876559511466, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_Name
+      value: Cell Purple
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.279
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.848
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511462, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511464, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 03d9a09305aa64644b95ac97187cba81, type: 2}
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: points
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: energy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: movingVelocity
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987327876559511463, guid: 624b002ef7befe4449e4673985314173,
+        type: 3}
+      propertyPath: velocityBoost
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 624b002ef7befe4449e4673985314173, type: 3}

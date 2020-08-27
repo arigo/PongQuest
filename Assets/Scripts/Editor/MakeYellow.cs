@@ -62,7 +62,7 @@ public static class MakeYellow
     static void MakePurpleCmd(MenuCommand command)
     {
         MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Purple.prefab",
-            "?",
+            "Assets/Prefabs/Set2/Cell Purple.prefab",
             "?");
     }
 
