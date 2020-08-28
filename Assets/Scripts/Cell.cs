@@ -8,7 +8,7 @@ public class Cell : MonoBehaviour
     public float energy = 1;
     public int points = 100;
     public float pointsSize;
-    public bool velocityBoost, finalBigCell;
+    public bool velocityBoost, finalBigCell, nextLevelIfOnlyMe;
 
     bool bonus;
     Material _my_material;

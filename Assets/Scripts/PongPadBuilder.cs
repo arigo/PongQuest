@@ -116,18 +116,21 @@ public class PongPadBuilder : PongBaseBuilder
     {
         if (track_cell == null)
         {
-            var cell = FindObjectOfType<Cell>();
-            if (cell != null)
+            bool next_level_now = false;
+            foreach (var cell in FindObjectsOfType<Cell>())
             {
-                track_cell = cell.gameObject;
+                if (!cell.nextLevelIfOnlyMe)
+                {
+                    track_cell = cell.gameObject;
+                    break;
+                }
+                next_level_now = true;
             }
-            else
+            if (track_cell == null)
             {
                 if (level_end_time == null)
                 {
                     Bonus.RemoveAllBonuses();
-                    if (levelEndSound != null)    /* no nice sound found so far */
-                        levelEndSound.Play();
 
                     if (current_level >= levelPrefabs.Length)
                     {
@@ -152,7 +155,7 @@ public class PongPadBuilder : PongBaseBuilder
                         number_of_cells_in_this_level = 0;
                         number_of_cells_killed = 0;
                         UpdateMusicVolumes();
-                        level_end_time = Time.time + 1.2f;
+                        level_end_time = Time.time + (next_level_now ? 0f : 1.2f);
                     }
                 }
 
@@ -179,6 +182,7 @@ public class PongPadBuilder : PongBaseBuilder
     IEnumerator EndGame()
     {
         FadeOutSounds(0.8f);
+        levelEndSound.Play();
 
         float f = 0f;
         float t0 = Time.time;

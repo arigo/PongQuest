@@ -434,6 +434,8 @@ public class Ball : MonoBehaviour, IBall
     void PlayClip(AudioClip clip, float pitch = 1f)
     {
         var asrc = GetComponent<AudioSource>();
+        if (asrc == null)   /* maybe the ball was destroyed? */
+            return;
         asrc.Stop();
         asrc.clip = clip;
         asrc.pitch = pitch;
