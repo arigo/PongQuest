@@ -16,7 +16,7 @@ public class PongPadBuilder : PongBaseBuilder
     public Transform headsetPrefab;
     public Material padsAndHeadsetTransparencyMaterial;
     public AudioClip ballBounceSound, tileBreakSound;
-    public AudioSource levelEndSound;
+    //public AudioSource levelEndSound;
     public AudioClip[] backgroundMusicParts;
     public int episodeNumber = 1;
     public GameObject[] levelPrefabs;
@@ -182,7 +182,7 @@ public class PongPadBuilder : PongBaseBuilder
     IEnumerator EndGame()
     {
         FadeOutSounds(0.8f);
-        levelEndSound.Play();
+        //levelEndSound.Play();
 
         float f = 0f;
         float t0 = Time.time;
