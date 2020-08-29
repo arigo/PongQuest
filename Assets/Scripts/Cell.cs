@@ -46,15 +46,15 @@ public class Cell : MonoBehaviour
 
     public void Hit(RaycastHit hitInfo, float subtract_energy, ref AudioClip clip)
     {
-        var b = PongPadBuilder.instance;
-        var ps = b.hitPS;
+
         var color = MyMaterial.color;
-        var ignore = IgnoreHit();
-        EmitHitPS(hitInfo.point, hitInfo.normal, ignore ? Color.black : color);
+        var ignore = IgnoreHit(hitInfo.point, subtract_energy);
 
         if (!ignore)
         {
-            ChangeMaterial(b.cellHitMaterial);
+            if (energy <= 0)
+                return;
+            ChangeMaterial(PongPadBuilder.instance.cellHitMaterial);
             float prev_energy = energy;
             if (energy > 0)
             {
@@ -72,6 +72,7 @@ public class Cell : MonoBehaviour
                 hit_point = hitInfo.point,
             }));
         }
+        EmitHitPS(hitInfo.point, hitInfo.normal, ignore ? Color.black : color);
     }
 
     IEnumerator _Hit(CellHitInfo info)
@@ -100,7 +101,8 @@ public class Cell : MonoBehaviour
         public Vector3 hit_point;
     }
 
-    protected virtual bool IgnoreHit() => finalBigCell && OtherCellsStillAround();
+    protected virtual bool IgnoreHit(Vector3 point, float subtract_energy) =>
+        finalBigCell && OtherCellsStillAround();
     protected virtual float GetCellFraction() => 1f;
     protected virtual void GotHit(CellHitInfo info) { }
 

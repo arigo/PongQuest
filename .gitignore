@@ -1,5 +1,7 @@
 .vs
 *.csproj
+*.skb
+*.skb.meta
 PongQuest.sln
 
 Library

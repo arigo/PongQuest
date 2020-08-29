@@ -42,6 +42,22 @@ public static class MakeYellow
             "Assets/Prefabs/Set3/HexCell Green.prefab");
     }
 
+    [MenuItem("CONTEXT/Cell/Make HexDir Yellow")]
+    static void MakeHexDirYellowCmd(MenuCommand command)
+    {
+        MakeCmd(command, "?",
+            "?",
+            "Assets/Prefabs/Set3/HexDir Yellow.prefab");
+    }
+
+    [MenuItem("CONTEXT/Cell/Make HexDir Green")]
+    static void MakeHexDirGreenCmd(MenuCommand command)
+    {
+        MakeCmd(command, "?",
+            "?",
+            "Assets/Prefabs/Set3/HexDir Green.prefab");
+    }
+
     [MenuItem("CONTEXT/Cell/Make Blue")]
     static void MakeBlueCmd(MenuCommand command)
     {
@@ -80,6 +96,25 @@ public static class MakeYellow
     {
         Cell cell = (Cell)command.context;
         cell.transform.position += cell.transform.forward * cell.transform.lossyScale.y;
+        EditorUtility.SetDirty(cell.transform);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("CONTEXT/Cell/Snap to triangular grid")]
+    static void SnapToTriangularGridCmd(MenuCommand command)
+    {
+        const float GRID_SIZE = 0.19f;
+        float GRID_SIZE_SMALLER = GRID_SIZE * 0.5f * Mathf.Sqrt(3);
+
+        Cell cell = (Cell)command.context;
+        int z = Mathf.RoundToInt(cell.transform.localPosition.z / GRID_SIZE_SMALLER);
+        float dx = 0.5f * (z & 1);
+        float x = Mathf.RoundToInt(cell.transform.localPosition.x / GRID_SIZE + dx) - dx;
+        cell.transform.localPosition = new Vector3(
+            x * GRID_SIZE,
+            cell.transform.localPosition.y,
+            z * GRID_SIZE_SMALLER);
+
         EditorUtility.SetDirty(cell.transform);
         AssetDatabase.SaveAssets();
     }
