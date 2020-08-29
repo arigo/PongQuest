@@ -15,12 +15,13 @@ public interface IPongPad
 
 public abstract class PongBaseBuilder : MonoBehaviour
 {
-    public GameObject padObjectPrefab;
+    public GameObject padObjectPrefab, pausedPointerPrefab;
     public Transform transformSpaceBase;
     /*public GameObject preloadGameObject;*/
 
-    public static bool paused { get => paused_no_focus || paused_no_ctrl; }
+    public static bool paused { get => paused_no_focus || paused_no_ctrl || paused_explicit; }
     static bool paused_no_focus, paused_no_ctrl;
+    static protected bool paused_explicit;
 
     protected virtual void Start()
     {
@@ -41,6 +42,14 @@ public abstract class PongBaseBuilder : MonoBehaviour
         paused_no_focus = !focus;
         Time.timeScale = paused ? 0f : 1f;
 #endif
+    }
+
+    public void SetPausedExplicit(bool pause)
+    {
+        paused_explicit = pause;
+        Time.timeScale = paused ? 0f : 1f;
+        if (!pause)
+            RemovePointersOnPausedExplicit();
     }
 
     bool _was_paused;
@@ -105,6 +114,8 @@ public abstract class PongBaseBuilder : MonoBehaviour
 
             float length = Mathf.Min(Vector3.Distance(p0, p1), Vector3.Distance(p2, p3));
             float width = Mathf.Min(Vector3.Distance(p1, p2), Vector3.Distance(p3, p0));
+            if (length < 1e-3f || width < 1e-3f)
+                return;
             if (width > length)
             {
                 Vector3 t1 = p0; p0 = p1; p1 = p2; p2 = p3; p3 = t1;
@@ -147,7 +158,11 @@ public abstract class PongBaseBuilder : MonoBehaviour
     private void Ht_onControllersUpdate(Controller[] controllers)
     {
         if (paused)
+        {
+            if (paused_explicit)
+                AddPointersOnPausedExplicit();
             return;
+        }
 
         FrameByFrameUpdate();
 
@@ -174,6 +189,7 @@ public abstract class PongBaseBuilder : MonoBehaviour
             if (pad != null)
                 pad.DestroyPad();
         }
+        RemovePointersOnPausedExplicit();
     }
 
     float _volume = 1;
@@ -234,4 +250,7 @@ public abstract class PongBaseBuilder : MonoBehaviour
             yield return null;
         }
     }
+
+    protected virtual void AddPointersOnPausedExplicit() { SetPausedExplicit(false); }
+    protected virtual void RemovePointersOnPausedExplicit() { }
 }

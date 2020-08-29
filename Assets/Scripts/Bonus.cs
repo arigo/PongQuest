@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class Bonus : MonoBehaviour, IBall
 {
     const float X_DELTA_MAX = 0.8595f;
-    const float Y_MIN = 0.179f;
+    const float Y_MIN = 0.258f;
     const float Y_MAX = 1.58f;
 
     public static void AddBonus(Vector3 position)

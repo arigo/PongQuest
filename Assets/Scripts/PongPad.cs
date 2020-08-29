@@ -55,6 +55,9 @@ public class PongPad : MonoBehaviour, IPongPad
 
     public void FollowController()
     {
+        if (controller.touchpadPressed || controller.menuPressed)
+            PongPadBuilder.instance.SetPausedExplicit(true);
+
         Vector3 old_position = previous_position;
         Vector3 current_velocity;
         if (Time.time > previous_time)

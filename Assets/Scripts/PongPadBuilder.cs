@@ -13,6 +13,7 @@ public class PongPadBuilder : PongBaseBuilder
     public MeshRenderer haloPrefab;
     public Points canvasPointsPrefab;
     public UnityEngine.UI.Text totalPointsText;
+    public GameObject pausedCanvasGobj;
     public Transform headsetPrefab;
     public Material padsAndHeadsetTransparencyMaterial;
     public AudioClip ballBounceSound, tileBreakSound;
@@ -107,9 +108,17 @@ public class PongPadBuilder : PongBaseBuilder
     protected override void SetPaused(bool paused)
     {
         if (paused)
-            totalPointsText.text = "READY";
+        {
+            if (!paused_explicit)
+                totalPointsText.text = "READY";
+            else
+                pausedCanvasGobj.SetActive(true);
+        }
         else
+        {
             Points.UpdateTotalPoints(0);
+            pausedCanvasGobj.SetActive(false);
+        }
     }
 
     protected override void FrameByFrameUpdate()
@@ -204,5 +213,95 @@ public class PongPadBuilder : PongBaseBuilder
         Baroque.FadeToColor(Color.black, 2f);
         yield return new WaitForSeconds(2f);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Intro");
+    }
+
+
+    class PointerOnPausedExplicit
+    {
+        public Transform cylinder_tr;
+        //public int menu_press;
+        public Collider clicking_button;
+    }
+    PointerOnPausedExplicit[] expls;
+
+    protected override void AddPointersOnPausedExplicit()
+    {
+        foreach (var coll in pausedCanvasGobj.GetComponentsInChildren<BoxCollider>())
+            coll.GetComponent<UnityEngine.UI.Text>().color = new Color(0.9f, 0.9f, 0.9f);
+
+        foreach (var ctrl in Baroque.GetControllers())
+            if (ctrl.isReady)
+            {
+                var expl = ctrl.GetAdditionalData(ref expls);
+                if (expl.cylinder_tr == null)
+                {
+                    var gobj = Instantiate(pausedPointerPrefab, ctrl.transform);
+                    expl.cylinder_tr = gobj.transform.GetChild(0);
+                }
+
+                const float Z_MAX = 0.75f;
+                float z = Z_MAX;
+
+                Collider click = null;
+                if (Physics.Raycast(ctrl.transform.position, ctrl.transform.forward, out var hitInfo, 2 * Z_MAX,
+                    layerMask: 1 << IntroPointer.LAYER_SELECTION))
+                    click = hitInfo.collider;
+
+                if (click != null && (expl.clicking_button == null || expl.clicking_button == click))
+                {
+                    var text = hitInfo.collider.GetComponent<UnityEngine.UI.Text>();
+                    if (expl.clicking_button == null)
+                        text.color = new Color(1f, 0.7f, 0.7f);
+                    else
+                        text.color = new Color(1f, 0.45f, 0.45f);
+
+                    z = hitInfo.distance * 0.5f;
+                }
+                var cylinder_tr = expl.cylinder_tr;
+                var v = cylinder_tr.localScale; v.y = z; cylinder_tr.localScale = v;
+                v = cylinder_tr.localPosition; v.z = z; cylinder_tr.localPosition = v;
+
+                if (ctrl.triggerPressed)
+                {
+                    if (expl.clicking_button == null)
+                        expl.clicking_button = click;
+                    //expl.menu_press = 0;
+                }
+                else if (expl.clicking_button != null && expl.clicking_button == click)
+                {
+                    SetPausedExplicit(false);
+                    if (click.gameObject.name == "EXIT")
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("Intro");
+                    break;
+                }
+                else
+                {
+                    expl.clicking_button = null;
+                    /*if (ctrl.touchpadPressed || ctrl.menuPressed)
+                    {
+                        if (expl.menu_press == 1)
+                            expl.menu_press = 2;
+                    }
+                    else if (expl.menu_press == 2)
+                    {
+                        SetPausedExplicit(false);
+                        break;
+                    }
+                    else
+                        expl.menu_press = 1;*/
+                }
+            }
+    }
+
+    protected override void RemovePointersOnPausedExplicit()
+    {
+        var old_expls = expls;
+        expls = null;
+        foreach (var ctrl in Baroque.GetControllers())
+        {
+            var expl = ctrl.GetAdditionalData(ref old_expls);
+            if (expl.cylinder_tr != null)
+                Destroy((GameObject)expl.cylinder_tr.parent.gameObject);
+        }
     }
 }

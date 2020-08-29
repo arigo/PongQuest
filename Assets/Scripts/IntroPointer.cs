@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class IntroPointer : MonoBehaviour, IPongPad
 {
-    const int LAYER_SELECTION = 12;
+    public const int LAYER_SELECTION = 12;
 
     Controller controller;
     bool triggered;
