@@ -100,22 +100,22 @@ public static class MakeYellow
         AssetDatabase.SaveAssets();
     }
 
-    [MenuItem("CONTEXT/Cell/Snap to triangular grid")]
+    [MenuItem("CONTEXT/Transform/Snap to triangular grid")]
     static void SnapToTriangularGridCmd(MenuCommand command)
     {
         const float GRID_SIZE = 0.19f;
         float GRID_SIZE_SMALLER = GRID_SIZE * 0.5f * Mathf.Sqrt(3);
 
-        Cell cell = (Cell)command.context;
-        int z = Mathf.RoundToInt(cell.transform.localPosition.z / GRID_SIZE_SMALLER);
+        Transform tr = (Transform)command.context;
+        int z = Mathf.RoundToInt(tr.localPosition.z / GRID_SIZE_SMALLER);
         float dx = 0.5f * (z & 1);
-        float x = Mathf.RoundToInt(cell.transform.localPosition.x / GRID_SIZE + dx) - dx;
-        cell.transform.localPosition = new Vector3(
+        float x = Mathf.RoundToInt(tr.localPosition.x / GRID_SIZE + dx) - dx;
+        tr.localPosition = new Vector3(
             x * GRID_SIZE,
-            cell.transform.localPosition.y,
+            tr.localPosition.y,
             z * GRID_SIZE_SMALLER);
 
-        EditorUtility.SetDirty(cell.transform);
+        EditorUtility.SetDirty(tr);
         AssetDatabase.SaveAssets();
     }
 }

@@ -380,12 +380,23 @@ public class Ball : MonoBehaviour, IBall
                     {
                         transform.position += dir * hitInfo.distance;
 
-                        float old_velocity_z = velocity.z;
-                        velocity = Vector3.Reflect(velocity - cell_speed, hitInfo.normal) + cell_speed;
+                        bool randomly_tweak_velocity = false;
+                        float bump_factor = 2f;
+                        if (cell == null)
+                        {
+                            if (PongPadBuilder.instance.episodeNumber == 3)
+                                bump_factor = 1.9f;
+                            else if (velocity.z < 0f)
+                                randomly_tweak_velocity = true;
+                        }
+
+                        velocity -= cell_speed;
+                        velocity -= hitInfo.normal * (bump_factor * Vector3.Dot(velocity, hitInfo.normal));
+                        velocity += cell_speed;
 
                         /* randomly tweak the velocity at every rebound that is on a wall, and goes
                          * from 'towards' to 'away from' the player */
-                        if (cell == null && old_velocity_z < 0f && velocity.z >= 0f)
+                        if (randomly_tweak_velocity && velocity.z > 0f)
                             velocity += Random.onUnitSphere * (SPEED_LIMIT / 5f);
 
                         rotation_axis = Random.onUnitSphere;

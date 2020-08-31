@@ -842,7 +842,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   padObjectPrefab: {fileID: 9092351764034345449, guid: f54768f071f7daa4283fbfe95c82c470,
     type: 3}
-  preloadGameObject: {fileID: 0}
+  pausedPointerPrefab: {fileID: 0}
+  transformSpaceBase: {fileID: 0}
 --- !u!4 &1156553126
 Transform:
   m_ObjectHideFlags: 0
@@ -1476,7 +1477,9 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Episode 3
 
-    WARP'
+    WARP
+
+    (unfinished)'
 --- !u!222 &1908704903
 CanvasRenderer:
   m_ObjectHideFlags: 0
