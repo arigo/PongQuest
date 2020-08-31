@@ -356,14 +356,9 @@ public class Ball : MonoBehaviour, IBall
                 if (hitInfo.distance == 0)
                 {
                     hitInfo.point = hitInfo.collider.ClosestPoint(transform.position);
-                    if (Vector3.Distance(hitInfo.point, transform.position) < 1e-5f)
-                    {
-                        hitInfo.normal = -dir;
-                    }
-                    else
-                    {
-                        hitInfo.normal = (transform.position - hitInfo.point).normalized;
-                    }
+                    if (Vector3.Dot(transform.position - hitInfo.point, velocity) > -1e-5)
+                        continue;   /* flying away from the closest point, ignore collision */
+                    hitInfo.normal = (transform.position - hitInfo.point).normalized;
                 }
 
                 var cell = hitInfo.collider.GetComponent<Cell>();
