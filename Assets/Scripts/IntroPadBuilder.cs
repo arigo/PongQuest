@@ -10,7 +10,7 @@ public class IntroPadBuilder : PongBaseBuilder
     {
     }
 
-    protected override void SetPaused(bool paused)
+    protected override void PausedChange(bool paused)
     {
     }
 }

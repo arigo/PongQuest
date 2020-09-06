@@ -43,7 +43,7 @@ public class Cell : MonoBehaviour
         {
             position = pos,
             startSize = 0.1f,
-            startColor = color,
+            startColor = color * 0.6f,
         };
 
         for (int i = 0; i < 20; i++)

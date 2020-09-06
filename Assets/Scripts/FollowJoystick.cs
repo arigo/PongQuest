@@ -7,9 +7,12 @@ using BaroqueUI;
 public class FollowJoystick : MonoBehaviour
 {
     public GameObject canvasInfo;
+    public GameObject warpWalls;
 
     float current_angle;
     bool[] stop_instruction;
+    float wrap_walls_timeout;
+    bool wrap_discontinuity;
 
     void Start()
     {
@@ -53,6 +56,9 @@ public class FollowJoystick : MonoBehaviour
 
             Vector2 pos = ctrl.touchpadPosition;
             if (pos.sqrMagnitude < 0.6f * 0.6f || Mathf.Abs(pos.x) < 0.3f)
+                continue;
+
+            if (PongPadBuilder.paused)
                 continue;
 
             /* moving the joystick! */
@@ -126,5 +132,88 @@ public class FollowJoystick : MonoBehaviour
 
         Destroy((GameObject)headset.gameObject);
         Destroy(mat);
+    }
+
+    public void StartWarpWallsBonus()
+    {
+        bool was_inactive = wrap_walls_timeout == 0f;
+        wrap_walls_timeout = Time.time + 60f;
+        if (was_inactive)
+            StartCoroutine(_AnimateWarpWalls());
+    }
+
+    IEnumerator _AnimateWarpWalls()
+    {
+        const float ALPHA_MAX = 0.4f;
+
+        warpWalls.SetActive(true);
+
+        var pb = new MaterialPropertyBlock();
+        int name_id = Shader.PropertyToID("_Parameters");
+        var walls = warpWalls.GetComponentsInChildren<MeshRenderer>();
+        float alpha = 0f;
+        float timespeed = 1f;
+        float time = Time.time % 2345f;
+
+        while (true)
+        {
+            float target_alpha;
+            float remaining = wrap_walls_timeout - Time.time;
+            if (remaining < 0f)
+                break;
+            if (remaining >= 2.8f || (remaining % 0.8f) >= 0.4f)
+                target_alpha = ALPHA_MAX;
+            else
+                target_alpha = 0f;
+
+            alpha = Mathf.MoveTowards(alpha, target_alpha, 3.2f * Time.deltaTime);
+            timespeed = Mathf.MoveTowards(timespeed, 1f, 1.5f * Time.deltaTime);
+            if (wrap_discontinuity)
+            {
+                timespeed = 2.5f;
+                alpha = ALPHA_MAX * 2.0f;
+                wrap_discontinuity = false;
+            }
+            time += timespeed * Time.deltaTime;
+
+            pb.SetVector(name_id, new Vector4(alpha, time, 0f));
+            foreach (var wall in walls)
+                wall.SetPropertyBlock(pb);
+
+            yield return null;
+        }
+
+        wrap_walls_timeout = 0f;
+        warpWalls.SetActive(false);
+    }
+
+    public void WarpBall(Ball ball, ref Vector3 velocity)
+    {
+        var tr1 = warpWalls.transform.GetChild(0);
+        var tr2 = warpWalls.transform.GetChild(1);
+        var ball_pos = ball.transform.position;
+
+        if ((ball_pos - tr1.position).sqrMagnitude > (ball_pos - tr2.position).sqrMagnitude)
+        {
+            var tr_swap = tr1;
+            tr1 = tr2;
+            tr2 = tr_swap;
+        }
+
+        /* warping from tr1 to tr2 */
+        var rel_velocity = tr1.InverseTransformVector(velocity);
+        if (rel_velocity.z > 0f)
+        {
+            rel_velocity.z = -rel_velocity.z;
+
+            var rel_position = tr1.InverseTransformPoint(ball_pos);
+            if (rel_position.z > 0f)
+                rel_position.z = 0f;
+
+            ball.transform.position = tr2.TransformPoint(rel_position);
+            velocity = tr2.TransformVector(rel_velocity);
+
+            wrap_discontinuity = true;
+        }
     }
 }

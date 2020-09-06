@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.30000004
       objectReference: {fileID: 0}
+    - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 1.0471976
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
 --- !u!4 &2257057718706944713 stripped
@@ -376,6 +381,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.29999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 3.1415927
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -772,6 +782,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 2.0943952
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
 --- !u!4 &3571508632783176575 stripped
@@ -1071,6 +1086,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 4.1887903
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -1831,6 +1851,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 5.2359877
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}

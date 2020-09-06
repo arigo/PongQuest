@@ -24,7 +24,10 @@ public abstract class Bonus : MonoBehaviour, IBall
         switch (Random.Range(0, 3))
         {
             case 0:
-                bgo.AddComponent<DoubleBallBonus>();
+                if (PongPadBuilder.instance.episodeNumber == 3)
+                    bgo.AddComponent<WarpWallsBonus>();
+                else
+                    bgo.AddComponent<DoubleBallBonus>();
                 break;
 
             case 1:
@@ -286,5 +289,17 @@ public class LaserBonus : Bonus
                 yield return null;
         }
         Destroy((GameObject)gameObject);
+    }
+}
+
+public class WarpWallsBonus : Bonus
+{
+    protected override Color GetColor() => new Color(0.262f * 1.2f, 0.355f * 1.2f, 0.516f * 1.2f);
+    protected override int GetPoints() => 400;
+
+    protected override void Hit(PongPad pad)
+    {
+        AttachToPad(pad, null);
+        FindObjectOfType<FollowJoystick>().StartWarpWallsBonus();
     }
 }

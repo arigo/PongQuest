@@ -6,7 +6,7 @@ using UnityEngine;
 public class HexCell : Cell
 {
     public bool hasDirection;
-    public float blinkSpeed;
+    public float blinkSpeed, blinkDelta;
 
     private void Start()
     {
@@ -19,21 +19,15 @@ public class HexCell : Cell
     IEnumerator BlinkDirection()
     {
         var rend = GetComponent<MeshRenderer>();
-        var original_mat = rend.sharedMaterial;
         int name_id = Shader.PropertyToID("_EmissionColor");
-        var bright_color = original_mat.GetColor(name_id);
-
-        if (!private_mat_copy.TryGetValue(original_mat, out var copy_mat))
-        {
-            copy_mat = rend.material;   /* make a copy */
-            private_mat_copy[original_mat] = copy_mat;
-        }
-        rend.sharedMaterial = copy_mat;
+        var bright_color = rend.sharedMaterial.GetColor(name_id);
+        var pb = new MaterialPropertyBlock();
 
         while (true)
         {
-            float t = Mathf.Abs(Mathf.Sin(Time.time * blinkSpeed));
-            copy_mat.SetColor(name_id, Color.Lerp(Color.black, bright_color, t));
+            float t = Mathf.Abs(Mathf.Sin(Time.time * blinkSpeed - blinkDelta));
+            pb.SetColor(name_id, Color.Lerp(Color.black, bright_color, t));
+            rend.SetPropertyBlock(pb);
             yield return null;
         }
     }

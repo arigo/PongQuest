@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LevelSet3ColumnHit : MonoBehaviour
 {
-    const float BOOST = 2f;
+    const float BOOST = 2.6f;
 
     static Mesh static_mesh;
 
@@ -20,19 +20,19 @@ public class LevelSet3ColumnHit : MonoBehaviour
 
             static_mesh = VelocityBooster.MakeLinesMesh(new List<Vector3>
             {
-                new Vector3(RADIUS, YD, 0),
-                new Vector3(RADIUS * S, YD, S),
-                new Vector3(-RADIUS * S, YD, S),
-                new Vector3(-RADIUS, YD, 0),
-                new Vector3(-RADIUS * S, YD, -S),
-                new Vector3(RADIUS * S, YD, -S),
+                RADIUS * new Vector3( 1.0f, YD, 0),
+                RADIUS * new Vector3( 0.5f, YD, S),
+                RADIUS * new Vector3(-0.5f, YD, S),
+                RADIUS * new Vector3(-1.0f, YD, 0),
+                RADIUS * new Vector3(-0.5f, YD, -S),
+                RADIUS * new Vector3( 0.5f, YD, -S),
 
-                new Vector3(RADIUS, -YD, 0),
-                new Vector3(RADIUS * S, -YD, S),
-                new Vector3(-RADIUS * S, -YD, S),
-                new Vector3(-RADIUS, -YD, 0),
-                new Vector3(-RADIUS * S, -YD, -S),
-                new Vector3(RADIUS * S, -YD, -S),
+                RADIUS * new Vector3( 1.0f, -YD, 0),
+                RADIUS * new Vector3( 0.5f, -YD, S),
+                RADIUS * new Vector3(-0.5f, -YD, S),
+                RADIUS * new Vector3(-1.0f, -YD, 0),
+                RADIUS * new Vector3(-0.5f, -YD, -S),
+                RADIUS * new Vector3( 0.5f, -YD, -S),
             },
             new int[]
             {

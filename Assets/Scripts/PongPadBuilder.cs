@@ -105,7 +105,9 @@ public class PongPadBuilder : PongBaseBuilder
         coro_music_volumes = null;
     }
 
-    protected override void SetPaused(bool paused)
+    Vector3? paused_canvas_position;
+
+    protected override void PausedChange(bool paused)
     {
         if (paused)
         {
@@ -115,7 +117,12 @@ public class PongPadBuilder : PongBaseBuilder
             }
             else
             {
-                pausedCanvasGobj.transform.SetParent(OVRManager.instance.transform, false);
+                if (paused_canvas_position == null)
+                    paused_canvas_position = pausedCanvasGobj.transform.position;
+
+                pausedCanvasGobj.transform.SetPositionAndRotation(
+                    OVRManager.instance.transform.TransformPoint(paused_canvas_position.Value),
+                    OVRManager.instance.transform.rotation);
                 pausedCanvasGobj.SetActive(true);
             }
         }
@@ -123,7 +130,6 @@ public class PongPadBuilder : PongBaseBuilder
         {
             Points.UpdateTotalPoints(0);
             pausedCanvasGobj.SetActive(false);
-            pausedCanvasGobj.transform.SetParent(transform, false);
         }
     }
 
@@ -307,8 +313,6 @@ public class PongPadBuilder : PongBaseBuilder
 
     protected override void RemovePointersOnPausedExplicit()
     {
-        pausedCanvasGobj.transform.SetParent(transform, false);
-
         var old_expls = expls;
         expls = null;
         foreach (var ctrl in Baroque.GetControllers())

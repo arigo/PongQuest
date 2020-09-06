@@ -18,6 +18,7 @@ public class Ball : MonoBehaviour, IBall
     internal const int LAYER_WALLS = 9;
     internal const int LAYER_CELLS = 10;
     internal const int LAYER_HALOS = 11;
+    internal const int LAYER_WARP_WALLS = 14;
     internal const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
@@ -340,7 +341,7 @@ public class Ball : MonoBehaviour, IBall
         Vector3 dir = velocity.normalized;
 
         var hits = Physics.SphereCastAll(new Ray(transform.position, dir), radius, move,
-            (1 << LAYER_WALLS) | (1 << LAYER_CELLS), QueryTriggerInteraction.Ignore);
+            (1 << LAYER_WALLS) | (1 << LAYER_CELLS) | (1 << LAYER_WARP_WALLS), QueryTriggerInteraction.Ignore);
 
         if (hits.Length > 0)
         {
@@ -352,15 +353,27 @@ public class Ball : MonoBehaviour, IBall
             {
                 var hitInfo = hitInfo1;
 
+                Cell cell = null;
+                switch (hitInfo.collider.gameObject.layer)
+                {
+                    case LAYER_CELLS:
+                        cell = hitInfo.collider.GetComponent<Cell>();
+                        break;
+
+                    case LAYER_WARP_WALLS:
+                        hitInfo.collider.GetComponentInParent<FollowJoystick>().WarpBall(this, ref velocity);
+                        continue;
+                }
+
                 if (hitInfo.distance == 0)
                 {
+                    if (hitInfo.collider is MeshCollider mc && !mc.convex)
+                        continue;
                     hitInfo.point = hitInfo.collider.ClosestPoint(transform.position);
                     if (Vector3.Dot(transform.position - hitInfo.point, velocity) > -1e-5)
                         continue;   /* flying away from the closest point, ignore collision */
                     hitInfo.normal = (transform.position - hitInfo.point).normalized;
                 }
-
-                var cell = hitInfo.collider.GetComponent<Cell>();
 
                 Vector3 cell_speed = cell != null ? cell.LastSpeedOnPoint(hitInfo.point) : Vector3.zero;
                 if (Vector3.Dot(velocity - cell_speed, hitInfo.normal) >= 0f)

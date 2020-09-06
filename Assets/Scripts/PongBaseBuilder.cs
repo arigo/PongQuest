@@ -72,15 +72,15 @@ public abstract class PongBaseBuilder : MonoBehaviour
                 if (pad != null)
                     pad.DestroyPad();
             }
-            SetPaused(true);
+            PausedChange(true);
         }
         else if (_was_paused)
-            SetPaused(false);
+            PausedChange(false);
 
         _was_paused = paused;
     }
 
-    protected abstract void SetPaused(bool paused);
+    protected abstract void PausedChange(bool paused);
 
     public void UpdateTrackingSpacePosition()
     {
