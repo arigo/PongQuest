@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 1
-  points: 250
+  points: 600
   pointsSize: 0
-  velocityBoost: 0
+  velocityBoost: 1
   finalBigCell: 0
   nextLevelIfOnlyMe: 0
   hasDirection: 1

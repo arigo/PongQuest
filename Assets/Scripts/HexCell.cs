@@ -32,21 +32,21 @@ public class HexCell : Cell
 
         while (true)
         {
-            float t = Mathf.Sin(Time.time * blinkSpeed);
+            float t = Mathf.Abs(Mathf.Sin(Time.time * blinkSpeed));
             copy_mat.SetColor(name_id, Color.Lerp(Color.black, bright_color, t));
             yield return null;
         }
     }
 
-    public override bool IgnoreHit(Vector3 point, bool unstoppable)
+    public override bool IgnoreHit(Vector3 velocity, bool unstoppable)
     {
         if (hasDirection && !unstoppable)
         {
-            point = transform.InverseTransformPoint(point);
-            return point.z < 0.04f;
+            velocity = transform.InverseTransformVector(velocity);
+            return velocity.z >= 0f;
         }
         return false;
     }
 
-    public override float VelocityBoostSpeed() => 2.5f;
+    public override float VelocityBoostSpeed() => 3.1f;
 }

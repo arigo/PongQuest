@@ -29,17 +29,17 @@ public static class MakeYellow
     [MenuItem("CONTEXT/Cell/Make Yellow")]
     static void MakeYellowCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell.prefab",
-            "Assets/Prefabs/Set2/Cell Yellow.prefab",
-            "Assets/Prefabs/Set3/HexCell Yellow.prefab");
+        MakeCmd(command, "Assets/Episode 1/Prefabs/SolarCell.prefab",
+            "Assets/Episode 2/Prefabs/Cell Yellow.prefab",
+            "Assets/Episode 3/Prefabs/HexCell Yellow.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Green")]
     static void MakeGreenCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Green.prefab",
-            "Assets/Prefabs/Set2/Cell Green.prefab",
-            "Assets/Prefabs/Set3/HexCell Green.prefab");
+        MakeCmd(command, "Assets/Episode 1/Prefabs/SolarCell Green.prefab",
+            "Assets/Episode 2/Prefabs/Cell Green.prefab",
+            "Assets/Episode 3/Prefabs/HexCell Green.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Cyan")]
@@ -47,7 +47,7 @@ public static class MakeYellow
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexCell Cyan.prefab");
+            "Assets/Episode 3/Prefabs/HexCell Cyan.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make HexPad Yellow")]
@@ -55,7 +55,7 @@ public static class MakeYellow
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexPad Yellow.prefab");
+            "Assets/Episode 3/Prefabs/HexPad Yellow.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make HexPad Green")]
@@ -63,7 +63,7 @@ public static class MakeYellow
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexPad Green.prefab");
+            "Assets/Episode 3/Prefabs/HexPad Green.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make HexPad Cyan")]
@@ -71,30 +71,30 @@ public static class MakeYellow
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexPad Cyan.prefab");
+            "Assets/Episode 3/Prefabs/HexPad Cyan.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Blue")]
     static void MakeBlueCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Blue.prefab",
-            "Assets/Prefabs/Set2/Cell Blue.prefab",
+        MakeCmd(command, "Assets/Episode 1/Prefabs/SolarCell Blue.prefab",
+            "Assets/Episode 2/Prefabs/Cell Blue.prefab",
             "?");
     }
 
     [MenuItem("CONTEXT/Cell/Make Red")]
     static void MakeRedCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Red.prefab",
-            "Assets/Prefabs/Set2/Cell Red.prefab",
+        MakeCmd(command, "Assets/Episode 1/Prefabs/SolarCell Red.prefab",
+            "Assets/Episode 2/Prefabs/Cell Red.prefab",
             "?");
     }
 
     [MenuItem("CONTEXT/Cell/Make Purple")]
     static void MakePurpleCmd(MenuCommand command)
     {
-        MakeCmd(command, "Assets/Prefabs/Set1/SolarCell Purple.prefab",
-            "Assets/Prefabs/Set2/Cell Purple.prefab",
+        MakeCmd(command, "Assets/Episode 1/Prefabs/SolarCell Purple.prefab",
+            "Assets/Episode 2/Prefabs/Cell Purple.prefab",
             "?");
     }
 

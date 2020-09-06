@@ -39,9 +39,19 @@ public class Cell : MonoBehaviour
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
 
+        var emit_params = new ParticleSystem.EmitParams
+        {
+            position = pos,
+            startSize = 0.1f,
+            startColor = color,
+        };
+
         for (int i = 0; i < 20; i++)
-            ps.Emit(pos, normal + (Random.onUnitSphere * 0.5f),
-                0.1f, Random.Range(0.2f, 0.5f), color);
+        {
+            emit_params.velocity = normal + (Random.onUnitSphere * 0.5f);
+            emit_params.startLifetime = Random.Range(0.2f, 0.5f);
+            ps.Emit(emit_params, 1);
+        }
     }
 
     public void Hit(RaycastHit hitInfo, float subtract_energy, bool ignore, ref AudioClip clip)
@@ -100,7 +110,7 @@ public class Cell : MonoBehaviour
         public Vector3 hit_point;
     }
 
-    public virtual bool IgnoreHit(Vector3 point, bool unstoppable) =>
+    public virtual bool IgnoreHit(Vector3 velocity, bool unstoppable) =>
         finalBigCell && OtherCellsStillAround();
     protected virtual float GetCellFraction() => 1f;
     protected virtual void GotHit(CellHitInfo info) { }
@@ -144,112 +154,83 @@ public class Cell : MonoBehaviour
     public void HitVelocityBoost(Vector3 cell_speed)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        Destroy(go.GetComponent<Collider>());
+        Destroy((Component)go.GetComponent<Collider>());
         go.transform.SetPositionAndRotation(transform.position, transform.rotation);
         go.transform.localScale = transform.lossyScale;
         go.GetComponent<MeshRenderer>().sharedMaterial = MyMaterial;
+        go.GetComponent<MeshFilter>().sharedMesh = GetVBMesh();
         var vb = go.AddComponent<VelocityBooster>();
         vb.base_speed = cell_speed * 0.5f;
-        if (!VelocityBoostCube())
-            vb.src_mesh = GetComponent<MeshFilter>().sharedMesh;
     }
 
-    class VelocityBooster : MonoBehaviour
+    static Dictionary<string, Mesh> vb_static_meshes = new Dictionary<string, Mesh>();
+
+    Mesh GetVBMesh()
     {
-        static Dictionary<string, Mesh> static_meshes = new Dictionary<string, Mesh>();
+        Mesh src_mesh = VelocityBoostCube() ? null : GetComponent<MeshFilter>().sharedMesh;
 
-        internal Mesh src_mesh;
-        internal Vector3 base_speed;
-
-        IEnumerator Start()
+        string name = src_mesh ? src_mesh.name : "cube";
+        if (!vb_static_meshes.TryGetValue(name, out Mesh mesh))
         {
-            string name = src_mesh ? src_mesh.name : "cube";
-            if (!static_meshes.TryGetValue(name, out Mesh mesh))
+            var vecs = new List<Vector3>();
+            var indices = new List<int>();
+
+            if (!src_mesh)
             {
-                var vecs = new List<Vector3>();
-                var indices = new List<int>();
+                /* cube */
+                for (int dz = -1; dz <= 1; dz += 2)
+                    for (int dy = -1; dy <= 1; dy += 2)
+                        for (int dx = -1; dx <= 1; dx += 2)
+                            vecs.Add(new Vector3(dx * 0.5f, dy * 0.5f, dz * 0.5f));
 
-                if (!src_mesh)
+                indices.AddRange(new int[] {
+                    0, 1, 2, 3, 4, 5, 6, 7,
+                    0, 2, 1, 3, 4, 6, 5, 7,
+                    0, 4, 1, 5, 2, 6, 3, 7,
+                });
+            }
+            else
+            {
+                /* copy the underlying mesh's edges */
+                var vec2index = new Dictionary<Vector3Int, int>();
+                var seen_edge = new HashSet<System.Tuple<int, int>>();
+
+                int AddVec(Vector3 v)
                 {
-                    /* cube */
-                    for (int dz = -1; dz <= 1; dz += 2)
-                        for (int dy = -1; dy <= 1; dy += 2)
-                            for (int dx = -1; dx <= 1; dx += 2)
-                                vecs.Add(new Vector3(dx * 0.5f, dy * 0.5f, dz * 0.5f));
-
-                    indices.AddRange(new int[] {
-                        0, 1, 2, 3, 4, 5, 6, 7,
-                        0, 2, 1, 3, 4, 6, 5, 7,
-                        0, 4, 1, 5, 2, 6, 3, 7,
-                    });
-                }
-                else
-                {
-                    /* copy the underlying mesh's edges */
-                    var vec2index = new Dictionary<Vector3Int, int>();
-                    var seen_edge = new HashSet<System.Tuple<int, int>>();
-
-                    int AddVec(Vector3 v)
+                    Vector3Int key = Vector3Int.RoundToInt(v * 128f);
+                    if (!vec2index.TryGetValue(key, out int i))
                     {
-                        Vector3Int key = Vector3Int.RoundToInt(v * 128f);
-                        if (!vec2index.TryGetValue(key, out int i))
-                        {
-                            i = vecs.Count;
-                            vecs.Add(v);
-                            vec2index[key] = i;
-                        }
-                        return i;
+                        i = vecs.Count;
+                        vecs.Add(v);
+                        vec2index[key] = i;
                     }
-
-                    var src_vecs = src_mesh.vertices;
-                    var src_indices = src_mesh.GetIndices(0);
-                    for (int i = 0; i < src_indices.Length; i++)
-                    {
-                        int j = i + 1;
-                        if ((j % 3) == 0)
-                            j -= 3;
-
-                        int ii = AddVec(src_vecs[src_indices[i]]);
-                        int jj = AddVec(src_vecs[src_indices[j]]);
-
-                        if (!seen_edge.Contains(System.Tuple.Create(ii, jj)) &&
-                            !seen_edge.Contains(System.Tuple.Create(jj, ii)))
-                        {
-                            indices.Add(ii);
-                            indices.Add(jj);
-                            seen_edge.Add(System.Tuple.Create(jj, ii));
-                        }
-                    }
+                    return i;
                 }
 
-                var norms = new Vector3[vecs.Count];
-                for (int i = 0; i < vecs.Count; i++)
-                    norms[i] = vecs[i].normalized;
+                var src_vecs = src_mesh.vertices;
+                var src_indices = src_mesh.GetIndices(0);
+                for (int i = 0; i < src_indices.Length; i++)
+                {
+                    int j = i + 1;
+                    if ((j % 3) == 0)
+                        j -= 3;
 
-                mesh = new Mesh();
-                mesh.SetVertices(vecs);
-                mesh.normals = norms;
-                mesh.SetUVs(0, vecs);
-                mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
-                mesh.UploadMeshData(true);
-                static_meshes[name] = mesh;
+                    int ii = AddVec(src_vecs[src_indices[i]]);
+                    int jj = AddVec(src_vecs[src_indices[j]]);
+
+                    if (!seen_edge.Contains(System.Tuple.Create(ii, jj)) &&
+                        !seen_edge.Contains(System.Tuple.Create(jj, ii)))
+                    {
+                        indices.Add(ii);
+                        indices.Add(jj);
+                        seen_edge.Add(System.Tuple.Create(jj, ii));
+                    }
+                }
             }
-            GetComponent<MeshFilter>().sharedMesh = mesh;
 
-            Vector3 base_scale = transform.localScale;
-            float delta_y = 1f;
-            float vy = 0.5f;
-            while (vy > 0f)
-            {
-                yield return null;
-
-                float delta = Time.deltaTime * vy * 2.2f;
-                delta_y += delta;
-                transform.localScale = base_scale * delta_y;
-                transform.position += Time.deltaTime * base_speed;
-                vy -= Time.deltaTime;
-            }
-            Destroy((GameObject)gameObject);
+            mesh = VelocityBooster.MakeLinesMesh(vecs, indices.ToArray());
+            vb_static_meshes[name] = mesh;
         }
+        return mesh;
     }
 }

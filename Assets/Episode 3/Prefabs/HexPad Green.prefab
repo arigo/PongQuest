@@ -75,7 +75,7 @@ PrefabInstance:
     - target: {fileID: -2067611164496210588, guid: c9dc18ed9e607cc4b8c848cbdad1f57c,
         type: 3}
       propertyPath: points
-      value: 350
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: -2067611164496210588, guid: c9dc18ed9e607cc4b8c848cbdad1f57c,
         type: 3}

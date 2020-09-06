@@ -18,7 +18,7 @@ public class Ball : MonoBehaviour, IBall
     internal const int LAYER_WALLS = 9;
     internal const int LAYER_CELLS = 10;
     internal const int LAYER_HALOS = 11;
-    const float SPEED_LIMIT = 1.3f;
+    internal const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
     const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;   // -0.722
@@ -368,7 +368,7 @@ public class Ball : MonoBehaviour, IBall
 
                 bool done;
                 bool unstoppable = cell != null && IsUnstoppable && !cell.finalBigCell;
-                bool ignore = cell != null ? cell.IgnoreHit(hitInfo.point, unstoppable) : false;
+                bool ignore = cell != null ? cell.IgnoreHit(velocity, unstoppable) : false;
                 if (!shot)
                 {
                     if (cell == null || !unstoppable)
@@ -397,8 +397,13 @@ public class Ball : MonoBehaviour, IBall
                         rotation_axis = Random.onUnitSphere;
                         rot_speed = Random.Range(15f, 270f);
 
-                        if (cell != null && cell.velocityBoost &&
-                            (PongPadBuilder.instance.episodeNumber != 3 || !ignore))
+                        if (cell == null)
+                        {
+                            var column_hit = hitInfo.collider.GetComponent<LevelSet3ColumnHit>();
+                            if (column_hit != null)
+                                column_hit.Hit(transform.position, ref velocity, hitInfo.normal);
+                        }
+                        else if (cell.velocityBoost && (PongPadBuilder.instance.episodeNumber != 3 || !ignore))
                         {
                             float boost = cell.VelocityBoostSpeed();
                             float extra = SPEED_LIMIT * boost - velocity.magnitude;

@@ -69,7 +69,7 @@ public class LivingCell : Cell
 
     float InitialMovingVelocity() => movingVelocity * Random.Range(0.9f, 1.1f);
 
-    public override bool IgnoreHit(Vector3 point, bool unstoppable)
+    public override bool IgnoreHit(Vector3 velocity, bool unstoppable)
     {
         if (finalBigCell && transform.childCount > 0)
             return true;

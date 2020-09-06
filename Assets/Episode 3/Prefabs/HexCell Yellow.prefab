@@ -47,10 +47,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 1
-  points: 100
+  points: 250
   pointsSize: 0
   velocityBoost: 0
   finalBigCell: 0
+  nextLevelIfOnlyMe: 0
+  hasDirection: 0
+  blinkSpeed: 0
 --- !u!33 &1011857704068598536
 MeshFilter:
   m_ObjectHideFlags: 0

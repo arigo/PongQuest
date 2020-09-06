@@ -27,7 +27,7 @@ public class PongPadBuilder : PongBaseBuilder
     GameObject track_cell;
     float? level_end_time;
     GameObject levelInstance;
-    int current_level;  // = 6;   /* set to non-zero to debug from a different level */
+    int current_level=4;  // = 6;   /* set to non-zero to debug from a different level */
     public int _total_points { get; set; }
     AudioSource[] music_sources;
     int number_of_cells_in_this_level;
@@ -110,14 +110,20 @@ public class PongPadBuilder : PongBaseBuilder
         if (paused)
         {
             if (!paused_explicit)
+            {
                 totalPointsText.text = "READY";
+            }
             else
+            {
+                pausedCanvasGobj.transform.SetParent(OVRManager.instance.transform, false);
                 pausedCanvasGobj.SetActive(true);
+            }
         }
         else
         {
             Points.UpdateTotalPoints(0);
             pausedCanvasGobj.SetActive(false);
+            pausedCanvasGobj.transform.SetParent(transform, false);
         }
     }
 
@@ -203,9 +209,15 @@ public class PongPadBuilder : PongBaseBuilder
             f += Time.deltaTime * 100f;
             while (f >= 1f)
             {
-                var pos = new Vector3(0, 1.5f, 3f) + 1.5f * Random.insideUnitSphere;
-                hitPS.Emit(pos, new Vector3(0, 1, 0) + (Random.onUnitSphere * 0.5f),
-                           0.1f, Random.Range(0.2f, 0.5f), Color.white);
+                var emit_params = new ParticleSystem.EmitParams
+                {
+                    position = new Vector3(0, 1.5f, 3f) + 1.5f * Random.insideUnitSphere,
+                    velocity = new Vector3(0, 1, 0) + (Random.onUnitSphere * 0.5f),
+                    startSize = 0.1f,
+                    startLifetime = Random.Range(0.2f, 0.5f),
+                    startColor = Color.white,
+                };
+                hitPS.Emit(emit_params, 1);
                 total_emit--;
                 f -= 1f;
             }
@@ -295,6 +307,8 @@ public class PongPadBuilder : PongBaseBuilder
 
     protected override void RemovePointersOnPausedExplicit()
     {
+        pausedCanvasGobj.transform.SetParent(transform, false);
+
         var old_expls = expls;
         expls = null;
         foreach (var ctrl in Baroque.GetControllers())
