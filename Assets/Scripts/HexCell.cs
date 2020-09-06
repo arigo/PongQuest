@@ -38,13 +38,15 @@ public class HexCell : Cell
         }
     }
 
-    protected override bool IgnoreHit(Vector3 point, float subtract_energy)
+    public override bool IgnoreHit(Vector3 point, bool unstoppable)
     {
-        if (hasDirection && subtract_energy < 1.5f)
+        if (hasDirection && !unstoppable)
         {
             point = transform.InverseTransformPoint(point);
-            return point.z < 0.43f;
+            return point.z < 0.04f;
         }
         return false;
     }
+
+    public override float VelocityBoostSpeed() => 2.5f;
 }

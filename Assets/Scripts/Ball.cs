@@ -21,7 +21,6 @@ public class Ball : MonoBehaviour, IBall
     const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
-    const float SPEED_BOOST_TO = SPEED_LIMIT * 5f;
     const float MIN_Z = 2.96f - 3.842f + 0.32f / 2;   // -0.722
     const float EPISODE3_CENTER = 2.401781f;
 
@@ -369,6 +368,7 @@ public class Ball : MonoBehaviour, IBall
 
                 bool done;
                 bool unstoppable = cell != null && IsUnstoppable && !cell.finalBigCell;
+                bool ignore = cell != null ? cell.IgnoreHit(hitInfo.point, unstoppable) : false;
                 if (!shot)
                 {
                     if (cell == null || !unstoppable)
@@ -397,12 +397,14 @@ public class Ball : MonoBehaviour, IBall
                         rotation_axis = Random.onUnitSphere;
                         rot_speed = Random.Range(15f, 270f);
 
-                        if (cell != null && cell.velocityBoost)
+                        if (cell != null && cell.velocityBoost &&
+                            (PongPadBuilder.instance.episodeNumber != 3 || !ignore))
                         {
-                            float extra = SPEED_BOOST_TO - velocity.magnitude;
+                            float boost = cell.VelocityBoostSpeed();
+                            float extra = SPEED_LIMIT * boost - velocity.magnitude;
                             if (extra > 0f)
                                 velocity += hitInfo.normal * extra;
-                            rot_speed *= cell.VelocityBoostSpeed();
+                            rot_speed *= boost * 0.5f;
                             cell.HitVelocityBoost(cell_speed);
                         }
 
@@ -421,7 +423,7 @@ public class Ball : MonoBehaviour, IBall
 
                 AudioClip clip = null;
                 if (cell != null)
-                    cell.Hit(hitInfo, unstoppable ? 9999 : inflation_bonuses + 1, ref clip);
+                    cell.Hit(hitInfo, unstoppable ? 9999 : inflation_bonuses + 1, ignore, ref clip);
 
                 if (clip == null)
                     PlayClip(PongPadBuilder.instance.ballBounceSound,

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6716659608243124209}
   - component: {fileID: 4939647646859561533}
   m_Layer: 10
-  m_Name: HexDir Yellow
+  m_Name: HexPad Yellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 4974938682119783213}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.72, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.3, y: 0.33333334, z: 0.3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   finalBigCell: 0
   nextLevelIfOnlyMe: 0
   hasDirection: 1
-  blinkSpeed: 2.5
+  blinkSpeed: 2
 --- !u!33 &1011857704068598536
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -61,7 +61,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4974938682119783213}
-  m_Mesh: {fileID: 1254522096002275142, guid: 4d24cc75cbf2c034d94b9e8a781bd459, type: 3}
+  m_Mesh: {fileID: 5934418154628370393, guid: 74c647db0ad1e7941bbabba59cc402d8, type: 3}
 --- !u!23 &6716659608243124209
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -112,4 +112,4 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
-  m_Mesh: {fileID: 1254522096002275142, guid: 4d24cc75cbf2c034d94b9e8a781bd459, type: 3}
+  m_Mesh: {fileID: 5934418154628370393, guid: 74c647db0ad1e7941bbabba59cc402d8, type: 3}

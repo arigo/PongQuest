@@ -44,11 +44,10 @@ public class Cell : MonoBehaviour
                 0.1f, Random.Range(0.2f, 0.5f), color);
     }
 
-    public void Hit(RaycastHit hitInfo, float subtract_energy, ref AudioClip clip)
+    public void Hit(RaycastHit hitInfo, float subtract_energy, bool ignore, ref AudioClip clip)
     {
 
         var color = MyMaterial.color;
-        var ignore = IgnoreHit(hitInfo.point, subtract_energy);
 
         if (!ignore)
         {
@@ -101,7 +100,7 @@ public class Cell : MonoBehaviour
         public Vector3 hit_point;
     }
 
-    protected virtual bool IgnoreHit(Vector3 point, float subtract_energy) =>
+    public virtual bool IgnoreHit(Vector3 point, bool unstoppable) =>
         finalBigCell && OtherCellsStillAround();
     protected virtual float GetCellFraction() => 1f;
     protected virtual void GotHit(CellHitInfo info) { }
@@ -139,7 +138,7 @@ public class Cell : MonoBehaviour
         return (v2 - v + transform.position - last_pos) / Time.deltaTime;
     }
 
-    public virtual float VelocityBoostSpeed() => 2.5f;
+    public virtual float VelocityBoostSpeed() => 5f;
     public virtual bool VelocityBoostCube() => true;
 
     public void HitVelocityBoost(Vector3 cell_speed)

@@ -42,20 +42,36 @@ public static class MakeYellow
             "Assets/Prefabs/Set3/HexCell Green.prefab");
     }
 
-    [MenuItem("CONTEXT/Cell/Make HexDir Yellow")]
-    static void MakeHexDirYellowCmd(MenuCommand command)
+    [MenuItem("CONTEXT/Cell/Make Cyan")]
+    static void MakeCyanCmd(MenuCommand command)
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexDir Yellow.prefab");
+            "Assets/Prefabs/Set3/HexCell Cyan.prefab");
     }
 
-    [MenuItem("CONTEXT/Cell/Make HexDir Green")]
-    static void MakeHexDirGreenCmd(MenuCommand command)
+    [MenuItem("CONTEXT/Cell/Make HexPad Yellow")]
+    static void MakeHexPadYellowCmd(MenuCommand command)
     {
         MakeCmd(command, "?",
             "?",
-            "Assets/Prefabs/Set3/HexDir Green.prefab");
+            "Assets/Prefabs/Set3/HexPad Yellow.prefab");
+    }
+
+    [MenuItem("CONTEXT/Cell/Make HexPad Green")]
+    static void MakeHexPadGreenCmd(MenuCommand command)
+    {
+        MakeCmd(command, "?",
+            "?",
+            "Assets/Prefabs/Set3/HexPad Green.prefab");
+    }
+
+    [MenuItem("CONTEXT/Cell/Make HexPad Cyan")]
+    static void MakeHexPadCyanCmd(MenuCommand command)
+    {
+        MakeCmd(command, "?",
+            "?",
+            "Assets/Prefabs/Set3/HexPad Cyan.prefab");
     }
 
     [MenuItem("CONTEXT/Cell/Make Blue")]
