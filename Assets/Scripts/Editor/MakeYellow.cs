@@ -98,15 +98,6 @@ public static class MakeYellow
             "?");
     }
 
-    [MenuItem("CONTEXT/Cell/Shuffle Rotation")]
-    static void ShuffleRotationCmd(MenuCommand command)
-    {
-        Cell cell = (Cell)command.context;
-        cell.transform.rotation = Random.rotationUniform;
-        EditorUtility.SetDirty(cell.transform);
-        AssetDatabase.SaveAssets();
-    }
-
     [MenuItem("CONTEXT/Cell/Move Forward By Diameter")]
     static void MoveForwardByDiameterCmd(MenuCommand command)
     {
@@ -142,6 +133,15 @@ public static class MakeYellow
     {
         Transform tr = (Transform)command.context;
         tr.localRotation *= Quaternion.Euler(0, Random.Range(0, 6) * 60f, 0);
+        EditorUtility.SetDirty(tr);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("CONTEXT/Transform/Shuffle Rotations Freely")]
+    static void ShuffleRotationsFreelyCmd(MenuCommand command)
+    {
+        Transform tr = (Transform)command.context;
+        tr.rotation = Random.rotationUniform;
         EditorUtility.SetDirty(tr);
         AssetDatabase.SaveAssets();
     }

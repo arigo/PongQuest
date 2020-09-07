@@ -8,11 +8,8 @@ public class HexCell : Cell
     public bool hasDirection;
     public float blinkSpeed, blinkDelta;
 
-    Rigidbody rb;
-
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
         if (blinkSpeed > 0)
             StartCoroutine(BlinkDirection());
     }
@@ -49,15 +46,10 @@ public class HexCell : Cell
 
     public override Vector3 LastSpeedOnPoint(Vector3 point)
     {
+        var rb = GetComponent<Rigidbody>();
         if (rb != null)
             return rb.GetPointVelocity(point);
         else
             return Vector3.zero;
-    }
-
-    public void Impulse(Vector3 impulse)
-    {
-        if (rb != null)
-            rb.AddForce(impulse, ForceMode.Impulse);
     }
 }

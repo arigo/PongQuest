@@ -35,6 +35,7 @@ public class Ball : MonoBehaviour, IBall
     Ball duplicate_from;
 
     internal static List<Vector3> start_positions;
+    internal static float speed_limit = SPEED_LIMIT;
 
     void Start()
     {
@@ -75,7 +76,7 @@ public class Ball : MonoBehaviour, IBall
     {
         EndUnstoppable();
 
-        if (PongPadBuilder.instance.transformSpaceBase != null)
+        if (PongPadBuilder.instance.transformSpaceBase != null && !shot)
         {
             var tr = FindObjectOfType<FollowJoystick>().ballStartTr;
             var q = Quaternion.Euler(0, 0, Random.Range(-10f, 10f));
@@ -309,7 +310,7 @@ public class Ball : MonoBehaviour, IBall
         if (speed > SPEED_UPPER_LIMIT)
             speed = SPEED_UPPER_LIMIT;
 
-        speed = (speed - SPEED_LIMIT) * speed_reduction + SPEED_LIMIT;
+        speed = (speed - speed_limit) * speed_reduction + speed_limit;
         velocity *= speed / vmag;
 
         if (PongPadBuilder.instance.episodeNumber != 3)
@@ -414,6 +415,10 @@ public class Ball : MonoBehaviour, IBall
                         rotation_axis = Random.onUnitSphere;
                         rot_speed = Random.Range(15f, 270f);
 
+                        var rb = hitInfo.collider.GetComponent<Rigidbody>();
+                        if (rb != null)
+                            rb.AddForce(impulse, ForceMode.Impulse);
+
                         if (cell == null)
                         {
                             var column_hit = hitInfo.collider.GetComponent<LevelSet3ColumnHit>();
@@ -429,9 +434,6 @@ public class Ball : MonoBehaviour, IBall
                             rot_speed *= boost * 0.5f;
                             cell.HitVelocityBoost(cell_speed);
                         }
-
-                        if (cell is HexCell hexcell)
-                            hexcell.Impulse(impulse);
 
                         done = true;
                     }

@@ -66,6 +66,9 @@ public class PongPadBuilder : PongBaseBuilder
     {
         number_of_cells_killed += cell_fraction;
         UpdateMusicVolumes();
+
+        if (Ball.speed_limit > Ball.SPEED_LIMIT)
+            Ball.speed_limit += 1f / 120;
     }
 
     float music_volumes_fraction = 0f, target_volumes_fraction = 0f;

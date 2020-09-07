@@ -1477,9 +1477,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Episode 3
 
-    WARP
-
-    (unfinished)'
+    WARP'
 --- !u!222 &1908704903
 CanvasRenderer:
   m_ObjectHideFlags: 0
