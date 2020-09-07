@@ -4,7 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class LevelSet3ColumnHit : MonoBehaviour
+public interface IWallHit
+{
+    void Hit(Vector3 position, ref Vector3 velocity, Vector3 normal);
+}
+
+
+public class LevelSet3ColumnHit : MonoBehaviour, IWallHit
 {
     const float BOOST = 2.6f;
 

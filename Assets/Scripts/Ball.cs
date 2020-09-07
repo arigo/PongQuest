@@ -421,9 +421,9 @@ public class Ball : MonoBehaviour, IBall
 
                         if (cell == null)
                         {
-                            var column_hit = hitInfo.collider.GetComponent<LevelSet3ColumnHit>();
-                            if (column_hit != null)
-                                column_hit.Hit(transform.position, ref velocity, hitInfo.normal);
+                            var wall_hit = hitInfo.collider.GetComponent<IWallHit>();
+                            if (wall_hit != null)
+                                wall_hit.Hit(transform.position, ref velocity, hitInfo.normal);
                         }
                         else if (cell.velocityBoost && (PongPadBuilder.instance.episodeNumber != 3 || !ignore))
                         {
