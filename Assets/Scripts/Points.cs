@@ -11,13 +11,20 @@ public class Points : MonoBehaviour
 
     public Text text;
 
+    public static string FormatPoints(int score)
+    {
+        if (score < 0)
+            return "---";
+        return score.ToString("###\\'###\\'##0").TrimStart('\'');
+    }
+
     public static void UpdateTotalPoints(int count)
     {
         var b = PongPadBuilder.instance;
         b._total_points += count;
         if (b._total_points < 0)
             b._total_points = 0;
-        b.totalPointsText.text = b._total_points.ToString("###\\'###\\'##0").TrimStart('\'');
+        b.totalPointsText.text = FormatPoints(b._total_points);
     }
 
     public static void AddPoints(Vector3 position, Color color, int count, float points_size = 0f)

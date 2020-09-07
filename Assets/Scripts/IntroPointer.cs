@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BaroqueUI;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class IntroPointer : MonoBehaviour, IPongPad
@@ -30,19 +29,13 @@ public class IntroPointer : MonoBehaviour, IPongPad
         if (Physics.Raycast(transform.position, transform.forward, out var hitInfo, 10f,
             layerMask: 1 << LAYER_SELECTION) && hitInfo.collider != null)
         {
-            var fadeout = hitInfo.collider.GetComponent<FadeOut>();
-            if (fadeout == null)
-            {
-                fadeout = hitInfo.collider.gameObject.AddComponent<FadeOut>();
-                controller.HapticPulse(1000);
-            }
-            fadeout.Bump();
             z = hitInfo.distance * 0.5f;
 
-            if (controller.triggerPressed && !triggered)
+            var menu_item = hitInfo.collider.GetComponent<IntroMenuItem>();
+            if (menu_item != null)
             {
-                var menu_item = hitInfo.collider.GetComponent<IntroMenuItem>();
-                if (menu_item != null)
+                menu_item.Bump(controller);
+                if (controller.triggerPressed && !triggered)
                     StartCoroutine(menu_item.SceneChange());
             }
         }
@@ -54,28 +47,5 @@ public class IntroPointer : MonoBehaviour, IPongPad
     void IPongPad.DestroyPad()
     {
         DestroyImmediate((GameObject)gameObject);
-    }
-
-
-    class FadeOut : MonoBehaviour
-    {
-        float highlight_start;
-
-        public void Bump() { highlight_start = Time.time; }
-
-        private void Update()
-        {
-            var text = GetComponentInChildren<Text>();
-            var t = (Time.time - highlight_start) * 5f;
-            if (text != null)
-            {
-                text.color = Color.Lerp(
-                    new Color(0.25f, 0, 0, 1),
-                    new Color(0.1960784f, 0.1960784f, 0.1960784f, 0.6705883f),
-                    t);
-            }
-            if (t >= 1f)
-                Destroy((Object)this);
-        }
     }
 }

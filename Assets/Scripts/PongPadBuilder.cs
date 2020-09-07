@@ -208,6 +208,8 @@ public class PongPadBuilder : PongBaseBuilder
         FadeOutSounds(0.8f);
         //levelEndSound.Play();
 
+        Scores.NewScore(episodeNumber, _total_points);
+
         float f = 0f;
         float t0 = Time.time;
         int total_emit = 250;
@@ -292,7 +294,10 @@ public class PongPadBuilder : PongBaseBuilder
                 {
                     SetPausedExplicit(false);
                     if (click.gameObject.name == "EXIT")
+                    {
+                        Scores.NewScore(episodeNumber, _total_points);
                         UnityEngine.SceneManagement.SceneManager.LoadScene("Intro");
+                    }
                     break;
                 }
                 else
