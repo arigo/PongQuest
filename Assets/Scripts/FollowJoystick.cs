@@ -8,6 +8,7 @@ public class FollowJoystick : MonoBehaviour
 {
     public GameObject canvasInfo;
     public GameObject warpWalls;
+    public Transform ballStartTr;
 
     float current_angle;
     bool[] stop_instruction;
@@ -204,7 +205,7 @@ public class FollowJoystick : MonoBehaviour
 
         /* warping from tr1 to tr2 */
         var rel_velocity = tr1.InverseTransformVector(velocity);
-        if (rel_velocity.z > 0f)
+        if (rel_velocity.z > 0.001f)
         {
             rel_velocity.z = -Mathf.Max(rel_velocity.z, 0.02f);
             rel_velocity.x = -rel_velocity.x;

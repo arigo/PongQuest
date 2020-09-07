@@ -134,4 +134,13 @@ public static class MakeYellow
         EditorUtility.SetDirty(tr);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("CONTEXT/Transform/Shuffle Rotations")]
+    static void ShuffleRotationsCmd(MenuCommand command)
+    {
+        Transform tr = (Transform)command.context;
+        tr.localRotation *= Quaternion.Euler(0, Random.Range(0, 6) * 60f, 0);
+        EditorUtility.SetDirty(tr);
+        AssetDatabase.SaveAssets();
+    }
 }

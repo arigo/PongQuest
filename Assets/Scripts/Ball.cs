@@ -55,7 +55,7 @@ public class Ball : MonoBehaviour, IBall
             velocity = duplicate_from.velocity - delta;
             duplicate_from.velocity += delta;
         }
-        RestoreStartPosition(start_position, inflation_bonuses);
+        RestoreStartPosition(ref start_position, inflation_bonuses);
         PongPad.all_balls.Add(this);
     }
 
@@ -71,9 +71,19 @@ public class Ball : MonoBehaviour, IBall
 
     static float wait_for_next_respawn;
 
-    void RestoreStartPosition(Vector3 start_position, float inflation_bonuses = 0f)
+    void RestoreStartPosition(ref Vector3 start_position, float inflation_bonuses = 0f)
     {
         EndUnstoppable();
+
+        if (PongPadBuilder.instance.transformSpaceBase != null)
+        {
+            var tr = FindObjectOfType<FollowJoystick>().ballStartTr;
+            var q = Quaternion.Euler(0, 0, Random.Range(-10f, 10f));
+            q = tr.parent.rotation * q * tr.localRotation;
+            start_position = tr.position;
+            velocity = q * Vector3.forward * 0.2f;
+        }
+
         old_position = start_position;
         radius = initial_radius;
         this.inflation_bonuses = inflation_bonuses;
@@ -85,12 +95,7 @@ public class Ball : MonoBehaviour, IBall
 
         if (velocity == Vector3.zero)
         {
-            if (PongPadBuilder.instance.transformSpaceBase != null)
-            {
-                var tr = PongPadBuilder.instance.transformSpaceBase;
-                velocity = tr.forward * -0.2f;
-            }
-            else if (Time.time < wait_for_next_respawn)
+            if (Time.time < wait_for_next_respawn)
             {
                 respawning = true;
                 StartCoroutine(_DoneWaitingForABit(wait_for_next_respawn - Time.time));
@@ -257,7 +262,7 @@ public class Ball : MonoBehaviour, IBall
         if (TryRespawnPosition(out Vector3 start_pos))
         {
             velocity = Vector3.zero;
-            RestoreStartPosition(start_pos);
+            RestoreStartPosition(ref start_pos);
             Cell.EmitHitPS(start_pos, Vector3.zero, color);
             Points.AddPoints(start_pos, color, -5000, 1.5f);
         }
