@@ -27,7 +27,7 @@ public class PongPadBuilder : PongBaseBuilder
     GameObject track_cell;
     float? level_end_time;
     GameObject levelInstance;
-    int current_level=4;  // = 6;   /* set to non-zero to debug from a different level */
+    int current_level;  // = 6;   /* set to non-zero to debug from a different level */
     public int _total_points { get; set; }
     AudioSource[] music_sources;
     int number_of_cells_in_this_level;
