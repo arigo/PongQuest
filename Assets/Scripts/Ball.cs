@@ -403,9 +403,8 @@ public class Ball : MonoBehaviour, IBall
                                 randomly_tweak_velocity = true;
                         }
 
-                        velocity -= cell_speed;
-                        velocity -= hitInfo.normal * (bump_factor * Vector3.Dot(velocity, hitInfo.normal));
-                        velocity += cell_speed;
+                        Vector3 impulse = hitInfo.normal * (bump_factor * Vector3.Dot(velocity - cell_speed, hitInfo.normal));
+                        velocity -= impulse;
 
                         /* randomly tweak the velocity at every rebound that is on a wall, and goes
                          * from 'towards' to 'away from' the player */
@@ -430,6 +429,9 @@ public class Ball : MonoBehaviour, IBall
                             rot_speed *= boost * 0.5f;
                             cell.HitVelocityBoost(cell_speed);
                         }
+
+                        if (cell is HexCell hexcell)
+                            hexcell.Impulse(impulse);
 
                         done = true;
                     }

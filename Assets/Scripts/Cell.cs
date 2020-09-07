@@ -56,7 +56,6 @@ public class Cell : MonoBehaviour
 
     public void Hit(RaycastHit hitInfo, float subtract_energy, bool ignore, ref AudioClip clip)
     {
-
         var color = MyMaterial.color;
 
         if (!ignore)
@@ -138,7 +137,7 @@ public class Cell : MonoBehaviour
         transform.SetPositionAndRotation(pos, rot);
     }
 
-    public Vector3 LastSpeedOnPoint(Vector3 point)
+    public virtual Vector3 LastSpeedOnPoint(Vector3 point)
     {
         if (last_move_time != Time.time)
             return Vector3.zero;

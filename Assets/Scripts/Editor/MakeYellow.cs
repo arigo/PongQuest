@@ -119,7 +119,9 @@ public static class MakeYellow
     [MenuItem("CONTEXT/Transform/Snap to triangular grid")]
     static void SnapToTriangularGridCmd(MenuCommand command)
     {
-        const float GRID_SIZE = 0.19f;
+        //const float GRID_SIZE = 0.19f;
+        float GRID_SIZE = 0.25f * 0.5f / Mathf.Sqrt(3);    /* exactly the size of hexagons */
+
         float GRID_SIZE_SMALLER = GRID_SIZE * 0.5f * Mathf.Sqrt(3);
 
         Transform tr = (Transform)command.context;
