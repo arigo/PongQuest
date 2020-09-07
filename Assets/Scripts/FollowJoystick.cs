@@ -12,7 +12,7 @@ public class FollowJoystick : MonoBehaviour
     float current_angle;
     bool[] stop_instruction;
     float wrap_walls_timeout;
-    bool wrap_discontinuity;
+    int wrap_discontinuity;
 
     void Start()
     {
@@ -145,6 +145,7 @@ public class FollowJoystick : MonoBehaviour
     IEnumerator _AnimateWarpWalls()
     {
         const float ALPHA_MAX = 0.4f;
+        const float STANDARD_FORMUPARAM = 0.35295f;
 
         warpWalls.SetActive(true);
 
@@ -152,8 +153,7 @@ public class FollowJoystick : MonoBehaviour
         int name_id = Shader.PropertyToID("_Parameters");
         var walls = warpWalls.GetComponentsInChildren<MeshRenderer>();
         float alpha = 0f;
-        float timespeed = 1f;
-        float time = Time.time % 2345f;
+        float formu_delta = 0f;
 
         while (true)
         {
@@ -167,18 +167,18 @@ public class FollowJoystick : MonoBehaviour
                 target_alpha = 0f;
 
             alpha = Mathf.MoveTowards(alpha, target_alpha, 3.2f * Time.deltaTime);
-            timespeed = Mathf.MoveTowards(timespeed, 1f, 1.5f * Time.deltaTime);
-            if (wrap_discontinuity)
+            formu_delta *= Mathf.Exp(-Time.deltaTime);
+            if (wrap_discontinuity != 0)
             {
-                timespeed = 2.5f;
                 alpha = ALPHA_MAX * 2.0f;
-                wrap_discontinuity = false;
+                formu_delta = wrap_discontinuity * 0.1f;
+                wrap_discontinuity = 0;
             }
-            time += timespeed * Time.deltaTime;
 
-            pb.SetVector(name_id, new Vector4(alpha, time, 0f));
-            foreach (var wall in walls)
-                wall.SetPropertyBlock(pb);
+            pb.SetVector(name_id, new Vector4(alpha, 1f, STANDARD_FORMUPARAM + formu_delta));
+            walls[0].SetPropertyBlock(pb);
+            pb.SetVector(name_id, new Vector4(alpha, -1f, STANDARD_FORMUPARAM - formu_delta));
+            walls[1].SetPropertyBlock(pb);
 
             yield return null;
         }
@@ -193,18 +193,21 @@ public class FollowJoystick : MonoBehaviour
         var tr2 = warpWalls.transform.GetChild(1);
         var ball_pos = ball.transform.position;
 
+        int direction = 1;
         if ((ball_pos - tr1.position).sqrMagnitude > (ball_pos - tr2.position).sqrMagnitude)
         {
             var tr_swap = tr1;
             tr1 = tr2;
             tr2 = tr_swap;
+            direction = -1;
         }
 
         /* warping from tr1 to tr2 */
         var rel_velocity = tr1.InverseTransformVector(velocity);
         if (rel_velocity.z > 0f)
         {
-            rel_velocity.z = -rel_velocity.z;
+            rel_velocity.z = -Mathf.Max(rel_velocity.z, 0.02f);
+            rel_velocity.x = -rel_velocity.x;
 
             var rel_position = tr1.InverseTransformPoint(ball_pos);
             if (rel_position.z > 0f)
@@ -213,7 +216,7 @@ public class FollowJoystick : MonoBehaviour
             ball.transform.position = tr2.TransformPoint(rel_position);
             velocity = tr2.TransformVector(rel_velocity);
 
-            wrap_discontinuity = true;
+            wrap_discontinuity = direction;
         }
     }
 }

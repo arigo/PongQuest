@@ -82,9 +82,11 @@ Shader "Skybox/StarNest3" {
 			};
 			struct v2f {
 				float4 pos : SV_POSITION;
-				half3 rayDir : TEXCOORD0;	// Vector for incoming ray, normalized ( == -eyeRay )
-			}; 
-			
+				half3 rayDir : TEXCOORD0;	// Vector for incoming ray
+			};
+
+            #define S  0.2
+
 			v2f vert(appdata_t v) {
 				v2f OUT;
 				OUT.pos = UnityObjectToClipPos(v.vertex);
@@ -92,7 +94,8 @@ Shader "Skybox/StarNest3" {
 				// Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
 				float3 eyeRay = normalize(mul((float3x3)unity_ObjectToWorld, v.vertex.xyz));
 
-				OUT.rayDir = half3(eyeRay);
+                float s = 0.2;
+				OUT.rayDir = half3(eyeRay) * S * .5;
 				
 				
 				return OUT;
@@ -113,10 +116,10 @@ Shader "Skybox/StarNest3" {
 
 
                 //volumetric rendering
-                float s = 0.2, fade = 0.01;
+                float fade = 0.01;
                 float3 v = float3(0, 0, 0);
 
-                float3 p = from + s * dir * .5;
+                float3 p = from + dir;
 
                 p = _Tile - fmod(abs(p), _Tile * 2);
                 float pa = 0;

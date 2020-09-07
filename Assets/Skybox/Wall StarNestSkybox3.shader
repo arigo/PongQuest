@@ -32,9 +32,6 @@ Shader "Skybox/WallStarNest3" {
 		//This has a higher performance hit than iterations.
 		//_Volsteps ("Volumetric Steps", Range(1,20)) = 8
 		
-		//Magic number. Best values are around 0.400-0.600.
-		_Formuparam ("Formuparam", Float) = 0.6
-		
 		//Fractal repeating rate
 		//Low numbers are busy and give lots of repititio
 		//High numbers are very sparce
@@ -47,7 +44,7 @@ Shader "Skybox/WallStarNest3" {
 		_Saturation ("Saturation", Float) = 0.77
 		
         _ColorSky ("Color Sky", Color) = (0, 0, 0, 0)
-        _Parameters ("Alpha and Timebump", Vector) = (0.4, 0, 0, 0)
+        _Parameters ("Alpha/Timedir/FormuParam", Vector) = (0.4, 1, 0.35295, 0)
 	}
 
 	SubShader {
@@ -70,32 +67,32 @@ Shader "Skybox/WallStarNest3" {
 			float4 _Center;
 			//float _CamScroll;
 			
-			float _Formuparam;
-
 			float _Tile;
 
 			float _Brightness;
 			float _Saturation;
 
             float4 _ColorSky;
-            float2 _Parameters;
+            float3 _Parameters;
 
 			struct appdata_t {
 				float4 vertex : POSITION;
 			};
 			struct v2f {
 				float4 pos : SV_POSITION;
-				half3 rayDir : TEXCOORD0;	// Vector for incoming ray, normalized ( == -eyeRay )
-			}; 
+				half3 rayDir : TEXCOORD0;	// Vector for incoming ray
+			};
+
+            #define S  0.2
 			
 			v2f vert(appdata_t v) {
 				v2f OUT;
 				OUT.pos = UnityObjectToClipPos(v.vertex);
 			
 				// Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
-				float3 eyeRay = normalize(mul((float3x3)unity_ObjectToWorld, v.vertex.xyz));
+				float3 eyeRay = normalize(v.vertex.xyz);
 
-				OUT.rayDir = half3(eyeRay);
+				OUT.rayDir = half3(eyeRay) * S * .5;
 				
 				
 				return OUT;
@@ -105,7 +102,7 @@ Shader "Skybox/WallStarNest3" {
                 half3 col = half3(0, 0, 0);
                 half3 dir = IN.rayDir;
 
-                float time = _Parameters.y;
+                float time = _Time.x * _Parameters.y;
 
                 float3 from = _Center.xyz;
 
@@ -116,10 +113,10 @@ Shader "Skybox/WallStarNest3" {
 
 
                 //volumetric rendering
-                float s = 0.2, fade = 0.01;
+                float fade = 0.01;
                 float3 v = float3(0, 0, 0);
 
-                float3 p = from + s * dir * .5;
+                float3 p = from + dir;
 
                 p = _Tile - fmod(abs(p), _Tile * 2);
                 float pa = 0;
@@ -127,15 +124,15 @@ Shader "Skybox/WallStarNest3" {
                 int iterations = 10;
                 for (int i = 0; i < iterations; i++) {
                     // unroll one
-                    p = abs(p) / dot(p, p) - _Formuparam;
+                    p = abs(p) / dot(p, p) - _Parameters.z;
                     a += abs(length(p) - pa);
                     pa = length(p);
                     // unroll two
-                    p = abs(p) / dot(p, p) - _Formuparam;
+                    p = abs(p) / dot(p, p) - _Parameters.z;
                     a += abs(length(p) - pa);
                     pa = length(p);
                     // unroll three
-                    p = abs(p) / dot(p, p) - _Formuparam;
+                    p = abs(p) / dot(p, p) - _Parameters.z;
                     a += abs(length(p) - pa);
                     pa = length(p);
                 }

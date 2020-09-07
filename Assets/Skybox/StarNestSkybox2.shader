@@ -77,8 +77,10 @@ Shader "Skybox/StarNest2" {
 			};
 			struct v2f {
 				float4 pos : SV_POSITION;
-				half3 rayDir : TEXCOORD0;	// Vector for incoming ray, normalized ( == -eyeRay )
-			}; 
+				half3 rayDir : TEXCOORD0;	// Vector for incoming ray
+			};
+
+            #define S  0.2
 			
 			v2f vert(appdata_t v) {
 				v2f OUT;
@@ -87,7 +89,7 @@ Shader "Skybox/StarNest2" {
 				// Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
 				float3 eyeRay = normalize(mul((float3x3)unity_ObjectToWorld, v.vertex.xyz));
 
-				OUT.rayDir = half3(eyeRay);
+				OUT.rayDir = half3(eyeRay) * S * .5;
 				
 				
 				return OUT;
@@ -108,10 +110,10 @@ Shader "Skybox/StarNest2" {
 				
 				
 				//volumetric rendering
-				float s = 0.2, fade = 0.01;
+				float fade = 0.01;
 				float3 v = float3(0, 0, 0);
 
-				float3 p = from + s * dir * .5;
+				float3 p = from + dir;
 
 				p = _Tile - fmod(abs(p), _Tile*2);
                 float pa = 0;
@@ -126,7 +128,7 @@ Shader "Skybox/StarNest2" {
 					
 				// coloring based on distance
                 if (a < 64)
-                    v += float3(s, s*s, 0) * a*a * _Brightness * fade;
+                    v += float3(S, S*S, 0) * a*a * _Brightness * fade;
 					
 				float len = length(v);
 				//Quick saturate
