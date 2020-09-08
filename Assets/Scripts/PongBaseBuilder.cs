@@ -149,7 +149,7 @@ public abstract class PongBaseBuilder : MonoBehaviour
                 Destroy((GameObject)preloadGameObject);
                 preloadGameObject = null;
             }*/
-            yield return new WaitForSecondsRealtime(0.45f);
+            yield return new WaitForSecondsRealtime(0.55f);
         }
     }
 

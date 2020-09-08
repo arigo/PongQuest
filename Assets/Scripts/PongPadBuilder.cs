@@ -47,6 +47,10 @@ public class PongPadBuilder : PongBaseBuilder
 
         base.Start();
 
+        var fj = FindObjectOfType<FollowJoystick>();
+        if (fj != null)
+            pausedCanvasGobj.transform.SetParent(fj.transform, worldPositionStays: true);
+
         music_sources = new AudioSource[backgroundMusicParts.Length];
         var music_go = new GameObject("music");
         for (int i = 0; i < backgroundMusicParts.Length; i++)
@@ -108,8 +112,6 @@ public class PongPadBuilder : PongBaseBuilder
         coro_music_volumes = null;
     }
 
-    Vector3? paused_canvas_position;
-
     protected override void PausedChange(bool paused)
     {
         if (paused)
@@ -120,12 +122,6 @@ public class PongPadBuilder : PongBaseBuilder
             }
             else
             {
-                if (paused_canvas_position == null)
-                    paused_canvas_position = pausedCanvasGobj.transform.position;
-
-                pausedCanvasGobj.transform.SetPositionAndRotation(
-                    OVRManager.instance.transform.TransformPoint(paused_canvas_position.Value),
-                    OVRManager.instance.transform.rotation);
                 pausedCanvasGobj.SetActive(true);
             }
         }

@@ -399,7 +399,10 @@ public class Ball : MonoBehaviour, IBall
                         if (cell == null)
                         {
                             if (PongPadBuilder.instance.episodeNumber == 3)
+                            {
                                 bump_factor = 1.9f;
+                                velocity += Random.onUnitSphere * (SPEED_LIMIT / 14f);
+                            }
                             else if (velocity.z < 0f)
                                 randomly_tweak_velocity = true;
                         }
