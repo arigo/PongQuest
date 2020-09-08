@@ -135,10 +135,12 @@ public class LivingCell : Cell
                     SpawnNewCell(prefab, Quaternion.LookRotation(orientation));
             }
         }
-        else if (last_moving_target != null)
+        else if (last_moving_target != null && energy >= 1e-3f)
         {
             var copy = Instantiate(this, transform.parent);
             copy.copied_from_cell = this;
+
+            Debug.Assert(copy.energy > 0f);
         }
     }
 

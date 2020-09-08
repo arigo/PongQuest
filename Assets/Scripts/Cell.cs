@@ -61,18 +61,20 @@ public class Cell : MonoBehaviour
         if (!ignore)
         {
             if (energy <= 0)
+            {
+                /* should not be needed, but better safe than sorry.  This should only occur
+                 * within the 0.05 seconds delay in _Hit() */
+                Destroy((GameObject)gameObject, 0.5f);
                 return;
+            }
             ChangeMaterial(PongPadBuilder.instance.cellHitMaterial);
             float prev_energy = energy;
-            if (energy > 0)
-            {
-                bonus |= Random.Range(0, 4) == 3;
-                energy -= subtract_energy;
-                if (energy > 0 && energy < 1e-3)
-                    energy = 0;
-                if (energy <= 0)
-                    clip = PongPadBuilder.instance.tileBreakSound;
-            }
+            bonus |= Random.Range(0, 4) == 3;
+            energy -= subtract_energy;
+            if (energy > 0f && energy < 1e-3f)
+                energy = 0f;
+            if (energy <= 0)
+                clip = PongPadBuilder.instance.tileBreakSound;
             StartCoroutine(_Hit(new CellHitInfo
             {
                 fatal = energy <= 0,

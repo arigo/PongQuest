@@ -359,16 +359,10 @@ public class Ball : MonoBehaviour, IBall
             {
                 var hitInfo = hitInfo1;
 
-                Cell cell = null;
-                switch (hitInfo.collider.gameObject.layer)
+                if (hitInfo.collider.gameObject.layer == LAYER_WARP_WALLS)
                 {
-                    case LAYER_CELLS:
-                        cell = hitInfo.collider.GetComponent<Cell>();
-                        break;
-
-                    case LAYER_WARP_WALLS:
-                        hitInfo.collider.GetComponentInParent<FollowJoystick>().WarpBall(this, ref velocity);
-                        continue;
+                    hitInfo.collider.GetComponentInParent<FollowJoystick>().WarpBall(this, ref velocity);
+                    return;
                 }
 
                 if (hitInfo.distance == 0)
@@ -381,6 +375,7 @@ public class Ball : MonoBehaviour, IBall
                     hitInfo.normal = (transform.position - hitInfo.point).normalized;
                 }
 
+                Cell cell = hitInfo.collider.GetComponent<Cell>();
                 Vector3 cell_speed = cell != null ? cell.LastSpeedOnPoint(hitInfo.point) : Vector3.zero;
                 if (Vector3.Dot(velocity - cell_speed, hitInfo.normal) >= 0f)
                     continue;
