@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2428711591003737685}
   m_Layer: 0
-  m_Name: H4
+  m_Name: H3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,7 +124,7 @@ PrefabInstance:
     - target: {fileID: -2067611164496210588, guid: c9dc18ed9e607cc4b8c848cbdad1f57c,
         type: 3}
       propertyPath: blinkDelta
-      value: 1.0471976
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9dc18ed9e607cc4b8c848cbdad1f57c, type: 3}
@@ -429,7 +429,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
         type: 3}
       propertyPath: blinkDelta
-      value: 2.0943952
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -659,7 +659,7 @@ PrefabInstance:
     - target: {fileID: -2067611164496210588, guid: c9dc18ed9e607cc4b8c848cbdad1f57c,
         type: 3}
       propertyPath: blinkDelta
-      value: 1.0471976
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9dc18ed9e607cc4b8c848cbdad1f57c, type: 3}
@@ -739,7 +739,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
         type: 3}
       propertyPath: blinkDelta
-      value: 3.1415927
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -819,7 +819,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 50abb6356820e5c45b1559f305332718,
         type: 3}
       propertyPath: blinkDelta
-      value: 5.2359877
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50abb6356820e5c45b1559f305332718, type: 3}
@@ -1049,7 +1049,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 50abb6356820e5c45b1559f305332718,
         type: 3}
       propertyPath: blinkDelta
-      value: 4.1887903
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50abb6356820e5c45b1559f305332718, type: 3}
@@ -1204,7 +1204,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 50abb6356820e5c45b1559f305332718,
         type: 3}
       propertyPath: blinkDelta
-      value: 5.2359877
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50abb6356820e5c45b1559f305332718, type: 3}
@@ -1359,7 +1359,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
         type: 3}
       propertyPath: blinkDelta
-      value: 3.1415927
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -1439,7 +1439,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 50abb6356820e5c45b1559f305332718,
         type: 3}
       propertyPath: blinkDelta
-      value: 4.1887903
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50abb6356820e5c45b1559f305332718, type: 3}
@@ -1594,7 +1594,7 @@ PrefabInstance:
     - target: {fileID: 126191419925471806, guid: 3571ba92769993c4c90a9d631cbc94c3,
         type: 3}
       propertyPath: blinkDelta
-      value: 2.0943952
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3571ba92769993c4c90a9d631cbc94c3, type: 3}
@@ -1670,6 +1670,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2067611164496210588, guid: c9dc18ed9e607cc4b8c848cbdad1f57c,
+        type: 3}
+      propertyPath: blinkDelta
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9dc18ed9e607cc4b8c848cbdad1f57c, type: 3}

@@ -19,6 +19,7 @@ public class Ball : MonoBehaviour, IBall
     internal const int LAYER_CELLS = 10;
     internal const int LAYER_HALOS = 11;
     internal const int LAYER_WARP_WALLS = 14;
+    internal const int LAYER_CEILINGS = 16;
     internal const float SPEED_LIMIT = 1.3f;
     const float SPEED_EXPONENT = -1.5f;
     const float SPEED_UPPER_LIMIT = 23f;
@@ -347,7 +348,8 @@ public class Ball : MonoBehaviour, IBall
         Vector3 dir = velocity.normalized;
 
         var hits = Physics.SphereCastAll(new Ray(transform.position, dir), radius, move,
-            (1 << LAYER_WALLS) | (1 << LAYER_CELLS) | (1 << LAYER_WARP_WALLS), QueryTriggerInteraction.Ignore);
+            (1 << LAYER_WALLS) | (1 << LAYER_CEILINGS) | (1 << LAYER_CELLS) | (1 << LAYER_WARP_WALLS),
+            QueryTriggerInteraction.Ignore);
 
         if (hits.Length > 0)
         {

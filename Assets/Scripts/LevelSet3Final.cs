@@ -8,8 +8,6 @@ public class LevelSet3Final : MonoBehaviour
     public GameObject[] duplicateMe;
     public int numberOfDuplicates;
 
-    float last_active;
-
     private void Start()
     {
         Ball.speed_limit += 0.01f;   /* will increase further in PongPadBuilder.KilledOneCell */
@@ -21,8 +19,6 @@ public class LevelSet3Final : MonoBehaviour
 
             StartCoroutine(DuplicateMe(go));
         }
-
-        StartCoroutine(Bounce());
     }
 
     Rigidbody DuplicateHexCell(GameObject go)
@@ -38,61 +34,49 @@ public class LevelSet3Final : MonoBehaviour
     IEnumerator DuplicateMe(GameObject prefab)
     {
         Vector3 center = prefab.transform.position;
-        Stack<GameObject> actives = new Stack<GameObject>();
-        int step = 0;
+        List<Rigidbody> all_cells = new List<Rigidbody>();
 
-        while (true)
+        for (int i = 0; i < numberOfDuplicates; i++)
         {
-            int remaining = numberOfDuplicates;
-            float force = step == 0 ? 0.43f : 0.9f;
+            yield return new WaitForSeconds(Random.Range(0.5f, 0.8f));
 
-            while (remaining > 0)
+            var rb = DuplicateHexCell(prefab);
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            float y_limit = rb.transform.position.y + 0.255f;
+
+            while (rb.transform.position.y < y_limit)
             {
-                yield return new WaitForSeconds(Random.Range(0.5f, 0.8f));
-
-                if (!Physics.CheckSphere(center, 0.15f, 1 << Ball.LAYER_CELLS))
-                {
-                    var rb = DuplicateHexCell(prefab);
-                    rb.AddForce((Vector3.up * 3f + Random.insideUnitSphere) * force, ForceMode.VelocityChange);
-                    rb.AddTorque(Random.insideUnitSphere, ForceMode.VelocityChange);
-                    actives.Push(rb.gameObject);
-
-                    remaining--;
-                    last_active = Time.time;
-                }
+                yield return new WaitForFixedUpdate();
+                if (rb == null)   /* destroyed already */
+                    break;
+                rb.transform.position += Vector3.up * (0.35f * Time.fixedDeltaTime);
             }
 
-            step++;
-            if (step == 2)
-                break;
-
-            while (actives.Count > 0)
+            if (rb != null)
             {
-                if (actives.Peek() == null)
-                    actives.Pop();
-                else
-                    yield return new WaitForSeconds(1f);
+                rb.useGravity = true;
+                rb.isKinematic = false;
+                all_cells.Add(rb);
             }
         }
-        Destroy((GameObject)prefab);
-    }
 
-    IEnumerator Bounce()
-    {
+        Destroy((GameObject)prefab);
+
+        yield return new WaitForSeconds(10f);
+
+        /* Bounce */
         while (true)
         {
-            yield return new WaitForSeconds(2f);
-            if (Time.time - last_active >= 2f)
+            yield return new WaitForSeconds(Random.Range(3f, 4f));
+
+            foreach (var rb in all_cells)
             {
-                foreach (var cell in GetComponentsInChildren<HexCell>())
+                if (rb != null && rb.IsSleeping())
                 {
-                    var rb = cell.GetComponent<Rigidbody>();
-                    if (rb != null && rb.IsSleeping())
-                    {
-                        float force = Random.Range(0.4f, 1f);
-                        rb.AddForce((Vector3.up * 2f + Random.insideUnitSphere) * force, ForceMode.VelocityChange);
-                        rb.AddTorque(Random.insideUnitSphere, ForceMode.VelocityChange);
-                    }
+                    float force = Random.Range(0.4f, 1f);
+                    rb.AddForce((Vector3.up * 2f + Random.insideUnitSphere) * force, ForceMode.VelocityChange);
+                    rb.AddTorque(Random.insideUnitSphere, ForceMode.VelocityChange);
                 }
             }
         }
