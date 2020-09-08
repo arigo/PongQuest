@@ -359,10 +359,11 @@ public class Ball : MonoBehaviour, IBall
             {
                 var hitInfo = hitInfo1;
 
-                if (hitInfo.collider.gameObject.layer == LAYER_WARP_WALLS)
+                switch (hitInfo.collider.gameObject.layer)
                 {
-                    hitInfo.collider.GetComponentInParent<FollowJoystick>().WarpBall(this, ref velocity);
-                    return;
+                    case LAYER_WARP_WALLS:
+                        hitInfo.collider.GetComponentInParent<FollowJoystick>().WarpBall(this, ref velocity);
+                        continue;
                 }
 
                 if (hitInfo.distance == 0)
