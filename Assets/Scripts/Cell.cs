@@ -13,6 +13,26 @@ public class Cell : MonoBehaviour
     bool bonus;
     Material _my_material;
 
+    /*private void Awake()
+    {
+        IEnumerator Foobar()
+        {
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(1.5f);
+                const int STEPS = 24;
+                //Vector3 point = Vector3.Lerp(info.hit_point, transform.position, 0.5f);
+                Vector3 point = new Vector3(0, 1, 3.2f);
+                for (int i = 0; i < STEPS; i++)
+                {
+                    Vector3 normal = Quaternion.Euler(0, 360 * i / (float)STEPS, 0) * Vector3.forward;
+                    EmitHitPS(point, normal, Color.white, velocity_mul: 1.7f);
+                }
+            }
+        }
+        StartCoroutine(Foobar());
+    }*/
+
     void FetchMyMaterial()
     {
         if (_my_material == null)
@@ -34,7 +54,7 @@ public class Cell : MonoBehaviour
         GetComponent<MeshRenderer>().sharedMaterial = mat ?? _my_material;
     }
 
-    public static void EmitHitPS(Vector3 pos, Vector3 normal, Color color)
+    public static void EmitHitPS(Vector3 pos, Vector3 normal, Color color, float velocity_mul = 1f)
     {
         var b = PongPadBuilder.instance;
         var ps = b.hitPS;
@@ -48,7 +68,7 @@ public class Cell : MonoBehaviour
 
         for (int i = 0; i < 20; i++)
         {
-            emit_params.velocity = normal + (Random.onUnitSphere * 0.5f);
+            emit_params.velocity = (normal + (Random.onUnitSphere * 0.5f)) * velocity_mul;
             emit_params.startLifetime = Random.Range(0.2f, 0.5f);
             ps.Emit(emit_params, 1);
         }
@@ -93,6 +113,17 @@ public class Cell : MonoBehaviour
 
         if (info.fatal)
         {
+            if (finalBigCell && PongPadBuilder.instance.IsFinalLevel)
+            {
+                const int STEPS = 24;
+                Vector3 point = Vector3.Lerp(info.hit_point, transform.position, 0.5f);
+                for (int i = 0; i < STEPS; i++)
+                {
+                    Vector3 normal = Quaternion.Euler(0, 360 * i / (float)STEPS, 0) * Vector3.forward;
+                    EmitHitPS(point, normal, Color.white, velocity_mul: 1.7f);
+                }
+            }
+
             Destroy((GameObject)gameObject);
             if (bonus)
                 Bonus.AddBonus(transform.position);

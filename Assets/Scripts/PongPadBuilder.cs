@@ -33,6 +33,8 @@ public class PongPadBuilder : PongBaseBuilder
     int number_of_cells_in_this_level;
     float number_of_cells_killed;
 
+    public bool IsFinalLevel => current_level >= levelPrefabs.Length;
+
     private void Awake()
     {
         instance = this;
@@ -152,7 +154,7 @@ public class PongPadBuilder : PongBaseBuilder
                 {
                     Bonus.RemoveAllBonuses();
 
-                    if (current_level >= levelPrefabs.Length)
+                    if (IsFinalLevel)
                     {
                         Ball.RemoveAllBalls();
                         track_cell = gameObject;
