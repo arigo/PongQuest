@@ -8,6 +8,11 @@ public class HexCell : Cell
     public bool hasDirection;
     public float blinkSpeed, blinkDelta;
 
+    internal bool ignore_hits;   /* set sometimes on the final big hex cell */
+
+    internal float fraction_of_original = 1f;
+    protected override float GetCellFraction() => fraction_of_original;
+
     private void Start()
     {
         if (blinkSpeed > 0)
@@ -39,7 +44,7 @@ public class HexCell : Cell
             velocity = transform.InverseTransformVector(velocity);
             return velocity.z >= 0f;
         }
-        return false;
+        return ignore_hits;
     }
 
     public override float VelocityBoostSpeed() => 3.1f;
